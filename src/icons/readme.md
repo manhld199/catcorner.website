@@ -1,0 +1,1 @@
+- /icons is used for some cases that you want to use customized icons which are not provided by lucide-react

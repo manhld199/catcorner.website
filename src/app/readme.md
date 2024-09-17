@@ -1,0 +1,1 @@
+- All pages are separated based on their roles

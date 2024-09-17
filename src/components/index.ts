@@ -1,2 +1,6 @@
+// **********************GENERAL**********************
+
 // toogles
-export { default as ToogleThemeMode } from "./toogles/toogle-theme-mode";
+export { default as ToogleThemeMode } from "./(general)/toogles/toogle-theme-mode";
+
+// **********************ADMIN**********************

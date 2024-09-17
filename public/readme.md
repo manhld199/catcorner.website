@@ -1,0 +1,1 @@
+- All files in /public must be placed on specific folder. Ex: product-1.png -> /imgs/products
