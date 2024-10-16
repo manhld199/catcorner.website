@@ -25,9 +25,9 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 					onClick={() => setShowPassword((prev) => !prev)}
 				>
 					{showPassword ? (
-						<EyeOffIcon className="h-4 w-4" aria-hidden="true" />
-					) : (
 						<EyeIcon className="h-4 w-4" aria-hidden="true" />
+					) : (
+						<EyeOffIcon className="h-4 w-4" aria-hidden="true" />
 					)}
 					<span className="sr-only">
 						{showPassword ? "Hide password" : "Show password"}
@@ -38,5 +38,4 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 	}
 );
 PasswordInput.displayName = "PasswordInput";
-
 export { PasswordInput };

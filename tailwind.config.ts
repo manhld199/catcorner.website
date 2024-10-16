@@ -11,6 +11,7 @@ const config: Config = {
 		extend: {
 			colors: {
 				"pri-1": "#1E4646",
+				"text-btn-color": "#085457",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
 				card: {

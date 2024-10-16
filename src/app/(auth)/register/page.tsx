@@ -1,42 +1,137 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { AlertCircle } from "lucide-react";
 
 import { PasswordInput } from "@/partials/(auth)/PasswordInput";
+import { useState, useCallback } from "react";
+
+import BeatLoader from "react-spinners/BeatLoader";
+
+const override: CSSProperties = {
+	display: "block",
+	margin: "0 auto",
+	borderColor: "red",
+};
+
+const formSchema = z
+	.object({
+		name: z.string().refine((value) => value.trim().length >= 2, {
+			message: "Full Name must be at least 2 characters",
+		}),
+		email: z.string().email({ message: "Invalid email address" }),
+		password: z
+			.string()
+			.min(8, { message: "Password must be at least 8 characters" }),
+		passwordConfirmation: z.string(),
+		agreeTerms: z.boolean().refine((val) => val === true, {
+			message: "You must agree to the terms and conditions",
+		}),
+		subscribeNewsletter: z.boolean().optional(),
+	})
+	.refine((data) => data.password === data.passwordConfirmation, {
+		message: "Passwords do not match",
+		path: ["passwordConfirmation"],
+	});
 
 export default function SignUpPage() {
-	const [password, setPassword] = useState("");
-	const [passwordConfirmation, setPasswordConfirmation] = useState("");
+	const [emailExists, setEmailExists] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false); // Thêm state này
 
-	const [formData, setFormData] = useState({
-		firstName: "",
-		lastName: "",
-		email: "",
-		password: "",
-		passwordConfirmation: "",
+	const router = useRouter();
+
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			password: "",
+			passwordConfirmation: "",
+			agreeTerms: false,
+			subscribeNewsletter: false,
+		},
+		mode: "onChange", // Thêm dòng này để kích hoạt validation khi giá trị thay đổi
 	});
-	const [agreeTerms, setAgreeTerms] = useState(false);
-	const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
+	const checkEmailExists = useCallback(
+		async (email: string) => {
+			try {
+				const response = await fetch(
+					`http://localhost:8080/api/auth/check-email?email=${email}`,
+					{
+						method: "GET",
+					}
+				);
+				const data = await response.json();
+				console.log("data", data.data);
+				setEmailExists(data.data.exists);
+				if (data.data.exists) {
+					console.log("exist");
+					form.setError("email", {
+						type: "manual",
+						message: "This email is already registered",
+					});
+				} else {
+					form.clearErrors("email");
+				}
+			} catch (error) {
+				console.error("Error checking email:", error);
+			}
+		},
+		[form]
+	);
+	const onSubmit = async (values: z.infer<typeof formSchema>) => {
+		try {
+			setIsSubmitting(true);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
-	};
+			const apiPayload = {
+				email: values.email,
+				password: values.password,
+				user_name: values.name,
+			};
+			const response = await fetch("http://localhost:8080/api/auth/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(apiPayload),
+			});
+			const data = await response.json();
 
-	const isFormValid = () => {
-		// Kiểm tra xem email, password và checkbox đã được chọn hay chưa
-		return (
-			formData.email !== "" &&
-			password !== "" &&
-			passwordConfirmation != "" &&
-			agreeTerms
-		);
+			if (!response.ok) {
+				console.log("data", data);
+				// If the response is not ok, throw an error with the message from the server
+				throw new Error(data.message || "Registration failed");
+			}
+
+			console.log("Registration successful", data);
+			router.push(
+				`/register/verify-email?email=${encodeURIComponent(values.email)}`
+			);
+
+			// Handle successful registration (e.g., redirect to login page or show success message)
+		} catch (error) {
+			console.error("Registration failed", error);
+			// Handle registration error (e.g., show error message to user)
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -59,95 +154,184 @@ export default function SignUpPage() {
 						Vui lòng không để trống các mục được đánh dấu *
 					</p>
 
-					<form className="space-y-6">
-						<div>
-							<Label className="text-gray-600">First Name</Label>
-							<Input
-								name="firstName"
-								value={formData.firstName}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<Label className="text-gray-600">Last Name</Label>
-							<Input
-								name="lastName"
-								value={formData.lastName}
-								onChange={handleInputChange}
-							/>
-						</div>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+							<FormField
+								control={form.control}
+								name="name"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Full Name <span className="text-red-600">*</span>
+										</FormLabel>
+										<div className="relative">
+											<FormControl>
+												<Input
+													{...field}
+													type="text"
+													className={
+														field.value && !form.formState.errors.name
+															? "border-green-500"
+															: form.formState.errors.name
+															? "border-red-500"
+															: ""
+													}
+												/>
+											</FormControl>
 
-						<div>
-							<Label className="text-gray-600">
-								Email <span className="text-red-600">*</span>
-							</Label>
-							<Input
+											{form.formState.errors.name && (
+												<AlertCircle className="h-5 w-5 text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />
+											)}
+										</div>
+										<FormMessage className="text-red-500" />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
 								name="email"
-								type="email"
-								value={formData.email}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<Label className="text-gray-600">
-								Password <span className="text-red-600">*</span>
-							</Label>
-							<PasswordInput
-								id="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-						</div>
-						<div>
-							<Label className="text-gray-600">
-								Confirm Password <span className="text-red-600">*</span>
-							</Label>
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Email <span className="text-red-600">*</span>
+										</FormLabel>
+										<div className="relative">
+											<FormControl>
+												<Input
+													{...field}
+													type="email"
+													className={
+														field.value && !form.formState.errors.email
+															? "border-green-500"
+															: form.formState.errors.email || emailExists
+															? "border-red-500"
+															: ""
+													}
+													onBlur={(e) => {
+														field.onBlur();
+														if (e.target.value) {
+															checkEmailExists(e.target.value);
+														}
+													}}
+												/>
+											</FormControl>
 
-							<PasswordInput
-								id="password_confirmation"
-								value={passwordConfirmation}
-								onChange={(e) => setPasswordConfirmation(e.target.value)}
-								autoComplete="password"
+											{form.formState.errors.email && (
+												<AlertCircle className="h-5 w-5 text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />
+											)}
+										</div>
+										<FormMessage className="text-red-500" />
+									</FormItem>
+								)}
 							/>
-						</div>
-						<div className="flex items-center space-x-2">
-							<Checkbox
-								id="terms"
-								checked={agreeTerms}
-								onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
-							/>
-							<label
-								htmlFor="terms"
-								className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-							>
-								Agree to our Terms of use and Privacy Policy
-							</label>
-						</div>
 
-						<div className="flex items-center space-x-2">
-							<Checkbox
-								id="newsletter"
-								checked={subscribeNewsletter}
-								onCheckedChange={(checked) =>
-									setSubscribeNewsletter(checked as boolean)
+							<FormField
+								control={form.control}
+								name="password"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Password <span className="text-red-600">*</span>
+										</FormLabel>
+										<FormControl>
+											<PasswordInput
+												{...field}
+												className={
+													field.value && !form.formState.errors.password
+														? "border-green-500"
+														: form.formState.errors.password
+														? "border-red-500"
+														: ""
+												}
+											/>
+										</FormControl>
+										<FormMessage className="text-red-500" />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="passwordConfirmation"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Confirm Password <span className="text-red-600">*</span>
+										</FormLabel>
+										<FormControl>
+											<PasswordInput
+												{...field}
+												className={
+													field.value &&
+													!form.formState.errors.passwordConfirmation
+														? "border-green-500"
+														: form.formState.errors.passwordConfirmation
+														? "border-red-500"
+														: ""
+												}
+											/>
+										</FormControl>
+										<FormMessage className="text-red-500" />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="agreeTerms"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-start space-x-3 space-y-0">
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+										<div className="space-y-1 leading-none">
+											<FormLabel>
+												Agree to our Terms of use and Privacy Policy{" "}
+												<span className="text-red-600">*</span>
+											</FormLabel>
+										</div>
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="subscribeNewsletter"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-start space-x-3 space-y-0">
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+										<div className="space-y-1 leading-none">
+											<FormLabel>Subscribe to our monthly newsletter</FormLabel>
+										</div>
+									</FormItem>
+								)}
+							/>
+
+							<Button
+								className="w-1/2 mx-auto block"
+								disabled={
+									!form.formState.isValid || emailExists || isSubmitting
 								}
-							/>
-							<label
-								htmlFor="newsletter"
-								className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+								variant="custom"
+								type="submit"
 							>
-								Subscribe to our monthly newsletter
-							</label>
-						</div>
-
-						<Button
-							className="w-1/2 mx-auto block"
-							disabled={!isFormValid()} // Kích hoạt nút dựa trên điều kiện
-							variant="custom"
-						>
-							Sign up
-						</Button>
-					</form>
+								{isSubmitting ? (
+									<BeatLoader color="#ffffff" size={8} />
+								) : (
+									"Sign up"
+								)}
+							</Button>
+						</form>
+					</Form>
 
 					<p className="text-center text-sm text-muted-foreground mt-4">
 						<Link href="/forgot-password" className="underline">

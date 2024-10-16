@@ -20,6 +20,10 @@ const buttonVariants = cva(
 				ghost: "hover:bg-accent hover:text-accent-foreground",
 				link: "text-primary underline-offset-4 hover:underline",
 				custom: "rounded-[32px] bg-pri-1 text-white hover:opacity-80", // Thêm variant custom
+				custom_outlined:
+					"rounded-[32px] bg-white text-pri-1 border border-pri-1 hover:opacity-80", // Thêm variant custom
+
+				filled: "rounded-[8px] bg-pri-1 text-white hover:opacity-80",
 			},
 			size: {
 				default: "h-9 px-4 py-2",

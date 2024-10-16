@@ -11,7 +11,7 @@ export default function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className={`w-[60%] mx-auto m-8 ${josefin_Sans.className}`}>
+		<section className={`w-[80%] mx-auto m-8 ${josefin_Sans.className}`}>
 			{children}
 		</section>
 	);
