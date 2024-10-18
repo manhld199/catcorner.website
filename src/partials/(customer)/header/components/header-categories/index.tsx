@@ -42,17 +42,17 @@ export default function CustomerHeaderCategories() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <DropdownMenuLabel className="tablet:text-sm phone:hidden tablet:flex py-0 text-base flex items-center text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 focus:outline-none font-semibold group desktop:text-base laptop:text-base">
+        <DropdownMenuLabel className="phone:hidden laptop:flex py-0 text-base flex items-center text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 focus:outline-none font-semibold group desktop:text-base laptop:text-base">
           Categories
-          <ChevronDown className="tablet:text-xs laptop:text-sm ml-1 text-pri-1 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300" />
+          <ChevronDown className="laptop:text-sm ml-1 text-pri-1 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300" />
         </DropdownMenuLabel>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[80vw] absolute left-1/2 -translate-x-[48%] bg-white dark:bg-gray-800 dark:text-white shadow-lg dark:shadow-none mt-2 border border-transparent dark:border-none">
+      <DropdownMenuContent className="laptop:w-[90vw] desktop:w-[80vw] absolute left-1/2 laptop:-translate-x-[30%] desktop:-translate-x-[45%] bg-white dark:bg-gray-800 dark:text-white shadow-lg dark:shadow-none mt-4 border border-transparent dark:border-none">
         <DropdownMenuGroup>
           {categories.map((category, index) => (
             <DropdownMenuItem
               key={index}
-              className="flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-700" // Hover trong chế độ sáng
+              className="flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <div className="flex items-center">
                 {/* Hình ảnh nhỏ bên trái */}
