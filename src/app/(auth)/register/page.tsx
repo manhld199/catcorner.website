@@ -35,13 +35,19 @@ const override: CSSProperties = {
 
 const formSchema = z
 	.object({
-		name: z.string().refine((value) => value.trim().length >= 2, {
-			message: "Full Name must be at least 2 characters",
-		}),
-		email: z.string().email({ message: "Invalid email address" }),
+		name: z
+			.string()
+			.min(2, { message: "Họ tên phải có ít nhất 2 ký tự" })
+			.regex(/^[a-zA-ZÀ-ỹ\s]+$/, {
+				message: "Họ tên chỉ được chứa chữ cái và khoảng trắng",
+			})
+			.refine((value) => value.trim().length >= 2, {
+				message: "Họ tên phải có ít nhất 2 ký tự",
+			}),
+		email: z.string().email({ message: "Email không hợp lệ" }),
 		password: z
 			.string()
-			.min(8, { message: "Password must be at least 8 characters" }),
+			.min(8, { message: "Mật khẩu phải có ít nhất 8 ký tự" }),
 		passwordConfirmation: z.string(),
 		agreeTerms: z.boolean().refine((val) => val === true, {
 			message: "You must agree to the terms and conditions",
@@ -49,7 +55,7 @@ const formSchema = z
 		subscribeNewsletter: z.boolean().optional(),
 	})
 	.refine((data) => data.password === data.passwordConfirmation, {
-		message: "Passwords do not match",
+		message: "Mật khẩu không khớp",
 		path: ["passwordConfirmation"],
 	});
 
@@ -104,7 +110,7 @@ export default function SignUpPage() {
 				// If email is not valid, don't call the API
 				form.setError("email", {
 					type: "manual",
-					message: "Invalid email address",
+					message: "Email không hợp lệ",
 				});
 				return;
 			}
@@ -122,7 +128,7 @@ export default function SignUpPage() {
 					console.log("exist");
 					form.setError("email", {
 						type: "manual",
-						message: "This email is already registered",
+						message: "Email đã được đăng ký",
 					});
 				} else {
 					form.clearErrors("email");
@@ -174,25 +180,35 @@ export default function SignUpPage() {
 	return (
 		<div className="flex min-h-screen">
 			{/* Left side - Image */}
-			<div className="hidden lg:block lg:w-1/2 relative">
-				<Image
-					src={`/imgs/auth/circle.png`}
-					alt="Abstract background"
-					layout="fill"
-					objectFit="scale-down"
-				/>
+			<div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+				<div className="absolute inset-0 transform scale-125 lg:scale-100">
+					<Image
+						src={`/imgs/auth/circle.png`}
+						alt="Abstract background"
+						layout="fill"
+						objectFit="cover"
+						quality={100}
+						priority
+					/>
+				</div>
 			</div>
 
 			{/* Right side - Form */}
-			<div className="w-full lg:w-1/2 p-8 flex flex-col justify-between">
+			<div className="w-full lg:w-1/2 px-[42px] py-[103px] mm:py-7 mm:px-0 ml:py-7 ml:px-0 sm:px-[42px] sm:py-[103px] flex flex-col justify-between">
 				<main className="flex-grow">
-					<h1 className="text-[32px] font-bold mb-2">Tạo tài khoản</h1>
+					<h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl">
+						Tạo tài khoản của bạn
+					</h1>
 
-					<p className="text-muted-foreground mb-6 text-red-500 italic text-lg">
+					<p className="text-muted-foreground mb-4 sm:mb-6 text-red-500 italic text-sm sm:text-base md:text-lg">
 						Vui lòng không để trống các mục được đánh dấu *
 					</p>
+
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="space-y-4 sm:space-y-6"
+						>
 							<FormField
 								control={form.control}
 								name="name"
@@ -331,7 +347,7 @@ export default function SignUpPage() {
 											/>
 										</FormControl>
 										<div className="space-y-1 leading-none">
-											<FormLabel className="text-base">
+											<FormLabel className="text-base text-black-text">
 												Agree to our{" "}
 												<span className="underline">Terms of use</span> and{" "}
 												<span className="underline">Privacy Policy</span>
@@ -354,7 +370,7 @@ export default function SignUpPage() {
 											/>
 										</FormControl>
 										<div className="space-y-1 leading-none">
-											<FormLabel className="text-base">
+											<FormLabel className="text-base text-black-text">
 												Subscribe to our monthly newsletter
 											</FormLabel>
 										</div>
@@ -363,7 +379,7 @@ export default function SignUpPage() {
 							/>
 
 							<Button
-								className="w-1/2 mx-auto block text-2xl"
+								className="w-full sm:w-2/3 md:w-1/2 mx-auto block text-lg sm:text-xl md:text-2xl"
 								disabled={
 									!form.formState.isValid || emailExists || isSubmitting
 								}
@@ -378,49 +394,60 @@ export default function SignUpPage() {
 							</Button>
 						</form>
 					</Form>
-					<p className="text-center text-sm text-muted-foreground mt-4">
+
+					<p className="text-center text-xs sm:text-sm text-muted-foreground mt-4">
 						<Link
 							href="/forgot-password"
-							className="underline text-base font-medium"
+							className="underline text-sm sm:text-base font-medium"
 						>
 							Forgot your password?
 						</Link>
 					</p>
-					<div className="mt-6">
+
+					<div className="mt-4 sm:mt-6">
 						<div className="relative">
 							<div className="absolute inset-0 flex items-center">
 								<div className="w-full border-t border-gray-300"></div>
 							</div>
 							<div className="relative flex justify-center text-sm">
-								<span className="px-2 bg-white text-xl">Or sign up with</span>
+								<span className="px-2 bg-white text-base sm:text-lg md:text-xl">
+									Or sign up with
+								</span>
 							</div>
 						</div>
-						<div className="mt-6 flex justify-center space-x-4">
-							<Button variant="custom_outlined" className="w-48 text-xl">
+						<div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+							<Button
+								variant="custom_outlined"
+								className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+							>
 								<Image
 									src={`/imgs/auth/fb_logo.svg`}
 									alt="Facebook"
-									width={30} // Tăng kích thước nếu cần
-									height={30} // Tăng kích thước nếu cần
+									width={32}
+									height={32}
 									className="mr-2"
-									quality={100} // Đảm bảo chất lượng cao
+									quality={100}
 								/>
 								Facebook
 							</Button>
-							<Button variant="custom_outlined" className="w-48 text-xl">
+							<Button
+								variant="custom_outlined"
+								className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+							>
 								<Image
 									src={`/imgs/auth/gg_logo.svg`}
 									alt="Google"
-									width={24} // Tăng kích thước nếu cần
-									height={24} // Tăng kích thước nếu cần
+									width={28}
+									height={28}
 									className="mr-2"
-									quality={100} // Đảm bảo chất lượng cao
+									quality={100}
 								/>
 								Google
 							</Button>
 						</div>
 					</div>
-					<Label className="text-center text-gray-500 font-light my-5">
+
+					<Label className="text-center text-gray-500 font-light my-3 sm:my-5 text-xs sm:text-sm md:text-base block">
 						Not a member? Get exclusive access to exhibitions and events, free
 						admission every day, and much more.
 					</Label>

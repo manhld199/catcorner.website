@@ -11,6 +11,7 @@ const config: Config = {
 	theme: {
 		extend: {
 			colors: {
+				"black-text": "#333333",
 				"text-btn-color": "#085457",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
