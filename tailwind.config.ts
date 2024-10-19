@@ -66,13 +66,11 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-    },
-    screens: {
-      ml: "425px",
-      phone: "320px",
-      tablet: "768px",
-      laptop: "1024px",
-      desktop: "1440px",
+      screens: {
+        mm: "320px",
+        ml: "425px",
+        phone: "320px",
+      },
     },
     keyframes: {
       "accordion-down": {
