@@ -73,6 +73,11 @@ const config: Config = {
       tablet: "768px",
       laptop: "1024px",
       desktop: "1440px",
+      screens: {
+        mm: "320px",
+        ml: "425px",
+        phone: "320px",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
