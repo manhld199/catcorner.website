@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { Josefin_Sans } from "next/font/google";
+
 import { ThemeProvider } from "@/providers/theme-provider";
 import "./globals.css";
+
+const josefin = Josefin_Sans({
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="vi" className={josefin.className}>
       <body>
         <ThemeProvider
           attribute="class"

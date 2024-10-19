@@ -6,11 +6,11 @@ const config: Config = {
 		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/partials/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
 		extend: {
 			colors: {
-				"pri-1": "#1E4646",
 				"text-btn-color": "#085457",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
@@ -52,11 +52,25 @@ const config: Config = {
 					"4": "hsl(var(--chart-4))",
 					"5": "hsl(var(--chart-5))",
 				},
+
+				//Bộ màu
+				"pri-1": "#1E4646",
+				"pri-2": "#B3E0E6",
+				"pri-3": "#EAFBE4",
+				"pri-4": "#F9DCC5",
+				"pri-5": "#FFF6D8",
+				"pri-6": "#315475",
+				"pri-7": "#669E9E",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
+			},
+			screens: {
+				mm: "320px",
+				ml: "425px",
+				phone: "320px",
 			},
 		},
 	},
