@@ -68,16 +68,13 @@ const config: Config = {
       },
     },
     screens: {
+      mm: "320px",
+      ml: "425px",
       phone: "320px",
       phone_large: "425px",
       tablet: "768px",
       laptop: "1024px",
       desktop: "1440px",
-      screens: {
-        mm: "320px",
-        ml: "425px",
-        phone: "320px",
-      },
     },
   },
   plugins: [require("tailwindcss-animate")],
