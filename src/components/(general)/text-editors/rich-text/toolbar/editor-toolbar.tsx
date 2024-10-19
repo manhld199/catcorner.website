@@ -91,7 +91,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
 
   return (
     <Toolbar
-      className="w-full z-0 my-0 bg-zinc-400 dark:bg-zinc-900"
+      className="w-full z-0 my-0 bg-pri-2/40 dark:bg-pri-2/30"
       aria-label="Formatting options"
     >
       <ToggleGroup
@@ -155,7 +155,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           <DialogTrigger>
             <Button
               type="button"
-              variant="default"
+              variant="none"
               size="sm"
               className="hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
             >
@@ -164,7 +164,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           </DialogTrigger>
 
           <DialogContent className="mxs:max-w-md mxs:max-h-[600px]">
-            <DialogHeader>
+            <DialogHeader className="pb-2 border-b-2">
               <DialogTitle>{EDITOR_DATA["add-table"]}</DialogTitle>
             </DialogHeader>
 
@@ -186,7 +186,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
               className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
             />
 
-            <DialogFooter className="flex flex-row justify-between">
+            <DialogFooter className="flex flex-row !justify-between">
               <Button type="button" variant="ghost" onClick={() => setOpenAddTablePopup(false)}>
                 {DIALOG_DATA["close-btn"]}
               </Button>
@@ -208,7 +208,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           <DialogTrigger>
             <Button
               type="button"
-              variant="default"
+              variant="none"
               size="sm"
               className="hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
               // onClick={handleImageButtonClick}
@@ -218,20 +218,23 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           </DialogTrigger>
 
           <DialogContent className="mxs:max-w-md mxs:max-h-[800px]">
-            <DialogHeader>
+            <DialogHeader className="pb-2 border-b-2">
               <DialogTitle>{DIALOG_DATA["images-add"]}</DialogTitle>
             </DialogHeader>
 
             <DropZoneSingleImg value={imgLink} onChange={setImgLink} />
 
-            <Input
-              value={imgCaption}
-              onChange={(e) => setImgCaption(e.target.value)}
-              placeholder={PLACEHOLDER_DATA["caption-placeholder"]}
-              className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-            />
+            <div className="flex flex-col gap-2">
+              <p>{EDITOR_DATA["figcaption"]}</p>
+              <Input
+                value={imgCaption}
+                onChange={(e) => setImgCaption(e.target.value)}
+                placeholder={PLACEHOLDER_DATA["caption-placeholder"]}
+                className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
+              />
+            </div>
 
-            <DialogFooter className="flex flex-row justify-between">
+            <DialogFooter className="flex flex-row !justify-between">
               <Button type="button" variant="ghost" onClick={() => setOpenAddImgPopup(false)}>
                 {DIALOG_DATA["close-btn"]}
               </Button>
@@ -254,7 +257,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           <DialogTrigger>
             <Button
               type="button"
-              variant="default"
+              variant="none"
               size="sm"
               className="hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
             >
@@ -263,39 +266,45 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           </DialogTrigger>
 
           <DialogContent className="mxs:max-w-md mxs:max-h-[600px]">
-            <DialogHeader>
+            <DialogHeader className="pb-2 border-b-2">
               <DialogTitle>{DIALOG_DATA["links-add"]}</DialogTitle>
             </DialogHeader>
 
-            <Input
-              value={link}
-              onDoubleClick={async () => {
-                const text = await navigator.clipboard.readText();
-                // console.log("clipboard", text);
-                setLink(text);
-              }}
-              onPaste={async () => {
-                const text = await navigator.clipboard.readText();
-                // console.log("clipboard", text);
-                setLink(text);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Backspace") {
-                  setLink("");
-                }
-              }}
-              placeholder={PLACEHOLDER_DATA["link-placeholder"]}
-              className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-            />
+            <div className="flex flex-col gap-2">
+              <p>{EDITOR_DATA["link-title"]}</p>
+              <Input
+                value={linkTitle}
+                onChange={(e) => setLinkTitle(e.target.value)}
+                placeholder={PLACEHOLDER_DATA["link-title-placeholder"]}
+                className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
+              />
+            </div>
 
-            <Input
-              value={linkTitle}
-              onChange={(e) => setLinkTitle(e.target.value)}
-              placeholder={PLACEHOLDER_DATA["link-title-placeholder"]}
-              className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-            />
+            <div className="flex flex-col gap-2">
+              <p>{EDITOR_DATA["link"]}</p>
+              <Input
+                value={link}
+                onDoubleClick={async () => {
+                  const text = await navigator.clipboard.readText();
+                  // console.log("clipboard", text);
+                  setLink(text);
+                }}
+                onPaste={async () => {
+                  const text = await navigator.clipboard.readText();
+                  // console.log("clipboard", text);
+                  setLink(text);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace") {
+                    setLink("");
+                  }
+                }}
+                placeholder={PLACEHOLDER_DATA["link-placeholder"]}
+                className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
+              />
+            </div>
 
-            <DialogFooter className="flex flex-row justify-between">
+            <DialogFooter className="flex flex-row !justify-between">
               <Button type="button" variant="ghost" onClick={() => setOpenAddLinkPopup(false)}>
                 {DIALOG_DATA["close-btn"]}
               </Button>

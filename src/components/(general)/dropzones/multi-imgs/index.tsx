@@ -87,7 +87,7 @@ const DropZoneMultiImgs = ({
             <Button
               type="button"
               variant="ghost"
-              className="text-blue-400"
+              className="text-pri-7"
               onClick={() => {
                 setImageLinks([...imagePreviews]);
               }}
@@ -172,7 +172,7 @@ const DropZoneMultiImgs = ({
         <div
           {...getRootProps({
             className:
-              "w-full flex justify-center h-32 transition bg-zinc-200  border-2  border-grounded-2xly-300  border-dashed dark:border-zinc-700 dark:hover:border-zinc-400 rounded-md appearance-none cursor-pointer hover:border-zinc-400 focus:outline-none dark:bg-zinc-800",
+              "w-full flex justify-center h-32 transition bg-pri-2/20 border-2 border-grounded-2xly-300 border-dashed dark:border-zinc-400 dark:hover:border-slate-50 rounded-md appearance-none cursor-pointer hover:border-zinc-400 focus:outline-none",
           })}
         >
           <span className="flex flex-col justify-center items-center gap-1">

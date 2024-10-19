@@ -14,4 +14,7 @@ export const EDITOR_DATA = {
   "add-table": "Thêm bảng",
   "rows-number": "Số dòng",
   "columns-number": "Số cột",
+  figcaption: "Mô tả hình ảnh",
+  link: "Liên kết",
+  "link-title": "Tiêu đề",
 };

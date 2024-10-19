@@ -17,7 +17,7 @@ export default async function AdminProductPAge() {
   // console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaa", data);
 
   return (
-    <main className="w-full py-2 flex flex-col gap-4">
+    <main className="w-full py-2 flex flex-col items gap-4">
       <section className="flex flex-row justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2">

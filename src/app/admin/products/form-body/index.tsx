@@ -52,7 +52,7 @@ const CustomSection = ({
   required?: boolean;
 }) => {
   return (
-    <section className="dark:border-zinc-800 h-fit mxs:p-2 md:p-4 border-[1px] rounded-2xl space-y-4 dark:bg-zinc-900">
+    <section className="w-full dark:border-zinc-800 h-fit mxs:p-2 md:p-4 border-[1px] rounded-2xl space-y-4 bg-white dark:bg-zinc-900">
       <div className="border-b-[1px] pb-2">
         <h4 className="w-full text-center dark:text-zinc-100 font-bold text-xl">
           {required && <span className="text-red-500">* </span>}
@@ -187,7 +187,7 @@ const ProductVariantGroup = ({
           required={true}
           type="text-80"
           placeholder={PLACEHOLDER_DATA["variant-name"]}
-          className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
         />
 
         <CustomFormField
@@ -197,7 +197,7 @@ const ProductVariantGroup = ({
           required={true}
           type="number"
           placeholder={PLACEHOLDER_DATA["variant-price"]}
-          className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
         />
 
         <CustomFormField
@@ -207,7 +207,7 @@ const ProductVariantGroup = ({
           required={true}
           type="number"
           placeholder={PLACEHOLDER_DATA["variant-stock-quantity"]}
-          className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
         />
 
         <CustomFormField
@@ -217,7 +217,7 @@ const ProductVariantGroup = ({
           required={false}
           type="number"
           placeholder={PLACEHOLDER_DATA["variant-discount-percent"]}
-          className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
         />
       </div>
 
@@ -261,8 +261,8 @@ const handleAddSpecification = (form: any) => {
   form.setValue(`product_specifications` as any, [
     ...item,
     {
-      name: undefined,
-      value: undefined,
+      name: "",
+      value: "",
     },
   ]);
 };
@@ -343,8 +343,8 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit space-y-2">
-        <div className="relative md:max-w-screen-md grid grid-cols-1 gap-2 mx-auto">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full  md:max-w-screen-md space-y-2">
+        <div className="w-full relative grid grid-cols-1 gap-2 mx-auto">
           {/* product info */}
           <CustomSection title={PAGE_DATA["product-info"]}>
             <>
@@ -393,7 +393,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
               <>
                 <Accordion
                   type="single"
-                  className="w-full flex flex-col gap-2 rounded-md dark:bg-zinc-950"
+                  className="w-full flex flex-col gap-2 rounded-md"
                   collapsible
                 >
                   {form.watch("product_variants").map((item, index) => {
@@ -410,7 +410,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                       <AccordionItem
                         key={`variant ${index}`}
                         value={`variant ${index}`}
-                        className="relative bg-zinc-100 dark:bg-zinc-950"
+                        className="relative bg-pri-2/20 dark:bg-zinc-950 rounded-md"
                       >
                         <AccordionTrigger
                           className={`rounded-md ${variantError ? "!bg-red-500" : ""}`}
@@ -423,13 +423,15 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                             <div className="flex flex-row items-center gap-3">
                               <PawPrint />
                               <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                                {PAGE_DATA["product-variant"]} {index + 1}
+                                {form.watch(`product_variants.${index}.variant_name`) != ""
+                                  ? form.watch(`product_variants.${index}.variant_name`)
+                                  : `${PAGE_DATA["product-variant"]} ${index + 1}`}
                               </FormLabel>
                             </div>
 
                             <Button
                               type="button"
-                              variant="default"
+                              variant="none"
                               className="hover:bg-red-500 hover:text-white"
                               onClick={() => handleRemoveVariant(form, index)}
                             >
@@ -456,7 +458,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
                 <Button
                   type="button"
-                  variant="default"
+                  variant="none"
                   className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
                   onClick={() => handleAddVariant(form)}
                 >
@@ -468,54 +470,69 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
           <CustomSection title={PAGE_DATA["product-specifications"]}>
             <>
-              {(form.watch("product_specifications") ?? []).map((item, index) => (
-                <div
-                  key={`product specification ${index}`}
-                  className="px-4 py-2 flex flex-col gap-2 dark:bg-zinc-950 rounded-md"
-                >
-                  <div className="w-full flex flex-row justify-between items-center cursor-pointer mb-2">
-                    <div className="flex flex-row items-center gap-3">
-                      <Cpu />
-                      <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                        {PAGE_DATA["product-specification"]} {index + 1}
-                      </FormLabel>
-                    </div>
+              <Accordion
+                type="single"
+                className="w-full flex flex-col gap-2 rounded-md dark:bg-zinc-900"
+                collapsible
+              >
+                {(form.watch("product_specifications") ?? []).map((item, index) => (
+                  <AccordionItem
+                    key={`product specification ${index}`}
+                    value={`product specification ${index}`}
+                    className="relative bg-zinc-100 dark:bg-zinc-950 rounded-md"
+                  >
+                    <AccordionTrigger className="rounded-md">
+                      <div
+                        className={`w-full flex flex-row justify-between items-center cursor-pointer`}
+                      >
+                        <div className="flex flex-row items-center gap-3">
+                          <Cpu />
+                          <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
+                            {form.watch(`product_specifications.${index}.name`) != ""
+                              ? form.watch(`product_specifications.${index}.name`)
+                              : `${PAGE_DATA["product-specification"]} ${index + 1}`}
+                          </FormLabel>
+                        </div>
 
-                    <Button
-                      type="button"
-                      variant="default"
-                      className="hover:bg-red-500 hover:text-white"
-                      onClick={() => handleRemoveSpecification(form, index)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                        <Button
+                          type="button"
+                          variant="none"
+                          className="hover:bg-red-500 hover:text-white"
+                          onClick={() => handleRemoveSpecification(form, index)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </AccordionTrigger>
 
-                  <CustomFormField
-                    form={form}
-                    fieldName={`product_specifications.${index}.name`}
-                    title={PAGE_DATA["specification-name"]}
-                    required={false}
-                    type="text-80"
-                    placeholder={PLACEHOLDER_DATA["specification-name"]}
-                    className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
-                  />
+                    <AccordionContent className="mt-2 flex flex-col gap-2">
+                      <CustomFormField
+                        form={form}
+                        fieldName={`product_specifications.${index}.name`}
+                        title={PAGE_DATA["specification-name"]}
+                        required={false}
+                        type="text-80"
+                        placeholder={PLACEHOLDER_DATA["specification-name"]}
+                        className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
+                      />
 
-                  <CustomFormField
-                    form={form}
-                    fieldName={`product_specifications.${index}.value`}
-                    title={PAGE_DATA["specification-value"]}
-                    required={false}
-                    type="text-80"
-                    placeholder={PLACEHOLDER_DATA["specification-value"]}
-                    className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
-                  />
-                </div>
-              ))}
+                      <CustomFormField
+                        form={form}
+                        fieldName={`product_specifications.${index}.value`}
+                        title={PAGE_DATA["specification-value"]}
+                        required={false}
+                        type="text-80"
+                        placeholder={PLACEHOLDER_DATA["specification-value"]}
+                        className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
 
               <Button
                 type="button"
-                variant="default"
+                variant="none"
                 className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
                 onClick={() => handleAddSpecification(form)}
               >
@@ -525,7 +542,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
           </CustomSection>
 
           <Dialog open={openSubmit}>
-            <DialogTrigger className="sticky bottom-0 left-0 px-4 py-2 dark:bg-zinc-950">
+            <DialogTrigger className="z-50 sticky bottom-0 left-0 px-4 py-2 bg-bg-1 dark:bg-zinc-800">
               <Button
                 type="submit"
                 variant="default"

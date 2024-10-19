@@ -51,7 +51,7 @@ function AdminTable<TData, TValue>({
   // const tAdmin = useTranslations("AdminLocation");
   // const tDialog = useTranslations("AdminDialog");
 
-  console.log("datadatadatadata", data);
+  // console.log("datadatadatadata", data);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -114,9 +114,9 @@ function AdminTable<TData, TValue>({
         pageName={pageName}
       />
 
-      <div className="overflow-hidden">
-        <TableWrap>
-          <TableHeader className="">
+      <div className="relative rounded md w-full max-h-[580px] overflow-auto">
+        <TableWrap className="p-2 bg-white dark:bg-zinc-950">
+          <TableHeader className="sticky  top-0 z-10 bg-white dark:bg-zinc-950">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

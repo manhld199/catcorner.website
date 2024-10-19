@@ -175,7 +175,7 @@ function DataTableHeader<T>({
         <Input
           placeholder="Tìm gì đó..."
           onChange={(event) => table.setGlobalFilter(event.target.value)}
-          className="md:max-w-xs ml:max-w-[30%] mm:max-w-[40%] dark:bg-zinc-700"
+          className="md:max-w-xs ml:max-w-[30%] mm:max-w-[40%] bg-white dark:bg-zinc-700"
         />
 
         <div className="flex flex-row gap-2 mxs:w-full mxs:justify-end">
@@ -285,6 +285,7 @@ function DataTableHeader<T>({
                           ],
                         });
                       }}
+                      className="dark:bg-zinc-900"
                     />
 
                     <Input
@@ -302,6 +303,7 @@ function DataTableHeader<T>({
                           ],
                         });
                       }}
+                      className="dark:bg-zinc-900"
                     />
                   </div>
 
@@ -309,7 +311,7 @@ function DataTableHeader<T>({
                     <Button
                       type="button"
                       variant="outline"
-                      className="rounded-md flex justify-center cursor-pointer bg-zinc-300 dark:bg-zinc-700"
+                      className="rounded-md flex justify-center cursor-pointer bg-zinc-300 bg-pri-2/20 hover:bg-pri-2/60 dark:bg-zinc-700 dark:hover:bg-pri-2/60"
                       onClick={() => setFilterState({ ...filterState, priceRange: [0, 0] })}
                     >
                       {FILTER_NAMES["filter-price-free"]}
@@ -320,7 +322,7 @@ function DataTableHeader<T>({
                         key={`filter price ${index}`}
                         type="button"
                         variant="outline"
-                        className="rounded-md flex justify-center cursor-pointer bg-zinc-300 dark:bg-zinc-700"
+                        className="rounded-md flex justify-center cursor-pointer bg-zinc-300 bg-pri-2/20 hover:bg-pri-2/60 dark:bg-zinc-700  dark:hover:bg-pri-2/60"
                         onClick={() =>
                           setFilterState({
                             ...filterState,

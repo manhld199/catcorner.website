@@ -75,7 +75,7 @@ const DropZoneSingleImg = ({
           <Button
             type="button"
             variant="ghost"
-            className="text-blue-400"
+            className="text-pri-7"
             onClick={() => setImgLink(previewImg)}
           >
             {DROPZONE_DATA["images-urls"]}
@@ -125,7 +125,7 @@ const DropZoneSingleImg = ({
       <div
         {...getRootProps({
           className:
-            "relative aspect-square max-h-[50dvh] rounded-md w-full flex justify-center transition bg-zinc-200 border-2 border-dashed dark:border-zinc-700 appearance-none cursor-pointer hover:border-zinc-400 focus:outline-none dark:bg-zinc-800",
+            "relative aspect-square max-h-[50dvh] rounded-md w-full flex justify-center transition bg-pri-2/20 border-2 border-dashed dark:border-zinc-400 dark:hover:border-slate-50 appearance-none cursor-pointer hover:border-zinc-400 focus:outline-none",
         })}
       >
         {previewImg ? (
