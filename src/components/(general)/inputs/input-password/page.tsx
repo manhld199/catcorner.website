@@ -18,6 +18,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 					ref={ref}
 					{...props}
 				/>
+
 				<button
 					style={{ top: 0, right: 0 }} // Sử dụng đối tượng JavaScript
 					type="button"

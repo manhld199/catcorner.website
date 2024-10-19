@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
 import {
 	Form,
 	FormControl,
@@ -20,10 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertCircle } from "lucide-react";
 
-import { PasswordInput } from "@/partials/(auth)/PasswordInput";
-import { useState, useCallback } from "react";
+import { useState, useCallback, CSSProperties, useEffect } from "react";
 
 import BeatLoader from "react-spinners/BeatLoader";
+import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
 
 const override: CSSProperties = {
 	display: "block",
@@ -54,6 +56,29 @@ const formSchema = z
 export default function SignUpPage() {
 	const [emailExists, setEmailExists] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false); // Thêm state này
+	useEffect(() => {
+		const subscription = form.watch((value, { name, type }) => {
+			if (name === "password" || name === "passwordConfirmation") {
+				const password = form.getValues("password");
+				const passwordConfirmation = form.getValues("passwordConfirmation");
+
+				if (
+					password &&
+					passwordConfirmation &&
+					password !== passwordConfirmation
+				) {
+					form.setError("passwordConfirmation", {
+						type: "manual",
+						message: "Passwords do not match",
+					});
+				} else {
+					form.clearErrors("passwordConfirmation");
+				}
+			}
+		});
+
+		return () => subscription.unsubscribe();
+	});
 
 	const router = useRouter();
 
@@ -71,6 +96,18 @@ export default function SignUpPage() {
 	});
 	const checkEmailExists = useCallback(
 		async (email: string) => {
+			// First, check if the email is valid
+			const emailSchema = z.string().email();
+			const result = emailSchema.safeParse(email);
+
+			if (!result.success) {
+				// If email is not valid, don't call the API
+				form.setError("email", {
+					type: "manual",
+					message: "Invalid email address",
+				});
+				return;
+			}
 			try {
 				const response = await fetch(
 					`http://localhost:8080/api/auth/check-email?email=${email}`,
@@ -149,11 +186,11 @@ export default function SignUpPage() {
 			{/* Right side - Form */}
 			<div className="w-full lg:w-1/2 p-8 flex flex-col justify-between">
 				<main className="flex-grow">
-					<h1 className="text-3xl font-bold mb-2">Create your account</h1>
-					<p className="text-muted-foreground mb-6 text-red-500 italic">
+					<h1 className="text-[32px] font-bold mb-2">Tạo tài khoản</h1>
+
+					<p className="text-muted-foreground mb-6 text-red-500 italic text-lg">
 						Vui lòng không để trống các mục được đánh dấu *
 					</p>
-
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 							<FormField
@@ -161,14 +198,15 @@ export default function SignUpPage() {
 								name="name"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
+										<FormLabel className="text-gray-600 text-base">
 											Full Name <span className="text-red-600">*</span>
 										</FormLabel>
 										<div className="relative">
 											<FormControl>
 												<Input
-													{...field}
 													type="text"
+													{...field}
+													placeholder="Enter your full name"
 													className={
 														field.value && !form.formState.errors.name
 															? "border-green-500"
@@ -193,14 +231,15 @@ export default function SignUpPage() {
 								name="email"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
+										<FormLabel className="text-gray-600 text-base">
 											Email <span className="text-red-600">*</span>
 										</FormLabel>
 										<div className="relative">
 											<FormControl>
 												<Input
-													{...field}
 													type="email"
+													{...field}
+													placeholder="Enter your email"
 													className={
 														field.value && !form.formState.errors.email
 															? "border-green-500"
@@ -231,7 +270,7 @@ export default function SignUpPage() {
 								name="password"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
+										<FormLabel className="text-gray-600 text-base">
 											Password <span className="text-red-600">*</span>
 										</FormLabel>
 										<FormControl>
@@ -244,6 +283,7 @@ export default function SignUpPage() {
 														? "border-red-500"
 														: ""
 												}
+												placeholder="Enter your password"
 											/>
 										</FormControl>
 										<FormMessage className="text-red-500" />
@@ -256,7 +296,7 @@ export default function SignUpPage() {
 								name="passwordConfirmation"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
+										<FormLabel className="text-gray-600 text-base">
 											Confirm Password <span className="text-red-600">*</span>
 										</FormLabel>
 										<FormControl>
@@ -264,12 +304,14 @@ export default function SignUpPage() {
 												{...field}
 												className={
 													field.value &&
-													!form.formState.errors.passwordConfirmation
+													!form.formState.errors.passwordConfirmation &&
+													field.value === form.getValues("password")
 														? "border-green-500"
 														: form.formState.errors.passwordConfirmation
 														? "border-red-500"
 														: ""
 												}
+												placeholder="Enter your confirm password"
 											/>
 										</FormControl>
 										<FormMessage className="text-red-500" />
@@ -289,8 +331,10 @@ export default function SignUpPage() {
 											/>
 										</FormControl>
 										<div className="space-y-1 leading-none">
-											<FormLabel>
-												Agree to our Terms of use and Privacy Policy{" "}
+											<FormLabel className="text-base">
+												Agree to our{" "}
+												<span className="underline">Terms of use</span> and{" "}
+												<span className="underline">Privacy Policy</span>
 												<span className="text-red-600">*</span>
 											</FormLabel>
 										</div>
@@ -310,14 +354,16 @@ export default function SignUpPage() {
 											/>
 										</FormControl>
 										<div className="space-y-1 leading-none">
-											<FormLabel>Subscribe to our monthly newsletter</FormLabel>
+											<FormLabel className="text-base">
+												Subscribe to our monthly newsletter
+											</FormLabel>
 										</div>
 									</FormItem>
 								)}
 							/>
 
 							<Button
-								className="w-1/2 mx-auto block"
+								className="w-1/2 mx-auto block text-2xl"
 								disabled={
 									!form.formState.isValid || emailExists || isSubmitting
 								}
@@ -327,33 +373,32 @@ export default function SignUpPage() {
 								{isSubmitting ? (
 									<BeatLoader color="#ffffff" size={8} />
 								) : (
-									"Sign up"
+									"Đăng ký"
 								)}
 							</Button>
 						</form>
 					</Form>
-
 					<p className="text-center text-sm text-muted-foreground mt-4">
-						<Link href="/forgot-password" className="underline">
+						<Link
+							href="/forgot-password"
+							className="underline text-base font-medium"
+						>
 							Forgot your password?
 						</Link>
 					</p>
-
 					<div className="mt-6">
 						<div className="relative">
 							<div className="absolute inset-0 flex items-center">
 								<div className="w-full border-t border-gray-300"></div>
 							</div>
 							<div className="relative flex justify-center text-sm">
-								<span className="px-2 bg-white text-gray-500">
-									Or sign up with
-								</span>
+								<span className="px-2 bg-white text-xl">Or sign up with</span>
 							</div>
 						</div>
 						<div className="mt-6 flex justify-center space-x-4">
-							<Button variant="outline" className="w-full">
+							<Button variant="custom_outlined" className="w-48 text-xl">
 								<Image
-									src={`/imgs/auth/logo_fb.png`}
+									src={`/imgs/auth/fb_logo.svg`}
 									alt="Facebook"
 									width={30} // Tăng kích thước nếu cần
 									height={30} // Tăng kích thước nếu cần
@@ -362,9 +407,9 @@ export default function SignUpPage() {
 								/>
 								Facebook
 							</Button>
-							<Button variant="outline" className="w-full">
+							<Button variant="custom_outlined" className="w-48 text-xl">
 								<Image
-									src={`/imgs/auth/gg_logo.png`}
+									src={`/imgs/auth/gg_logo.svg`}
 									alt="Google"
 									width={24} // Tăng kích thước nếu cần
 									height={24} // Tăng kích thước nếu cần
@@ -375,6 +420,10 @@ export default function SignUpPage() {
 							</Button>
 						</div>
 					</div>
+					<Label className="text-center text-gray-500 font-light my-5">
+						Not a member? Get exclusive access to exhibitions and events, free
+						admission every day, and much more.
+					</Label>
 				</main>
 			</div>
 		</div>
