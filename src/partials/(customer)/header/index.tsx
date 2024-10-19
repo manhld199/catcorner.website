@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { ShoppingBag, UserRound, Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ShoppingBag } from "lucide-react";
 import {
   CustomerHeaderCategories,
   CustomerHeaderNavigation,
@@ -10,6 +10,7 @@ import {
   CustomerHeaderSearch,
   CustomerHeaderCart,
   CustomerHeaderUser,
+  CustomerHeaderMore,
 } from "./components";
 
 export default function CustomerHeader() {
@@ -24,7 +25,7 @@ export default function CustomerHeader() {
         <CustomerHeaderNavigation></CustomerHeaderNavigation>
         <CustomerHeaderCategories></CustomerHeaderCategories>
 
-        <div className="phone:px-4 phone:py-3 tablet:px-9 flex justify-between">
+        <div className="phone:px-4 phone:py-3 tablet:px-9 laptop:px-0 flex justify-between">
           <CustomerHeaderSearch></CustomerHeaderSearch>
           {/* Cart-phone+tablet */}
           <a
@@ -41,12 +42,12 @@ export default function CustomerHeader() {
               </span>
             </div>
           </a>
-          {/* Cart-phone+tablet */}
         </div>
 
         <div className="phone:hidden laptop:flex items-center space-x-4">
-          <CustomerHeaderUser></CustomerHeaderUser>
           <CustomerHeaderCart></CustomerHeaderCart>
+          <CustomerHeaderUser></CustomerHeaderUser>
+          <CustomerHeaderMore></CustomerHeaderMore>
         </div>
       </div>
     </header>

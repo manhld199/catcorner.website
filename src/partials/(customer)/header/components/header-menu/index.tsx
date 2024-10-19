@@ -29,7 +29,7 @@ export default function CustomerHeaderMenu() {
       ></div>
 
       <div
-        className={`tablet:w-7/12 fixed inset-y-0 right-0 w-4/5 h-full z-50 bg-white dark:bg-black shadow-md p-8 transform ${
+        className={`tablet:w-7/12 fixed inset-y-0 right-0 w-4/5 h-full z-50 bg-white dark:bg-zinc-900 shadow-md p-8 transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out`}
       >
@@ -74,15 +74,9 @@ export default function CustomerHeaderMenu() {
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center space-x-4 text-pri-1 dark:text-white"
-            >
+            <div className="flex items-center space-x-4 text-pri-1 dark:text-white">
               <ToogleThemeModeMobile />
-              <span className="font-semibold">
-                {mounted && theme === "light" ? "Light Mode" : "Dark Mode"}
-              </span>
-            </a>
+            </div>
           </li>
         </ul>
       </div>
