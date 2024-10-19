@@ -36,6 +36,7 @@ export const PAGE_DATA = {
   "specification-name": "Tên thông số",
   "specification-value": "Giá trị thông số",
   "specification-add": "Thêm 1 thông số",
+  "product-category": "Danh mục",
 };
 
 export const METHOD_NAMES = {

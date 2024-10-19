@@ -13,7 +13,7 @@ import { GET_PRODUCTS_URL } from "@/utils/constants/urls";
 
 export default async function AdminProductPAge() {
   // console.log("GET_ALL_PRODUCTS_URL", GET_ALL_PRODUCTS_URL);
-  const data = await fetchData(GET_PRODUCTS_URL);
+  const productsData = await fetchData(GET_PRODUCTS_URL);
   // console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaa", data);
 
   return (
@@ -39,7 +39,7 @@ export default async function AdminProductPAge() {
 
       <AdminTable
         columns={columns}
-        data={data.products ?? []}
+        data={productsData.products ?? []}
         deleteUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/products/delete`}
         pageName={"products"}
       />

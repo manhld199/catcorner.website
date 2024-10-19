@@ -18,3 +18,10 @@ export const EDITOR_DATA = {
   link: "Liên kết",
   "link-title": "Tiêu đề",
 };
+
+export const SELECT_DATA = {
+  "search-placeholder": "Tìm kiếm...",
+  "multi-description": 'Hãy chọn một hoặc nhiều giá trị, sau đó bấm vào nút "Lưu".',
+  "single-description": 'Hãy chọn một giá trị, sau đó bấm vào nút "Lưu".',
+  "save-btn": "Lưu",
+};

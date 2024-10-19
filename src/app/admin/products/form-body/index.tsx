@@ -41,6 +41,7 @@ import {
 import { DIALOG_DATA } from "@/data/dialog";
 import { Spinner } from "@/components/ui-expansions/spinner";
 import { ERROR_DATA } from "@/data/error";
+import SelectDialog from "@/components/(general)/selects/dialog";
 
 const CustomSection = ({
   title,
@@ -73,6 +74,7 @@ const CustomFormField = ({
   placeholder = "",
   onDelete,
   className = "",
+  selectData,
 }: {
   form: any;
   fieldName: string;
@@ -82,6 +84,7 @@ const CustomFormField = ({
   placeholder?: string;
   onDelete?: any;
   className?: string;
+  selectData?: any;
 }) => {
   let children: ({}: any) => ReactNode;
 
@@ -139,6 +142,17 @@ const CustomFormField = ({
   else if (type == "text-editor")
     children = ({ onChange, onBlur, value }) => (
       <EditorRichText content={value} onChange={onChange} />
+    );
+  else if (type == "select-dialog-single")
+    children = ({ onChange, onBlur, value }) => (
+      <SelectDialog
+        value={value}
+        onChange={onChange}
+        type="admin-categories"
+        name={selectData.name}
+        isMultiChoice={selectData.isMultiChoice}
+        options={selectData.options}
+      />
     );
   else children = ({ onChange, onBlur, value }) => <></>;
 
@@ -298,10 +312,19 @@ const scrollToErr = (form: any, ref: any) => {
   }
 };
 
-const FormBody = ({ data, id }: { data: any; id?: string }) => {
+const FormBody = ({
+  data,
+  categoriesData,
+  id,
+}: {
+  data: any;
+  categoriesData: any;
+  id?: string;
+}) => {
   const formSchema = getFormSchema();
   const defaultValues = getFormDefaultValues(data);
   // console.log("datadatadata", data);
+  // console.log("categoriesData", categoriesData);
   // console.log("defaultValues", defaultValues);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -341,6 +364,8 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
   const variantGroupRef = useRef(null);
   // console.log("variantGroupRef", variantGroupRef);
 
+  // console.log("fffffffffffff", form.watch("category_id"));
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full  md:max-w-screen-md space-y-2">
@@ -365,6 +390,24 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                 type="multi-imgs"
                 onDelete={setDeletedImgs}
                 placeholder={PLACEHOLDER_DATA["product-imgs"]}
+              />
+
+              <CustomFormField
+                form={form}
+                fieldName="category_id"
+                required={true}
+                type="select-dialog-single"
+                title={PAGE_DATA["product-category"]}
+                placeholder={PLACEHOLDER_DATA["product-category"]}
+                selectData={{
+                  name: PAGE_DATA["product-category"],
+                  isMultiChoice: false,
+                  options: categoriesData.map((item: any) => ({
+                    _id: item._id,
+                    img: item.category_img,
+                    name: item.category_name,
+                  })),
+                }}
               />
 
               <CustomFormField

@@ -12,4 +12,6 @@ export const PLACEHOLDER_DATA = {
   "link-placeholder": "Bấm 2 lần liên tiếp để dán liên kết",
   "link-title-placeholder": "Nhập tiêu đề của liên kết",
   "image-link-placeholder": "Bấm 2 lần liên tiếp để dán liên kết hình ảnh",
+  "product-category": "Chọn danh mục",
+  "select-default": "Bấm vào đây để chọn giá trị",
 };
