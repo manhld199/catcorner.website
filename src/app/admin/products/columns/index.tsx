@@ -170,7 +170,7 @@ const CellHandler = ({ row, type }: IAdminTableHandler<IAdminProduct>) => {
       case "name":
         return (
           <Link
-            href={`/admin/locations/${row?.original._id}`}
+            href={`/admin/products/${row?.original._id}`}
             className="w-full min-w-40 h-full text-sm line-clamp-3"
           >
             <div className="w-full h-full text-sm textHidden3 ">{row?.original.product_name}</div>
