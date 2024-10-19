@@ -186,8 +186,8 @@ const CellHandler = ({ row, type }: IAdminTableHandler<IAdminProduct>) => {
       case "variants":
         return (
           <div className="text-sm min-w-40 flex flex-row flex-wrap gap-1">
-            {row?.original.product_variants.map((variant) => (
-              <Badge>{variant.variant_name}</Badge>
+            {row?.original.product_variants.map((variant, index) => (
+              <Badge key={`variant name ${index}`}>{variant.variant_name}</Badge>
             ))}
           </div>
         );

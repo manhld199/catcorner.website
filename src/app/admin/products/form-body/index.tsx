@@ -346,190 +346,183 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit space-y-2">
         <div className="relative md:max-w-screen-md grid grid-cols-1 gap-2 mx-auto">
           {/* product info */}
-          <CustomSection
-            title={PAGE_DATA["product-info"]}
-            children={
-              <>
-                <CustomFormField
-                  form={form}
-                  fieldName="product_name"
-                  title={PAGE_DATA["product-name"]}
-                  required={true}
-                  type="text-80"
-                  placeholder={PLACEHOLDER_DATA["product-name"]}
-                />
+          <CustomSection title={PAGE_DATA["product-info"]}>
+            <>
+              <CustomFormField
+                form={form}
+                fieldName="product_name"
+                title={PAGE_DATA["product-name"]}
+                required={true}
+                type="text-80"
+                placeholder={PLACEHOLDER_DATA["product-name"]}
+              />
 
-                <CustomFormField
-                  form={form}
-                  fieldName="product_imgs"
-                  title={PAGE_DATA["product-imgs"]}
-                  required={true}
-                  type="multi-imgs"
-                  onDelete={setDeletedImgs}
-                  placeholder={PLACEHOLDER_DATA["product-imgs"]}
-                />
+              <CustomFormField
+                form={form}
+                fieldName="product_imgs"
+                title={PAGE_DATA["product-imgs"]}
+                required={true}
+                type="multi-imgs"
+                onDelete={setDeletedImgs}
+                placeholder={PLACEHOLDER_DATA["product-imgs"]}
+              />
 
-                <CustomFormField
-                  form={form}
-                  fieldName="product_short_description"
-                  title={PAGE_DATA["product-short-description"]}
-                  required={false}
-                  type="textarea"
-                  onDelete={setDeletedImgs}
-                  placeholder={PLACEHOLDER_DATA["product-short-description"]}
-                />
+              <CustomFormField
+                form={form}
+                fieldName="product_short_description"
+                title={PAGE_DATA["product-short-description"]}
+                required={false}
+                type="textarea"
+                onDelete={setDeletedImgs}
+                placeholder={PLACEHOLDER_DATA["product-short-description"]}
+              />
 
-                <CustomFormField
-                  form={form}
-                  fieldName="product_description"
-                  title={PAGE_DATA["product-description"]}
-                  required={true}
-                  type="text-editor"
-                  onDelete={setDeletedImgs}
-                />
-              </>
-            }
-          />
+              <CustomFormField
+                form={form}
+                fieldName="product_description"
+                title={PAGE_DATA["product-description"]}
+                required={true}
+                type="text-editor"
+                onDelete={setDeletedImgs}
+              />
+            </>
+          </CustomSection>
 
           <div ref={variantGroupRef}>
-            <CustomSection
-              title={PAGE_DATA["product-variants"]}
-              required={true}
-              children={
-                <>
-                  <Accordion
-                    type="single"
-                    className="w-full flex flex-col gap-2 rounded-md dark:bg-zinc-950"
-                    collapsible
-                  >
-                    {form.watch("product_variants").map((item, index) => {
-                      // Kiểm tra lỗi
-                      const variantError = form.formState.errors.product_variants?.[index];
-                      // console.log(
-                      //   "variantErrorsvariantErrorsvariantErrors",
-                      //   form.formState.errors,
-                      //   variantError,
-                      //   typeof variantError
-                      // );
-
-                      return (
-                        <AccordionItem
-                          key={`variant ${index}`}
-                          value={`variant ${index}`}
-                          className="relative bg-zinc-100 dark:bg-zinc-950"
-                        >
-                          <AccordionTrigger
-                            className={`rounded-md ${variantError ? "!bg-red-500" : ""}`}
-                          >
-                            <div
-                              className={`w-full flex flex-row justify-between items-center cursor-pointer ${
-                                variantError ? "!bg-red-500" : ""
-                              }`}
-                            >
-                              <div className="flex flex-row items-center gap-3">
-                                <PawPrint />
-                                <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                                  {PAGE_DATA["product-variant"]} {index + 1}
-                                </FormLabel>
-                              </div>
-
-                              <Button
-                                type="button"
-                                variant="default"
-                                className="hover:bg-red-500 hover:text-white"
-                                onClick={() => handleRemoveVariant(form, index)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </AccordionTrigger>
-
-                          <AccordionContent className="mt-2">
-                            <ProductVariantGroup
-                              form={form}
-                              index={0}
-                              setDeletedImgs={setDeletedVariantImgs}
-                            />
-                          </AccordionContent>
-                        </AccordionItem>
-                      );
-                    })}
-                  </Accordion>
-
-                  {form.watch("product_variants").length == 0 && (
-                    <FormMessage>{ERROR_DATA["required"]}</FormMessage>
-                  )}
-
-                  <Button
-                    type="button"
-                    variant="default"
-                    className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
-                    onClick={() => handleAddVariant(form)}
-                  >
-                    <Plus className="h-5 w-5" /> {PAGE_DATA["variant-add"]}
-                  </Button>
-                </>
-              }
-            />
-          </div>
-
-          <CustomSection
-            title={PAGE_DATA["product-specifications"]}
-            children={
+            <CustomSection title={PAGE_DATA["product-variants"]} required={true}>
               <>
-                {(form.watch("product_specifications") ?? []).map((item, index) => (
-                  <div className="px-4 py-2 flex flex-col gap-2 dark:bg-zinc-950 rounded-md">
-                    <div className="w-full flex flex-row justify-between items-center cursor-pointer mb-2">
-                      <div className="flex flex-row items-center gap-3">
-                        <Cpu />
-                        <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                          {PAGE_DATA["product-specification"]} {index + 1}
-                        </FormLabel>
-                      </div>
+                <Accordion
+                  type="single"
+                  className="w-full flex flex-col gap-2 rounded-md dark:bg-zinc-950"
+                  collapsible
+                >
+                  {form.watch("product_variants").map((item, index) => {
+                    // Kiểm tra lỗi
+                    const variantError = form.formState.errors.product_variants?.[index];
+                    // console.log(
+                    //   "variantErrorsvariantErrorsvariantErrors",
+                    //   form.formState.errors,
+                    //   variantError,
+                    //   typeof variantError
+                    // );
 
-                      <Button
-                        type="button"
-                        variant="default"
-                        className="hover:bg-red-500 hover:text-white"
-                        onClick={() => handleRemoveSpecification(form, index)}
+                    return (
+                      <AccordionItem
+                        key={`variant ${index}`}
+                        value={`variant ${index}`}
+                        className="relative bg-zinc-100 dark:bg-zinc-950"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                        <AccordionTrigger
+                          className={`rounded-md ${variantError ? "!bg-red-500" : ""}`}
+                        >
+                          <div
+                            className={`w-full flex flex-row justify-between items-center cursor-pointer ${
+                              variantError ? "!bg-red-500" : ""
+                            }`}
+                          >
+                            <div className="flex flex-row items-center gap-3">
+                              <PawPrint />
+                              <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
+                                {PAGE_DATA["product-variant"]} {index + 1}
+                              </FormLabel>
+                            </div>
 
-                    <CustomFormField
-                      form={form}
-                      fieldName={`product_specifications.${index}.name`}
-                      title={PAGE_DATA["specification-name"]}
-                      required={false}
-                      type="text-80"
-                      placeholder={PLACEHOLDER_DATA["specification-name"]}
-                      className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
-                    />
+                            <Button
+                              type="button"
+                              variant="default"
+                              className="hover:bg-red-500 hover:text-white"
+                              onClick={() => handleRemoveVariant(form, index)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </AccordionTrigger>
 
-                    <CustomFormField
-                      form={form}
-                      fieldName={`product_specifications.${index}.value`}
-                      title={PAGE_DATA["specification-value"]}
-                      required={false}
-                      type="text-80"
-                      placeholder={PLACEHOLDER_DATA["specification-value"]}
-                      className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
-                    />
-                  </div>
-                ))}
+                        <AccordionContent className="mt-2">
+                          <ProductVariantGroup
+                            form={form}
+                            index={0}
+                            setDeletedImgs={setDeletedVariantImgs}
+                          />
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+
+                {form.watch("product_variants").length == 0 && (
+                  <FormMessage>{ERROR_DATA["required"]}</FormMessage>
+                )}
 
                 <Button
                   type="button"
                   variant="default"
                   className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
-                  onClick={() => handleAddSpecification(form)}
+                  onClick={() => handleAddVariant(form)}
                 >
-                  <Plus className="h-5 w-5" /> {PAGE_DATA["specification-add"]}
+                  <Plus className="h-5 w-5" /> {PAGE_DATA["variant-add"]}
                 </Button>
               </>
-            }
-          />
+            </CustomSection>
+          </div>
+
+          <CustomSection title={PAGE_DATA["product-specifications"]}>
+            <>
+              {(form.watch("product_specifications") ?? []).map((item, index) => (
+                <div
+                  key={`product specification ${index}`}
+                  className="px-4 py-2 flex flex-col gap-2 dark:bg-zinc-950 rounded-md"
+                >
+                  <div className="w-full flex flex-row justify-between items-center cursor-pointer mb-2">
+                    <div className="flex flex-row items-center gap-3">
+                      <Cpu />
+                      <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
+                        {PAGE_DATA["product-specification"]} {index + 1}
+                      </FormLabel>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="default"
+                      className="hover:bg-red-500 hover:text-white"
+                      onClick={() => handleRemoveSpecification(form, index)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <CustomFormField
+                    form={form}
+                    fieldName={`product_specifications.${index}.name`}
+                    title={PAGE_DATA["specification-name"]}
+                    required={false}
+                    type="text-80"
+                    placeholder={PLACEHOLDER_DATA["specification-name"]}
+                    className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+                  />
+
+                  <CustomFormField
+                    form={form}
+                    fieldName={`product_specifications.${index}.value`}
+                    title={PAGE_DATA["specification-value"]}
+                    required={false}
+                    type="text-80"
+                    placeholder={PLACEHOLDER_DATA["specification-value"]}
+                    className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-950"
+                  />
+                </div>
+              ))}
+
+              <Button
+                type="button"
+                variant="default"
+                className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
+                onClick={() => handleAddSpecification(form)}
+              >
+                <Plus className="h-5 w-5" /> {PAGE_DATA["specification-add"]}
+              </Button>
+            </>
+          </CustomSection>
 
           <Dialog open={openSubmit}>
             <DialogTrigger className="sticky bottom-0 left-0 px-4 py-2 dark:bg-zinc-950">
