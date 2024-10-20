@@ -385,7 +385,7 @@ export default function SignUpPage() {
 								/>
 
 								<Button
-									className="w-full sm:w-2/3 md:w-1/2 mx-auto block text-lg sm:text-xl md:text-2xl mt-8"
+									className="h-auto w-full sm:w-2/3 md:w-1/2 mx-auto block text-lg sm:text-xl md:text-2xl mt-8"
 									disabled={
 										!form.formState.isValid ||
 										emailExists ||
