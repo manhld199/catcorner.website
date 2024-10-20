@@ -65,7 +65,7 @@ interface EmailContentProps {
 	email: string;
 }
 
-export function EmailContent({ email }: EmailContentProps) {
+function EmailContent({ email }: EmailContentProps) {
 	return (
 		<>
 			<CardContent className="text-left">
