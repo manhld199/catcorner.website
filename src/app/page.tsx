@@ -1,6 +1,3 @@
-// import components
-import { ToogleThemeMode } from "@/components";
-
 export default function Home() {
 	return (
 		<div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
-
+import { ToogleThemeMode } from "@/components";
 import { CustomerHeader } from "@/partials";
 import { ToogleThemeMode } from "@/components";
 import "./globals.css";
