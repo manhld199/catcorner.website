@@ -15,6 +15,7 @@ import { useEffect, useState, CSSProperties } from "react";
 
 export default function RegisterVerifyEmail() {
 	const [email, setEmail] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -25,8 +26,12 @@ export default function RegisterVerifyEmail() {
 		} else {
 			router.push("/register");
 		}
+		setIsLoading(false);
 	}, [router, searchParams]);
 
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
 	return (
 		<Card className="w-full max-w-[500px] pt-11 pb-11 px-4 shadow-lg hover:shadow-xl transition-shadow duration-300 mx-auto my-8">
 			<CardHeader className="text-center">
@@ -42,9 +47,7 @@ export default function RegisterVerifyEmail() {
 					Vui lòng xác minh địa chỉ email của bạn để hoàn tất việc đăng ký.
 					Chúng tôi đã gửi một email xác nhận tới:
 				</p>
-				<p className="text-green-500 font-semibold mb-4 text-center">
-					{email}.
-				</p>
+				<p className="text-green-500 font-semibold mb-4 text-center">{email}</p>
 				<p className="text-sm text-gray-500">
 					Nhấn &quot;Gửi lại email&quot; nếu bạn không nhận được bất kỳ email
 					nào trong vòng 10 phút.
