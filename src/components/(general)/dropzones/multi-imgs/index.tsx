@@ -102,7 +102,7 @@ const DropZoneMultiImgs = ({
               <DialogTitle>{DROPZONE_DATA["images-urls"]}</DialogTitle>
             </DialogHeader>
 
-            <div className="h-full max-h-[400px] overflow-y-scroll flex flex-col gap-2">
+            <div className="max-h-[400px] overflow-y-scroll flex flex-col gap-2">
               {imageLinks.map((img: string, index) => (
                 <Input
                   key={`image link ${index}`}
@@ -137,7 +137,7 @@ const DropZoneMultiImgs = ({
 
               <Button
                 type="button"
-                variant="default"
+                variant="none"
                 className="w-fit px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
                 onClick={() => setImageLinks([...imageLinks, ""])}
               >

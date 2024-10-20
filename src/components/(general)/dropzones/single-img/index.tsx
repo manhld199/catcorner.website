@@ -100,7 +100,7 @@ const DropZoneSingleImg = ({
             className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
           />
 
-          <DialogFooter className="flex flex-row justify-between">
+          <DialogFooter className="flex flex-row !justify-between">
             <Button type="button" variant="ghost" onClick={() => setOpenPopup(false)}>
               {DIALOG_DATA["close-btn"]}
             </Button>
