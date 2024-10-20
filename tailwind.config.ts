@@ -11,6 +11,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "black-text": "#333333",
+        "text-btn-color": "#085457",
+        "background-color": "#f7f7f7",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -71,6 +74,10 @@ const config: Config = {
         mm: "320px",
         ml: "425px",
         phone: "320px",
+        phone_large: "425px",
+        tablet: "768px",
+        laptop: "1024px",
+        desktop: "1440px",
       },
     },
     keyframes: {
