@@ -46,13 +46,13 @@ export default function RegisterVerifyEmail() {
 					{email}.
 				</p>
 				<p className="text-sm text-gray-500">
-					Nhấn "Gửi lại email" nếu bạn không nhận được bất kỳ email nào trong
-					vòng 10 phút.
+					Nhấn &quot;Gửi lại email&quot; nếu bạn không nhận được bất kỳ email
+					nào trong vòng 10 phút.
 				</p>
 			</CardContent>
 
 			<CardFooter className="flex flex-col gap-8 pt-11">
-				<Button className="w-full mx-auto block text-2xl" variant="filled">
+				<Button className="w-full mx-auto block text-xl" variant="filled">
 					Gửi Lại Email
 				</Button>
 				<Button

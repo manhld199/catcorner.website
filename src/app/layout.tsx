@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
-
 import { ThemeProvider } from "@/providers/theme-provider";
+import { ToogleThemeMode } from "@/components";
+import { CustomerHeader } from "@/partials";
 import "./globals.css";
 
 const josefin = Josefin_Sans({
@@ -27,9 +28,8 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					{/* put header here */}
-					<div className={`w-[80%] mx-auto`}>{children}</div>
-					{/* put footer here */}
+					<CustomerHeader></CustomerHeader>
+					{children}
 				</ThemeProvider>
 			</body>
 		</html>
