@@ -12,7 +12,7 @@ export default function CustomerHeaderUser() {
   return (
     <>
       {/* Unauthenticated user */}
-      <div className="relative group">
+      {/* <div className="relative group">
         <a
           href="/login"
           className="tablet:hidden laptop:flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300"
@@ -38,10 +38,10 @@ export default function CustomerHeaderUser() {
             </li>
           </ul>
         </div>
-      </div>
+      </div> */}
 
       {/* Authenticated user */}
-      {/* <div className="relative group">
+      <div className="relative group">
         <a
           href="#"
           className="tablet:hidden laptop:flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center"
@@ -91,7 +91,7 @@ export default function CustomerHeaderUser() {
             </li>
           </ul>
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

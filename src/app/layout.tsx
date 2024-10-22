@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { CustomerHeader } from "@/partials";
+
+import { CustomerFooter, CustomerHeader } from "@/partials";
+import { BreadCrumb, ScrollUp, ToogleThemeMode } from "@/components";
 import "./globals.css";
 
 const josefin = Josefin_Sans({
@@ -28,7 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CustomerHeader></CustomerHeader>
+          <BreadCrumb></BreadCrumb>
           {children}
+          <ScrollUp></ScrollUp>
+          <CustomerFooter></CustomerFooter>
         </ThemeProvider>
       </body>
     </html>
