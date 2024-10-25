@@ -12,7 +12,7 @@ import { fetchData } from "@/utils/functions/server";
 import { GET_PRODUCTS_URL } from "@/utils/constants/urls";
 
 export default async function AdminProductPAge() {
-  // console.log("GET_ALL_PRODUCTS_URL", GET_ALL_PRODUCTS_URL);
+  // console.log("GET_ALL_PRODUCTS_URL", GET_PRODUCTS_URL);
   const productsData = await fetchData(GET_PRODUCTS_URL);
   // console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaa", data);
 
