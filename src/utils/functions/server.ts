@@ -1,6 +1,7 @@
 // import libs
 import { NextResponse } from "next/server";
 import { EResponseStatus } from "../constants/variables";
+import { notFound } from "next/navigation";
 
 const baseResponse = (props: IBaseResponseProps) => {
   const { status, ...rest } = props;
@@ -42,4 +43,26 @@ export const notFoundResponse = (props?: INotOkResponseProps) => {
 export const errorResponse = (props?: INotOkResponseProps) => {
   const { message = "Lỗi xử lý", error } = props ?? {};
   return baseResponse({ message, status: EResponseStatus.ERROR, error });
+};
+
+export const fetchData = async (url: string) => {
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) return notFound();
+
+    const json = await res.json();
+
+    const data = json.data;
+
+    return data;
+  } catch (err) {
+    console.log("Fetch data error: ", err);
+    return notFound();
+  }
 };
