@@ -14,4 +14,9 @@ export const DIALOG_DATA = {
   "add-product": "Thêm sản phẩm",
   "update-product": "Cập nhật sản phẩm",
   "submit-content": "Bạn có chắc muốn thực hiện hành động này?",
+  "imgs-deleting": "Đang xóa hình ảnh",
+  "imgs-uploading": "Đang thêm hình ảnh",
+  "product-posting": "Đang thêm sản phẩm",
+  "post-failed": "Thêm thất bại",
+  "post-success": "Thêm thành công. Tự động thoát sau 3s!",
 };

@@ -7,13 +7,12 @@ import columns from "./columns";
 
 import { PAGE_DATA } from "@/data/admin";
 
-import { fetchData } from "@/utils/functions/server";
-
+import { fetchDataNoCache } from "@/utils/functions/server";
 import { GET_PRODUCTS_URL } from "@/utils/constants/urls";
 
 export default async function AdminProductPAge() {
   // console.log("GET_ALL_PRODUCTS_URL", GET_PRODUCTS_URL);
-  const productsData = await fetchData(GET_PRODUCTS_URL);
+  const productsData = await fetchDataNoCache(GET_PRODUCTS_URL);
   // console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaa", data);
 
   return (

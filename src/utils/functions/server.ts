@@ -66,3 +66,26 @@ export const fetchData = async (url: string) => {
     return notFound();
   }
 };
+
+export const fetchDataNoCache = async (url: string) => {
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+    });
+
+    if (!res.ok) return notFound();
+
+    const json = await res.json();
+
+    const data = json.data;
+
+    return data;
+  } catch (err) {
+    console.log("Fetch data error: ", err);
+    return notFound();
+  }
+};
