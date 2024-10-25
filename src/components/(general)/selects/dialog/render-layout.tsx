@@ -1,5 +1,5 @@
 import React from "react";
-import RenderOption from "./render-option"; // Đảm bảo bạn đã xuất RenderOption
+import RenderOption from "./render-option";
 
 const RenderLayout: React.FC<{
   type: string;

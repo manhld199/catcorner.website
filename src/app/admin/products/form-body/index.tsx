@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  AdminCustomField,
+  AdminCustomSection,
   DropZoneMultiImgs,
   DropZoneSingleImg,
   EditorRichText,
@@ -59,221 +61,9 @@ import { PRODUCTS_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
 import { handleAdd, handleUpdate } from "@/utils/functions/client";
 import {
   ADMIN_PRODUCTS,
-  PUBLIC_GET_PRODUCTS_URL,
+  PUBLIC_ADMIN_PRODUCTS_URL,
 } from "@/utils/constants/urls";
-
-const CustomSection = ({
-  title,
-  children,
-  required = false,
-}: {
-  title: string;
-  children: ReactNode;
-  required?: boolean;
-}) => {
-  return (
-    <section className="w-full dark:border-zinc-800 h-fit mxs:p-2 md:p-4 border-[1px] rounded-2xl space-y-4 bg-white dark:bg-zinc-900">
-      <div className="border-b-[1px] pb-2">
-        <h4 className="w-full text-center dark:text-zinc-100 font-bold text-xl">
-          {required && <span className="text-red-500">* </span>}
-          {title}
-        </h4>
-      </div>
-      {children}
-    </section>
-  );
-};
-
-const CustomFormField = ({
-  form,
-  fieldName,
-  title,
-  required = false,
-  type,
-  placeholder = "",
-  onDelete,
-  className = "",
-  selectData,
-}: {
-  form: any;
-  fieldName: string;
-  title: string | undefined;
-  required?: boolean;
-  type: string;
-  placeholder?: string;
-  onDelete?: any;
-  className?: string;
-  selectData?: any;
-}) => {
-  let children: ({}: any) => ReactNode;
-
-  if (type == "text-80")
-    children = ({ onChange, onBlur, value }) => (
-      <Input
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        maxLength={80}
-        className={
-          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
-          " " +
-          className
-        }
-      />
-    );
-  else if (type == "textarea")
-    children = ({ onChange, onBlur, value }) => (
-      <Textarea
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className={
-          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
-          " " +
-          className
-        }
-      />
-    );
-  else if (type == "number")
-    children = ({ onChange, onBlur, value }) => (
-      <Input
-        type="number"
-        min={0}
-        value={value}
-        onChange={(e) => onChange(Number(e.currentTarget.value))}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        className={
-          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
-          " " +
-          className
-        }
-      />
-    );
-  else if (type == "multi-imgs")
-    children = ({ onChange, onBlur, value }) => (
-      <DropZoneMultiImgs
-        value={value}
-        onChange={onChange}
-        onDelete={onDelete}
-      />
-    );
-  else if (type == "single-img")
-    children = ({ onChange, onBlur, value }) => (
-      <DropZoneSingleImg
-        value={value}
-        onChange={onChange}
-        onDelete={onDelete}
-        required={required}
-      />
-    );
-  else if (type == "text-editor")
-    children = ({ onChange, onBlur, value }) => (
-      <EditorRichText content={value} onChange={onChange} />
-    );
-  else if (type == "select-dialog-single")
-    children = ({ onChange, onBlur, value }) => (
-      <SelectDialog
-        value={value}
-        onChange={onChange}
-        type="admin-categories"
-        name={selectData.name}
-        isMultiChoice={selectData.isMultiChoice}
-        options={selectData.options}
-      />
-    );
-  else children = ({ onChange, onBlur, value }) => <></>;
-
-  return (
-    <FormField
-      control={form.control}
-      name={fieldName}
-      render={({ field }) => (
-        <FormItem>
-          <div
-            className={`flex flex-row ${
-              title ? "justify-between" : "justify-center"
-            } items-end gap-4`}>
-            {title && (
-              <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                {required && <span className="text-red-500">* </span>}
-                {title}
-              </FormLabel>
-            )}
-            <FormMessage className="relative" />
-          </div>
-          <FormControl>{children({ ...field })}</FormControl>
-        </FormItem>
-      )}
-    />
-  );
-};
-
-const ProductVariantGroup = ({
-  form,
-  index,
-  setDeletedImgs,
-}: {
-  form: any;
-  index: number;
-  setDeletedImgs: any;
-}) => {
-  return (
-    <div className="grid grid-cols-[3fr_1fr] gap-2 items-start">
-      <div className="flex flex-col gap-2">
-        <CustomFormField
-          form={form}
-          fieldName={`product_variants.${index}.variant_name`}
-          title={PAGE_DATA["variant-name"]}
-          required={true}
-          type="text-80"
-          placeholder={PLACEHOLDER_DATA["variant-name"]}
-          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-        />
-
-        <CustomFormField
-          form={form}
-          fieldName={`product_variants.${index}.variant_price`}
-          title={PAGE_DATA["variant-price"]}
-          required={true}
-          type="number"
-          placeholder={PLACEHOLDER_DATA["variant-price"]}
-          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-        />
-
-        <CustomFormField
-          form={form}
-          fieldName={`product_variants.${index}.variant_stock_quantity`}
-          title={PAGE_DATA["variant-stock-quantity"]}
-          required={true}
-          type="number"
-          placeholder={PLACEHOLDER_DATA["variant-stock-quantity"]}
-          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-        />
-
-        <CustomFormField
-          form={form}
-          fieldName={`product_variants.${index}.variant_discount_percent`}
-          title={PAGE_DATA["variant-discount-percent"]}
-          required={false}
-          type="number"
-          placeholder={PLACEHOLDER_DATA["variant-discount-percent"]}
-          className="bg-white dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-        />
-      </div>
-
-      <CustomFormField
-        form={form}
-        fieldName={`product_variants.${index}.variant_img`}
-        title={undefined}
-        required={true}
-        type="single-img"
-        onDelete={setDeletedImgs}
-      />
-    </div>
-  );
-};
+import ProductVariantGroup from "./product-variant-group";
 
 // for handle array
 const handleAddVariant = (form: any) => {
@@ -398,6 +188,10 @@ const FormBody = ({
       if (deletedImgs.length > 0) removeImgsFromCloudinary(deletedImgs);
       if (deletedVariantImgs.length > 0)
         removeImgsFromCloudinary(deletedVariantImgs);
+      await removeImgsInDesFromCloudinary(
+        defaultValuesRef.current.product_description,
+        values.product_description
+      );
 
       setSubmitDialogContent(DIALOG_DATA["imgs-uploading"]);
 
@@ -444,7 +238,7 @@ const FormBody = ({
       if (id == "" || !id) {
         const { isSuccess, _id, err } = await handleAdd(
           values,
-          PUBLIC_GET_PRODUCTS_URL
+          PUBLIC_ADMIN_PRODUCTS_URL
         );
 
         // console.log("isssssssssssssss", isSuccess);
@@ -471,7 +265,7 @@ const FormBody = ({
       } else {
         const { isSuccess, err } = await handleUpdate(
           values,
-          `${PUBLIC_GET_PRODUCTS_URL}/${id}`
+          `${PUBLIC_ADMIN_PRODUCTS_URL}/${id}`
         );
 
         if (!isSuccess || err != "") {
@@ -515,9 +309,9 @@ const FormBody = ({
       <form className="w-full  md:max-w-screen-md space-y-2">
         <div className="w-full relative grid grid-cols-1 gap-2 mx-auto">
           {/* product info */}
-          <CustomSection title={PAGE_DATA["product-info"]}>
+          <AdminCustomSection title={PAGE_DATA["product-info"]}>
             <>
-              <CustomFormField
+              <AdminCustomField
                 form={form}
                 fieldName="product_name"
                 title={PAGE_DATA["product-name"]}
@@ -526,7 +320,7 @@ const FormBody = ({
                 placeholder={PLACEHOLDER_DATA["product-name"]}
               />
 
-              <CustomFormField
+              <AdminCustomField
                 form={form}
                 fieldName="product_imgs"
                 title={PAGE_DATA["product-imgs"]}
@@ -536,7 +330,7 @@ const FormBody = ({
                 placeholder={PLACEHOLDER_DATA["product-imgs"]}
               />
 
-              <CustomFormField
+              <AdminCustomField
                 form={form}
                 fieldName="category_id"
                 required={true}
@@ -554,7 +348,7 @@ const FormBody = ({
                 }}
               />
 
-              <CustomFormField
+              <AdminCustomField
                 form={form}
                 fieldName="product_short_description"
                 title={PAGE_DATA["product-short-description"]}
@@ -564,7 +358,7 @@ const FormBody = ({
                 placeholder={PLACEHOLDER_DATA["product-short-description"]}
               />
 
-              <CustomFormField
+              <AdminCustomField
                 form={form}
                 fieldName="product_description"
                 title={PAGE_DATA["product-description"]}
@@ -573,10 +367,10 @@ const FormBody = ({
                 onDelete={setDeletedImgs}
               />
             </>
-          </CustomSection>
+          </AdminCustomSection>
 
           <div ref={variantGroupRef}>
-            <CustomSection
+            <AdminCustomSection
               title={PAGE_DATA["product-variants"]}
               required={true}>
               <>
@@ -657,10 +451,10 @@ const FormBody = ({
                   <Plus className="h-5 w-5" /> {PAGE_DATA["variant-add"]}
                 </Button>
               </>
-            </CustomSection>
+            </AdminCustomSection>
           </div>
 
-          <CustomSection title={PAGE_DATA["product-specifications"]}>
+          <AdminCustomSection title={PAGE_DATA["product-specifications"]}>
             <>
               <Accordion
                 type="single"
@@ -703,7 +497,7 @@ const FormBody = ({
                       </AccordionTrigger>
 
                       <AccordionContent className="mt-2 flex flex-col gap-2">
-                        <CustomFormField
+                        <AdminCustomField
                           form={form}
                           fieldName={`product_specifications.${index}.name`}
                           title={PAGE_DATA["specification-name"]}
@@ -713,7 +507,7 @@ const FormBody = ({
                           className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
                         />
 
-                        <CustomFormField
+                        <AdminCustomField
                           form={form}
                           fieldName={`product_specifications.${index}.value`}
                           title={PAGE_DATA["specification-value"]}
@@ -736,7 +530,7 @@ const FormBody = ({
                 <Plus className="h-5 w-5" /> {PAGE_DATA["specification-add"]}
               </Button>
             </>
-          </CustomSection>
+          </AdminCustomSection>
 
           <Dialog open={openSubmit}>
             <DialogTrigger className="z-50 sticky bottom-0 left-0 px-4 py-2 bg-bg-1 dark:bg-zinc-800">

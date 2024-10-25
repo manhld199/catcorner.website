@@ -1,6 +1,6 @@
 "use client";
 
-import { PUBLIC_GET_CLOUDINARY_URL } from "@/utils/constants/urls";
+import { PUBLIC_CLOUDINARY_URL } from "@/utils/constants/urls";
 import { convertBlobUrlsToImgFiles } from "@/utils/functions/convert";
 
 function getCldPublicIdFromUrl(url: string): string | undefined {
@@ -25,7 +25,7 @@ const uploadFilesToCloudinary = async (
   files.forEach((file: File) => formData.append("file", file));
   if (folderName) formData.append("folder", folderName);
 
-  const res = await fetch(PUBLIC_GET_CLOUDINARY_URL, {
+  const res = await fetch(PUBLIC_CLOUDINARY_URL, {
     method: "POST",
     body: formData,
   });
@@ -46,7 +46,7 @@ const removeImgsFromCloudinary = async (imgs: string[]): Promise<void> => {
 
   if (cldPublicIds.length) {
     // const deleteImgsRes =
-    await fetch(PUBLIC_GET_CLOUDINARY_URL, {
+    await fetch(PUBLIC_CLOUDINARY_URL, {
       method: "DELETE",
       body: JSON.stringify({ cldPublicIds }),
       headers: {

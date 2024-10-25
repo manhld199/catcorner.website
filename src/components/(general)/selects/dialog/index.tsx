@@ -2,31 +2,19 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+
 import {
   Dialog,
   DialogContent,
-  DialogClose,
   DialogTrigger,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { ChevronRight, Search, Check } from "lucide-react";
+
 import { SELECT_DATA } from "@/data/components";
 import { PLACEHOLDER_DATA } from "@/data/placeholder";
-import { Badge } from "@/components/ui/badge";
-import { CldImage } from "next-cloudinary";
 import { normalizeVietnameseStr } from "@/utils/functions/format";
 import RenderTrigger from "./render-trigger";
 import RenderSearch from "./render-search";
@@ -59,9 +47,12 @@ const SelectDialog: React.FC<{
   const [tempValue, setTempValue] = useState(value);
 
   // Xử lý logic tìm kiếm
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  }, []);
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchText(e.target.value);
+    },
+    []
+  );
 
   // Cập nhật danh sách tùy chọn dựa trên tìm kiếm
   useEffect(() => {
@@ -71,11 +62,15 @@ const SelectDialog: React.FC<{
     switch (type) {
       case "default":
         // Logic tìm kiếm mặc định
-        filtered = options.filter((option) => option.value.includes(searchText.toLowerCase()));
+        filtered = options.filter((option) =>
+          option.value.includes(searchText.toLowerCase())
+        );
         break;
       case "admin-categories":
         filtered = options.filter((option) =>
-          normalizeVietnameseStr(option.name).includes(normalizeVietnameseStr(searchText))
+          normalizeVietnameseStr(option.name).includes(
+            normalizeVietnameseStr(searchText)
+          )
         );
         break;
       default:
@@ -151,7 +146,10 @@ const SelectDialog: React.FC<{
           )}
 
           {/* search */}
-          <RenderSearch searchText={searchText} handleSearchChange={handleSearchChange} />
+          <RenderSearch
+            searchText={searchText}
+            handleSearchChange={handleSearchChange}
+          />
         </DialogHeader>
 
         {/* layout */}

@@ -13,5 +13,10 @@ export { default as DropZoneSingleImg } from "./(general)/dropzones/single-img";
 // text editors
 export { default as EditorRichText } from "./(general)/text-editors/rich-text/editor";
 
+// inputs
+export { default as InputTags } from "./(general)/inputs/tags";
+
 // **********************ADMIN**********************
 export { default as AdminTable } from "./(admin)/table";
+export { default as AdminCustomSection } from "./(admin)/form/custom-section";
+export { default as AdminCustomField } from "./(admin)/form/custom-field";

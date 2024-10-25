@@ -10,3 +10,4 @@ export enum EResponseStatus {
 }
 
 export const PRODUCTS_UPLOAD_FOLDER_NAME = "catcorner/products";
+export const BLOGS_UPLOAD_FOLDER_NAME = "catcorner/blogs";
