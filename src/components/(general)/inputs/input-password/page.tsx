@@ -14,7 +14,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 			<div className="relative">
 				<Input
 					type={showPassword ? "text" : "password"}
-					className={cn("pr-10", className)} // Giữ lại padding bên phải cho biểu tượng
+					className={cn("pr-10", className)} 
 					ref={ref}
 					{...props}
 				/>
@@ -26,12 +26,12 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 					onClick={() => setShowPassword((prev) => !prev)}
 				>
 					{showPassword ? (
-						<EyeIcon
+						<EyeOffIcon
 							className="h-5 w-5 stroke-pri-1 stroke-[1.5]"
 							aria-hidden="true"
 						/>
 					) : (
-						<EyeOffIcon
+						<EyeIcon
 							className="h-5 w-5 stroke-pri-1 stroke-[1.5]"
 							aria-hidden="true"
 						/>

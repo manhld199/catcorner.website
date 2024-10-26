@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 import {
@@ -27,7 +26,8 @@ import { useState, useCallback, CSSProperties, useEffect } from "react";
 
 import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
-
+import {AUTH_URL} from "@/utils/constants/urls"
+import AuthHeader from "@/partials/(auth)/header/page";
 const override: CSSProperties = {
 	display: "block",
 	margin: "0 auto",
@@ -63,7 +63,7 @@ export default function SignUpPage() {
 				password: values.password,
 			};
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+				`${AUTH_URL}/login`,
 				{
 					method: "POST",
 					headers: {
@@ -91,7 +91,23 @@ export default function SignUpPage() {
 		}
 	};
 
+	const handleLoginWithGoogle = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/google`;
+		} catch (error) {
+			toast.error("Error during Google login. Please try again.");
+		}
+	};
+	const handleLoginWithFacebook = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/facebook`;
+		} catch (error) {
+			toast.error("Error during Google login. Please try again.");
+		}
+	};
 	return (
+		<>
+		<AuthHeader currentPage="login"></AuthHeader>
 		<div className="md:bg-background-color mm:bg-white ml:bg-white">
 			<div className="flex min-h-screen w-[80%] mx-auto bg-white">
 				{/* Left side - Image */}
@@ -208,7 +224,7 @@ export default function SignUpPage() {
 								href="/forgot-password"
 								className="underline text-sm sm:text-base font-medium"
 							>
-								Forgot your password?
+								Bạn quên mật khẩu ư ?
 							</Link>
 						</p>
 
@@ -219,14 +235,16 @@ export default function SignUpPage() {
 								</div>
 								<div className="relative flex justify-center text-sm">
 									<span className="px-2 bg-white text-base sm:text-lg md:text-xl">
-										Or sign up with
+										Hoặc đăng nhập với
 									</span>
 								</div>
 							</div>
 							<div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+								
 								<Button
 									variant="custom_outlined"
 									className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+									onClick={handleLoginWithFacebook}
 								>
 									<Image
 										src={`/imgs/auth/fb_logo.svg`}
@@ -241,6 +259,7 @@ export default function SignUpPage() {
 								<Button
 									variant="custom_outlined"
 									className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+									onClick={handleLoginWithGoogle}
 								>
 									<Image
 										src={`/imgs/auth/gg_logo.svg`}
@@ -264,5 +283,6 @@ export default function SignUpPage() {
 				<ToastContainer />
 			</div>
 		</div>
+		</>
 	);
 }
