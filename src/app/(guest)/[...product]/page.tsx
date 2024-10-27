@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomerProductSlider } from "./partials";
 import { CustomerProductVariant } from "./components";
-import Image from "next/image";
-import { QuantityInputGroup } from "@/components";
+import { CustomerQuantityInputGroup } from "@/components";
 
 // Demo data
 const demoVariants = [
@@ -15,7 +14,7 @@ const demoVariants = [
       url: "/imgs/test.jpg",
       alt: "Variant 1 Image",
     },
-    quantity: 5,
+    quantity: 5, // Số lượng tối đa cho biến thể 1
   },
   {
     name: "Variant 2",
@@ -24,7 +23,7 @@ const demoVariants = [
       url: "/imgs/test.jpg",
       alt: "Variant 2 Image",
     },
-    quantity: 10,
+    quantity: 10, // Số lượng tối đa cho biến thể 2
   },
   {
     name: "Variant 3",
@@ -33,26 +32,33 @@ const demoVariants = [
       url: "/imgs/test.jpg",
       alt: "Variant 3 Image",
     },
-    quantity: 20,
+    quantity: 20, // Số lượng tối đa cho biến thể 3
   },
 ];
 
 export default function ProductDetailsPage() {
   const pid = "12345"; // Example product ID
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0); // The first variant is selected by default
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0); // Mặc định chọn biến thể đầu tiên
+  const [inputQuantity, setInputQuantity] = useState(1);
 
-  // Quản lý số lượng riêng cho từng biến thể
-  const [variantQuantities, setVariantQuantities] = useState(
-    demoVariants.map((variant) => variant.quantity)
-  );
+  // Khi thay đổi biến thể, kiểm tra và cập nhật số lượng nếu cần
+  useEffect(() => {
+    const maxQuantity = demoVariants[selectedVariantIndex].quantity;
+    if (inputQuantity > maxQuantity) {
+      setInputQuantity(maxQuantity);
+    }
+  }, [selectedVariantIndex]);
 
-  // Hàm lấy số lượng và cập nhật số lượng tương ứng với biến thể đang chọn
   const handleQuantityChange = (newQuantity: number) => {
-    setVariantQuantities((prevQuantities) => {
-      const updatedQuantities = [...prevQuantities];
-      updatedQuantities[selectedVariantIndex] = newQuantity;
-      return updatedQuantities;
-    });
+    setInputQuantity(newQuantity);
+  };
+
+  const handleVariantSelect = (index: number) => {
+    const maxQuantity = demoVariants[index].quantity;
+    if (inputQuantity > maxQuantity) {
+      setInputQuantity(maxQuantity);
+    }
+    setSelectedVariantIndex(index);
   };
 
   return (
@@ -64,22 +70,24 @@ export default function ProductDetailsPage() {
 
         {/* Right side - Product details */}
         <div className="laptop:w-2/3">
-          <h1 className="text-2xl font-bold mb-2">
+          <h1 className="text-2xl font-bold mb-2 dark:text-white">
             Pate Mèo Trưởng Thành Royal Canin Instinctive 85g
           </h1>
-          <p className="text-gray-500 mb-4">Short description of the product</p>
+          <p className="text-gray-500 dark:text-gray-300 mb-4">
+            Short description of the product
+          </p>
 
           {/* Ratings and reviews */}
           <div className="flex items-center mb-4">
             <span className="text-yellow-500">★★★★☆</span>
-            <span className="ml-2 text-gray-500">
+            <span className="ml-2 text-gray-500 dark:text-gray-300">
               (4.1 rating, 137 reviews)
             </span>
           </div>
 
           {/* Product variants */}
           <div className="mb-4">
-            <p className="font-medium">Chọn phân loại:</p>
+            <p className="font-medium dark:text-gray-200">Chọn phân loại:</p>
             <div className="grid grid-cols-3 laptop:grid-cols-4 desktop:grid-cols-6 gap-2 mt-2">
               {demoVariants.map((variant, index) => (
                 <CustomerProductVariant
@@ -87,7 +95,7 @@ export default function ProductDetailsPage() {
                   pid={pid}
                   variant={variant}
                   isActive={index === selectedVariantIndex}
-                  onClick={() => setSelectedVariantIndex(index)}
+                  onClick={() => handleVariantSelect(index)}
                 />
               ))}
             </div>
@@ -95,10 +103,12 @@ export default function ProductDetailsPage() {
 
           {/* Quantity selection */}
           <div className="mb-4">
-            <p className="font-medium mb-2">Chọn số lượng:</p>
-            <QuantityInputGroup
+            <p className="font-medium mb-2 dark:text-gray-200">
+              Chọn số lượng:
+            </p>
+            <CustomerQuantityInputGroup
               initValue={{
-                defaultValue: 1,
+                defaultValue: inputQuantity,
                 minValue: 1,
                 maxValue: demoVariants[selectedVariantIndex].quantity,
               }}
@@ -108,16 +118,20 @@ export default function ProductDetailsPage() {
 
           {/* Price */}
           <div className="flex items-center mb-6 gap-12">
-            <p className="text-gray-500 line-through mr-4">1,112,442đ</p>
-            <p className="text-2xl font-bold text-teal-600">567,988đ</p>
+            <p className="text-gray-500 dark:text-gray-400 line-through mr-4">
+              1,112,442đ
+            </p>
+            <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+              567,988đ
+            </p>
           </div>
 
           {/* Buttons */}
           <div className="flex gap-4">
-            <button className="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600">
+            <button className="border border-pri-1 text-pri-1 dark:border-teal-500 dark:text-teal-500 w-48 py-3 rounded-lg hover:bg-teal-700 hover:text-white dark:hover:text-white dark:hover:bg-teal-600">
               Thêm vào giỏ hàng
             </button>
-            <button className="border border-teal-500 text-teal-500 px-6 py-2 rounded-md hover:bg-teal-500 hover:text-white">
+            <button className="bg-pri-1 dark:bg-teal-500 text-white w-48 py-3 rounded-lg hover:bg-teal-700 dark:hover:bg-teal-600">
               Mua ngay
             </button>
           </div>
@@ -127,14 +141,16 @@ export default function ProductDetailsPage() {
       {/* Product description and reviews tabs */}
       <div className="mt-8">
         <div className="flex gap-4 border-b pb-2">
-          <button className="font-medium border-b-2 border-teal-500">
+          <button className="font-medium border-b-2 border-teal-500 dark:border-teal-400">
             Thông tin
           </button>
-          <button className="font-medium text-gray-500">Đánh giá</button>
+          <button className="font-medium text-gray-500 dark:text-gray-300">
+            Đánh giá
+          </button>
         </div>
 
-        <div className="mt-4">
-          <h2 className="text-xl font-bold mb-4">
+        <div className="mt-4 dark:text-gray-200">
+          <h2 className="text-xl font-bold mb-4 dark:text-white">
             Pate Mèo Trưởng Thành Royal Canin Instinctive 85g
           </h2>
           <ul className="list-disc pl-5 mb-4">
@@ -142,7 +158,9 @@ export default function ProductDetailsPage() {
             <li>Phù hợp cho: Mèo trưởng thành</li>
           </ul>
 
-          <h3 className="text-lg font-bold mb-2">Lợi ích:</h3>
+          <h3 className="text-lg font-bold mb-2 dark:text-gray-200">
+            Lợi ích:
+          </h3>
           <ul className="list-disc pl-5 mb-4">
             <li>Tạo ra nguồn dinh dưỡng phù hợp tối ưu cho mèo trưởng thành</li>
             <li>Hỗ trợ tăng cường hệ thống miễn dịch</li>
