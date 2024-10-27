@@ -102,7 +102,7 @@ export default function SignUpPage() {
 		try {
 			window.location.href = `${AUTH_URL}/facebook`;
 		} catch (error) {
-			toast.error("Error during Google login. Please try again.");
+			toast.error("Error during Facebook login. Please try again.");
 		}
 	};
 	return (
