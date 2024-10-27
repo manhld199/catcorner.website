@@ -27,6 +27,8 @@ import { useState, useCallback, CSSProperties, useEffect } from "react";
 
 import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
+import {AUTH_URL} from "@/utils/constants/urls"
+import AuthHeader from "@/partials/(auth)/header/page";
 
 const override: CSSProperties = {
 	display: "block",
@@ -118,7 +120,7 @@ export default function SignUpPage() {
 			}
 			try {
 				const response = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/api/auth/check-email?email=${email}`,
+					`${AUTH_URL}/check-email?email=${email}`,
 					{
 						method: "GET",
 					}
@@ -153,7 +155,7 @@ export default function SignUpPage() {
 				user_name: values.name,
 			};
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+				`${AUTH_URL}/register`,
 				{
 					method: "POST",
 					headers: {
@@ -183,6 +185,8 @@ export default function SignUpPage() {
 	};
 
 	return (
+		<>
+		<AuthHeader currentPage="register"></AuthHeader>
 		<div className="md:bg-background-color mm:bg-white ml:bg-white">
 			<div className="flex min-h-screen w-[80%] mx-auto bg-white">
 				{/* Left side - Image */}
@@ -348,6 +352,7 @@ export default function SignUpPage() {
 										<FormItem className="flex flex-row items-start space-x-3 space-y-0">
 											<FormControl>
 												<Checkbox
+												    className="rounded-[3px]"
 													checked={field.value}
 													onCheckedChange={field.onChange}
 												/>
@@ -371,6 +376,7 @@ export default function SignUpPage() {
 										<FormItem className="flex flex-row items-start space-x-3 space-y-0">
 											<FormControl>
 												<Checkbox
+												    className="rounded-[3px]"
 													checked={field.value}
 													onCheckedChange={field.onChange}
 												/>
@@ -467,5 +473,6 @@ export default function SignUpPage() {
 				<ToastContainer />
 			</div>
 		</div>
+		</>
 	);
 }

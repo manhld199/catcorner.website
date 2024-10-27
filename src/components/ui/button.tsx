@@ -22,8 +22,10 @@ const buttonVariants = cva(
 				custom: "rounded-[32px] bg-pri-1 text-white hover:opacity-80",
 				custom_outlined:
 					"rounded-[32px] bg-white text-pri-1 border border-pri-1 hover:opacity-80",
-					none: "",
+			    none: "",
 				filled: "rounded-[8px] bg-pri-1 text-white hover:opacity-80",
+				filled_outlined: "rounded-[8px] bg-white text-pri-1 hover:opacity-80 border border-pri-1",
+
 			},
 			size: {
 				default: "h-10 px-4 py-2",
