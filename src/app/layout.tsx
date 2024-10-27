@@ -1,9 +1,15 @@
+// import libs
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 
+// import components
+import { BreadCrumb, ScrollUp } from "@/components";
+
+// import partials
 import { CustomerFooter, CustomerHeader } from "@/partials";
-import { BreadCrumb, ScrollUp, ToogleThemeMode } from "@/components";
+
+// import css
 import "./globals.css";
 
 const josefin = Josefin_Sans({
@@ -27,13 +33,8 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
-        >
-          <CustomerHeader></CustomerHeader>
-          <BreadCrumb></BreadCrumb>
+          disableTransitionOnChange>
           {children}
-          <ScrollUp></ScrollUp>
-          <CustomerFooter></CustomerFooter>
         </ThemeProvider>
       </body>
     </html>

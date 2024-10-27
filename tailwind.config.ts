@@ -54,8 +54,6 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-
-        //Bộ màu
         "pri-1": "#1E4646",
         "pri-2": "#B3E0E6",
         "pri-3": "#EAFBE4",
@@ -63,6 +61,12 @@ const config: Config = {
         "pri-5": "#FFF6D8",
         "pri-6": "#315475",
         "pri-7": "#669E9E",
+        "bg-1": "#f5f5f5",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       screens: {
         mm: "320px",
@@ -73,6 +77,28 @@ const config: Config = {
         laptop: "1024px",
         desktop: "1440px",
       },
+    },
+    keyframes: {
+      "accordion-down": {
+        from: {
+          height: "0",
+        },
+        to: {
+          height: "var(--radix-accordion-content-height)",
+        },
+      },
+      "accordion-up": {
+        from: {
+          height: "var(--radix-accordion-content-height)",
+        },
+        to: {
+          height: "0",
+        },
+      },
+    },
+    animation: {
+      "accordion-down": "accordion-down 0.2s ease-out",
+      "accordion-up": "accordion-up 0.2s ease-out",
     },
   },
   plugins: [require("tailwindcss-animate")],
