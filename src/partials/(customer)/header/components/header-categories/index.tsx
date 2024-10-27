@@ -86,9 +86,9 @@ export default function CustomerHeaderCategories() {
       </div>
 
       {/* Dropdown */}
-      <div className="absolute left-1/2 transform laptop:-translate-x-[27%] desktop:-translate-x-[42%] mt-4 laptop:w-[90vw] desktop:w-[80vw] bg-white dark:bg-black border border-gray-200 dark:border-gray-600 rounded-md shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300">
+      <div className="z-50 absolute left-1/2 transform laptop:-translate-x-[27%] desktop:-translate-x-[45%] mt-4 laptop:w-[90vw] desktop:w-[80vw] bg-white dark:bg-black border border-gray-200 dark:border-gray-600 rounded-md shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300">
         {/* Tam giác trên dropdown */}
-        <div className="absolute top-[-6px] laptop:left-[26%] desktop:left-[42%] transform desktop:-translate-x-1/2 w-3 h-3 bg-white dark:bg-black rotate-45 transform border-t border-l border-gray-200 dark:border-gray-600"></div>
+        <div className="absolute top-[-6px] laptop:left-[26%] desktop:left-[45%] transform desktop:-translate-x-1/2 w-3 h-3 bg-white dark:bg-black rotate-45 transform border-t border-l border-gray-200 dark:border-gray-600"></div>
 
         <div className="flex">
           {/* Danh mục bên trái */}
