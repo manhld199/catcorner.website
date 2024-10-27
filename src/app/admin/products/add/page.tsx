@@ -3,10 +3,10 @@ import React from "react";
 import FormBody from "../form-body";
 import { PAGE_DATA } from "@/data/admin";
 import { fetchData } from "@/utils/functions/server";
-import { GET_CATEGORIES_URL } from "@/utils/constants/urls";
+import { ADMIN_CATEGORIES_URL } from "@/utils/constants/urls";
 
 export default async function AdminProductAddPage() {
-  const categoriesData = await fetchData(GET_CATEGORIES_URL);
+  const categoriesData = await fetchData(ADMIN_CATEGORIES_URL);
   // console.log("categoriesData", categoriesData);
 
   return (

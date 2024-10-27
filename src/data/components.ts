@@ -21,7 +21,13 @@ export const EDITOR_DATA = {
 
 export const SELECT_DATA = {
   "search-placeholder": "Tìm kiếm...",
-  "multi-description": 'Hãy chọn một hoặc nhiều giá trị, sau đó bấm vào nút "Lưu".',
+  "multi-description":
+    'Hãy chọn một hoặc nhiều giá trị, sau đó bấm vào nút "Lưu".',
   "single-description": 'Hãy chọn một giá trị, sau đó bấm vào nút "Lưu".',
   "save-btn": "Lưu",
+};
+
+export const INPUT_DATA = {
+  "tags-input-placeholder":
+    "Nhập các thẻ, ngăn cách bởi dấu phẩy, dấu cách, hoặc xuống dòng...",
 };

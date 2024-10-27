@@ -6,6 +6,10 @@ export const COLUMN_NAMES = {
   "column-rating": "Đánh giá",
   "column-status": "Trạng thái",
   "column-price": "Giá tiền",
+  "column-avt": "Ảnh bìa",
+  "column-author-name": "Tác giả",
+  "column-published-date": "Ngày xuất bản",
+  "column-tags": "Gắn thẻ",
 };
 
 export const SORT_NAMES = {
@@ -37,6 +41,21 @@ export const PAGE_DATA = {
   "specification-value": "Giá trị thông số",
   "specification-add": "Thêm 1 thông số",
   "product-category": "Danh mục",
+  blog: "Quản lý bài viết",
+  "blog-info": "Thông tin bài viết",
+  "blog-add": "Thêm bài viết",
+  "blog-detail": "Chi tiết bài viết",
+  "blog-name": "Tên bài viết",
+  "blog-short-description": "Mô tả ngắn",
+  "blog-content": "Nội dung",
+  "blog-tags": "Gắn thẻ",
+  "blog-reference": "Tham khảo",
+  "reference-title": "Tiêu đề",
+  "reference-link": "Liên kết",
+  "reference-add": "Thêm bài tham khảo",
+  "blog-references": "Bài viết tham khảo",
+  "blog-author-name": "Tác giả",
+  "blog-published-date": "Ngày xuất bản",
 };
 
 export const METHOD_NAMES = {

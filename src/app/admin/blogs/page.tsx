@@ -8,12 +8,11 @@ import columns from "./columns";
 import { PAGE_DATA } from "@/data/admin";
 
 import { fetchDataNoCache } from "@/utils/functions/server";
-import { ADMIN_PRODUCTS_URL } from "@/utils/constants/urls";
+import { ADMIN_BLOGS_URL } from "@/utils/constants/urls";
 
-export default async function AdminProductPAge() {
-  // console.log("ADMIN_ALL_PRODUCTS_URL", ADMIN_PRODUCTS_URL);
-  const productsData = await fetchDataNoCache(ADMIN_PRODUCTS_URL);
-  // console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaa", data);
+export default async function AdminBlogsPage() {
+  const blogsData = await fetchDataNoCache(ADMIN_BLOGS_URL);
+  // console.log("blogsDatablogsDatablogsData", blogsData);
 
   return (
     <main className="w-full py-2 flex flex-col items gap-4">
@@ -21,7 +20,7 @@ export default async function AdminProductPAge() {
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200 text-wrap">
-              {PAGE_DATA["product"]}
+              {PAGE_DATA["blog"]}
             </h1>
           </div>
         </div>
@@ -32,15 +31,15 @@ export default async function AdminProductPAge() {
           className="h-fit py-2 rounded-md"
           //   startIcon={<PlusIcon className="w-6 h-6" />}
         >
-          <Link href="/admin/products/add">{PAGE_DATA["product-add"]}</Link>
+          <Link href="/admin/blogs/add">{PAGE_DATA["blog-add"]}</Link>
         </Button>
       </section>
 
       <AdminTable
         columns={columns}
-        data={productsData.products ?? []}
-        deleteUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/products/delete`}
-        pageName={"products"}
+        data={blogsData.articles ?? []}
+        deleteUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/blogs/delete`}
+        pageName={"blogs"}
       />
     </main>
   );

@@ -41,7 +41,9 @@ const RenderTrigger: React.FC<{
           {!value ? (
             <p className="text-sm text-zinc-500">{placeholder}</p>
           ) : (
-            <Badge variant="pri-2">{options.find((option) => option._id === value)?.name}</Badge>
+            <Badge variant="pri-2">
+              {options.find((option) => option._id === value)?.name}
+            </Badge>
           )}
           <ChevronRight />
         </div>
@@ -52,7 +54,9 @@ const RenderTrigger: React.FC<{
           className="px-2 py-4 flex items-center justify-between border-b-[1px] border-zinc-300 cursor-pointer"
           onClick={() => setIsDialogOpen(true)} // mở dialog khi click
         >
-          <p>{Array.isArray(value) ? value.join(", ") : value || placeholder}</p>
+          <p>
+            {Array.isArray(value) ? value.join(", ") : value || placeholder}
+          </p>
           <ChevronRight />
         </div>
       );

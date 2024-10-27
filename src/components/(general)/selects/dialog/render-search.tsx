@@ -22,8 +22,7 @@ const RenderSearch: React.FC<{
         />
         <button
           type="submit"
-          className="absolute right-0 inline-flex w-fit h-full cursor-default aspect-square items-center justify-center px-4 py-0 rounded-tr-md rounded-br-md bg-pri-2/60"
-        >
+          className="absolute right-0 inline-flex w-fit h-full cursor-default aspect-square items-center justify-center px-4 py-0 rounded-tr-md rounded-br-md bg-pri-2/60">
           <Search className="w-auto h-1/2" />
         </button>
       </div>

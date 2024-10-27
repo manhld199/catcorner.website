@@ -54,8 +54,6 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-
-        //Bộ màu
         "pri-1": "#1E4646",
         "pri-2": "#B3E0E6",
         "pri-3": "#EAFBE4",

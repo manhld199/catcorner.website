@@ -1,7 +1,6 @@
-// components/SelectDialog/RenderOption.tsx
 import React from "react";
 import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { CldImage } from "next-cloudinary";
 
 const RenderOption: React.FC<{
@@ -19,8 +18,7 @@ const RenderOption: React.FC<{
               className={cn(
                 "w-full h-full rounded-full border-2 flex justify-center items-center transition-all",
                 "bg-pri-1 dark:border-zinc-200"
-              )}
-            >
+              )}>
               <div className="w-3 h-3 text-white">
                 <Check className="w-full h-full" />
               </div>
@@ -55,7 +53,11 @@ const RenderOption: React.FC<{
             {option.img && (
               <div className="relative w-full aspect-square">
                 {option.img.startsWith("SEO_Images") ? (
-                  <CldImage alt={option.name ?? ""} src={option.img} fill={true} />
+                  <CldImage
+                    alt={option.name ?? ""}
+                    src={option.img}
+                    fill={true}
+                  />
                 ) : (
                   <img alt={option.name} src={option.img} />
                 )}
@@ -85,8 +87,7 @@ const RenderOption: React.FC<{
           ? "bg-pri-7 text-white"
           : "text-zinc-700 dark:text-white bg-pri-2/20 dark:bg-zinc-700 dark:hover:text-zinc-800 hover:bg-pri-2/60 dark:hover:bg-pri-2"
       )}
-      onClick={() => handleToggle(option)}
-    >
+      onClick={() => handleToggle(option)}>
       {renderOptionContent()}
     </div>
   );
