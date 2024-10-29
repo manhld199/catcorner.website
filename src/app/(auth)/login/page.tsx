@@ -28,6 +28,10 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
 import {AUTH_URL} from "@/utils/constants/urls"
 import AuthHeader from "@/partials/(auth)/header/page";
+import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { LoadingScreen } from "@/components/(general)/loading/loading-screen";
+
 const override: CSSProperties = {
 	display: "block",
 	margin: "0 auto",
@@ -39,50 +43,48 @@ const formSchema = z.object({
 	password: z.string().min(8, { message: "Mật khẩu phải có ít nhất 8 ký tự" }),
 });
 
-export default function SignUpPage() {
-	const [isSubmitting, setIsSubmitting] = useState(false); // Thêm state này
+export default function LoginPage() {
+	const { data: session, status } = useSession();
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isRegistering, setIsRegistering] = useState(false);
 
-	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			email: "",
-			password: "",
+				email: "",
+				password: "",
 		},
-		mode: "onChange", // Thêm dòng này để kích hoạt validation khi giá trị thay đổi
+		mode: "onChange",
 	});
+
+	useEffect(() => {
+		if (status === "authenticated" && session) {
+			router.replace("/");
+		}
+	}, [status, session, router]);
+
+	
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		try {
 			setIsSubmitting(true);
 			setIsRegistering(true);
 
-			const apiPayload = {
+			const result = await signIn("credentials", {
 				email: values.email,
 				password: values.password,
-			};
-			const response = await fetch(
-				`${AUTH_URL}/login`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(apiPayload),
-				}
-			);
-			const data = await response.json();
+				redirect: false,
+			});
 
-			if (!response.ok) {
-				toast.error(
-					data.message || "Đăng nhập thất bại. Vui lòng thử lại sau."
-				);
+			if (result?.error) {
+				toast.error(result.error || "Đăng nhập thất bại. Vui lòng thử lại sau.");
 				setIsRegistering(false);
 				return;
 			}
 
-			router.push(`/`);
+			router.push("/");
+			router.refresh();
 		} catch (error) {
 			toast.error("Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
 			setIsRegistering(false);
@@ -91,20 +93,14 @@ export default function SignUpPage() {
 		}
 	};
 
-	const handleLoginWithGoogle = async () => {
-		try {
-			window.location.href = `${AUTH_URL}/google`;
-		} catch (error) {
-			toast.error("Error during Google login. Please try again.");
-		}
+	const handleLoginWithGoogle = () => {
+		signIn("google", { callbackUrl: "/" });
 	};
-	const handleLoginWithFacebook = async () => {
-		try {
-			window.location.href = `${AUTH_URL}/facebook`;
-		} catch (error) {
-			toast.error("Error during Facebook login. Please try again.");
-		}
+
+	const handleLoginWithFacebook = () => {
+		signIn("facebook", { callbackUrl: "/" });
 	};
+
 	return (
 		<>
 		<AuthHeader currentPage="login"></AuthHeader>

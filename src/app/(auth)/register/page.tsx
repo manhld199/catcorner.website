@@ -29,6 +29,8 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
 import {AUTH_URL} from "@/utils/constants/urls"
 import AuthHeader from "@/partials/(auth)/header/page";
+import { useAuth } from "@/hooks/useAuth";
+import { useSession } from "next-auth/react";
 
 const override: CSSProperties = {
 	display: "block",
@@ -62,11 +64,15 @@ const formSchema = z
 		path: ["passwordConfirmation"],
 	});
 
-export default function SignUpPage() {
+export default function RegisterPage() {
+	const { data: session, status } = useSession();
 	const [emailExists, setEmailExists] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false); // Thêm state này
 	const [isRegistering, setIsRegistering] = useState(false);
 	useEffect(() => {
+		if (status === "authenticated" && session) {
+			router.replace("/");
+		}
 		const subscription = form.watch((value, { name, type }) => {
 			if (name === "password" || name === "passwordConfirmation") {
 				const password = form.getValues("password");
