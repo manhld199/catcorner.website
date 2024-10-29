@@ -20,4 +20,5 @@ export const PLACEHOLDER_DATA = {
   "reference-link": "Nhập liên kết đến bài viết tham khảo",
   "blog-author-name": "Nhập tên tác giả",
   "blog-published-date": "Nhập ngày xuất bản",
+  "category-name": "Nhập tên danh mục",
 };

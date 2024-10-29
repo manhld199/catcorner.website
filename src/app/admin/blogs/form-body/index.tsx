@@ -417,8 +417,8 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
               <DialogHeader>
                 <DialogTitle>
                   {id == "" || !id
-                    ? DIALOG_DATA["add-product"]
-                    : DIALOG_DATA["update-product"]}
+                    ? DIALOG_DATA["add-blog"]
+                    : DIALOG_DATA["update-blog"]}
                 </DialogTitle>
 
                 {isSubmiting ? (

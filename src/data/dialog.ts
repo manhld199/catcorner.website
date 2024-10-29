@@ -19,4 +19,8 @@ export const DIALOG_DATA = {
   "product-posting": "Đang thêm sản phẩm",
   "post-failed": "Thêm thất bại",
   "post-success": "Thêm thành công. Tự động thoát sau 3s!",
+  "add-blog": "Thêm bài viết",
+  "update-blog": "Cập nhật bài viết",
+  "add-category": "Thêm danh mục",
+  "update-category": "Cập nhật danh mục",
 };
