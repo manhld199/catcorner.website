@@ -1,21 +1,18 @@
 "use client";
 
+// import libs
 import React, { useEffect, useRef, useState } from "react";
-import { getFormDefaultValues, getFormSchema } from "./form-init-value";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  convertBlobUrlsToImgFiles,
-  getStrOfObj,
-} from "@/utils/functions/convert";
-import { PAGE_DATA } from "@/data/admin";
-import { PLACEHOLDER_DATA } from "@/data/placeholder";
+  removeImgsFromCloudinary,
+  uploadFilesToCloudinary,
+} from "@/libs/cloudinary";
+
+// import components
 import { Form } from "@/components/ui/form";
-
-import { AdminCustomField, AdminCustomSection } from "@/components";
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogClose,
@@ -26,18 +23,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DIALOG_DATA } from "@/data/dialog";
 import { Spinner } from "@/components/ui-expansions/spinner";
-import {
-  removeImgsFromCloudinary,
-  uploadFilesToCloudinary,
-} from "@/libs/cloudinary";
+import { AdminCustomField, AdminCustomSection } from "@/components";
+import { getFormDefaultValues, getFormSchema } from "./form-init-value";
+
+// import data
+import { PAGE_DATA } from "@/data/admin";
+import { PLACEHOLDER_DATA } from "@/data/placeholder";
+import { DIALOG_DATA } from "@/data/dialog";
+
+// import utils
 import { CATEGORIES_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
 import { handleAdd, handleUpdate } from "@/utils/functions/client";
 import {
   ADMIN_CATEGORIES,
   PUBLIC_ADMIN_CATEGORIES_URL,
 } from "@/utils/constants/urls";
+import {
+  convertBlobUrlsToImgFiles,
+  getStrOfObj,
+} from "@/utils/functions/convert";
 
 // scroll to error func
 const scrollToErr = () => {

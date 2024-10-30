@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Row } from "@tanstack/react-table";
+import Link from "next/link";
 
 // import components
 import {
@@ -22,14 +23,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Link from "next/link";
+
+// import data
+import { METHOD_NAMES } from "@/data/admin";
+import { DIALOG_DATA } from "@/data/dialog";
 
 // import utils
-// import { IAdminBlog } from "../../../utils/type";
-// import { handleDeleteOne } from "../../../utils/fetch";
-import { METHOD_NAMES } from "@/data/admin";
-
-import { DIALOG_DATA } from "@/data/dialog";
 import { PUBLIC_ADMIN_BLOGS_URL } from "@/utils/constants/urls";
 import { handleDelete } from "@/utils/functions/client";
 

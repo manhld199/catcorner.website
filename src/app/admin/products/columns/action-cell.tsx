@@ -54,7 +54,6 @@ const ActionCell = ({ row }: { row: Row<IAdminProduct> | undefined }) => {
   const [dialogContent, setDialogContent] = useState(
     `${DIALOG_DATA["content-general-delete-rows-1"]} '${name}' ${DIALOG_DATA["content-general-delete-confirm-3"]}`
   );
-  // console.log("deleteUrl", deleteUrl);
 
   return (
     <DropdownMenu modal={false}>

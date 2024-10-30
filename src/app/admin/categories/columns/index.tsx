@@ -1,7 +1,6 @@
 "use client";
 
 // import libs
-import Image from "next/image";
 import { CldImage } from "next-cloudinary";
 import { ArrowUpDown, Filter } from "lucide-react";
 import {
@@ -13,11 +12,11 @@ import {
   Table,
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 // import components
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import ActionCell from "./action-cell";
 import {
   DropdownMenu,
   DropdownMenuRadioItem,
@@ -27,13 +26,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import ActionCell from "./action-cell";
+
+// import data
 import { COLUMN_NAMES, SORT_NAMES } from "@/data/admin";
-import {
-  formatDateTimeStr,
-  normalizeVietnameseStr,
-} from "@/utils/functions/format";
 
 interface IAdminCategory {
   _id: string;
@@ -48,9 +44,6 @@ interface IAdminTableHandler<T> {
   row?: Row<T>;
   type: string;
 }
-
-// import data
-// import { datacategory } from "@/data/data-place";
 
 const HeaderHandler = ({
   table,

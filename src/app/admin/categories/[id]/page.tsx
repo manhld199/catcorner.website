@@ -1,7 +1,13 @@
+// import libs
 import React from "react";
 
+// import components
 import FormBody from "../form-body";
+
+// import data
 import { PAGE_DATA } from "@/data/admin";
+
+// import utils
 import { fetchDataNoCache } from "@/utils/functions/server";
 import { ADMIN_CATEGORIES_URL } from "@/utils/constants/urls";
 

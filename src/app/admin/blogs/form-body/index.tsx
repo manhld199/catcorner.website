@@ -1,42 +1,25 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { getFormDefaultValues, getFormSchema } from "./form-init-value";
+// import libs
+import React, { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, Plus, Trash2 } from "lucide-react";
 import {
-  convertBlobUrlsToImgFiles,
-  getStrOfObj,
-} from "@/utils/functions/convert";
-import { PAGE_DATA } from "@/data/admin";
-import { PLACEHOLDER_DATA } from "@/data/placeholder";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  AdminCustomField,
-  AdminCustomSection,
-  DropZoneMultiImgs,
-  DropZoneSingleImg,
-  EditorRichText,
-} from "@/components";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Link, PawPrint, Plus, Trash2 } from "lucide-react";
+  removeImgsFromCloudinary,
+  removeImgsInDesFromCloudinary,
+  uploadFilesToCloudinary,
+  uploadImgsInDesToCloudinary,
+} from "@/libs/cloudinary";
+
+// import components
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import {
   Dialog,
   DialogClose,
@@ -47,23 +30,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DIALOG_DATA } from "@/data/dialog";
+import { Form, FormLabel } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui-expansions/spinner";
-import { ERROR_DATA } from "@/data/error";
-import SelectDialog from "@/components/(general)/selects/dialog";
+import { AdminCustomField, AdminCustomSection } from "@/components";
+import { getFormDefaultValues, getFormSchema } from "./form-init-value";
+
+// import data
+import { PAGE_DATA } from "@/data/admin";
+import { PLACEHOLDER_DATA } from "@/data/placeholder";
+import { DIALOG_DATA } from "@/data/dialog";
+
+// import utils
 import {
-  removeImgsFromCloudinary,
-  removeImgsInDesFromCloudinary,
-  uploadFilesToCloudinary,
-  uploadImgsInDesToCloudinary,
-} from "@/libs/cloudinary";
+  convertBlobUrlsToImgFiles,
+  getStrOfObj,
+} from "@/utils/functions/convert";
 import { BLOGS_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
 import { handleAdd, handleUpdate } from "@/utils/functions/client";
-import {
-  ADMIN_BLOGS,
-  ADMIN_PRODUCTS,
-  PUBLIC_ADMIN_BLOGS_URL,
-} from "@/utils/constants/urls";
+import { ADMIN_BLOGS, PUBLIC_ADMIN_BLOGS_URL } from "@/utils/constants/urls";
 
 // for handle array
 const handleAddReference = (form: any) => {
