@@ -1,11 +1,18 @@
 "use client";
 
 // import libs
-import Image from "next/image";
-import { CldImage } from "next-cloudinary";
 import { ArrowUpDown, Filter } from "lucide-react";
-import { CellContext, Column, ColumnDef, HeaderContext, Row, Table } from "@tanstack/react-table";
+import {
+  CellContext,
+  Column,
+  ColumnDef,
+  HeaderContext,
+  Row,
+  Table,
+} from "@tanstack/react-table";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { CldImage } from "next-cloudinary";
 
 // import components
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,10 +27,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+
+// import data
 import { COLUMN_NAMES, SORT_NAMES } from "@/data/admin";
-import { normalizeVietnameseStr } from "@/utils/functions/format";
 
 interface IAdminProduct {
   _id: string;
@@ -47,7 +54,11 @@ interface IAdminTableHandler<T> {
 // import data
 // import { datacategory } from "@/data/data-place";
 
-const HeaderHandler = ({ table, column, type }: IAdminTableHandler<IAdminProduct>) => {
+const HeaderHandler = ({
+  table,
+  column,
+  type,
+}: IAdminTableHandler<IAdminProduct>) => {
   const [sortState, setSortState] = useState<string>("none");
   const isSortedOrFiltered = sortState !== "none";
 
@@ -66,8 +77,9 @@ const HeaderHandler = ({ table, column, type }: IAdminTableHandler<IAdminProduct
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className={`min-w-20 ${isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""}`}
-          >
+            className={`min-w-20 ${
+              isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""
+            }`}>
             {label}
             <Filter className="ml-2 h-4 w-4" />
           </Button>
@@ -93,8 +105,9 @@ const HeaderHandler = ({ table, column, type }: IAdminTableHandler<IAdminProduct
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={`min-w-20 ${isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""}`}
-        >
+          className={`min-w-20 ${
+            isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""
+          }`}>
           {label}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -130,7 +143,9 @@ const HeaderHandler = ({ table, column, type }: IAdminTableHandler<IAdminProduct
               (table.getIsSomePageRowsSelected() && "indeterminate") ||
               false
             }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
             aria-label="Select all"
           />
         );
@@ -139,7 +154,8 @@ const HeaderHandler = ({ table, column, type }: IAdminTableHandler<IAdminProduct
     }
   };
 
-  if (["name", "price", "rating"].includes(type)) return renderColumnSort(getHeader() as string);
+  if (["name", "price", "rating"].includes(type))
+    return renderColumnSort(getHeader() as string);
   else return getHeader();
 };
 
@@ -156,7 +172,9 @@ const CellHandler = ({ row, type }: IAdminTableHandler<IAdminProduct>) => {
         );
       case "img":
         return (
-          <Link href={`/admin/products/${row?.original._id}`} className="w-fit h-fit aspect-square">
+          <Link
+            href={`/admin/products/${row?.original._id}`}
+            className="w-fit h-fit aspect-square">
             <div className="relative w-20 h-20 aspect-square">
               <CldImage
                 className="object-cover aspect-square"
@@ -171,9 +189,10 @@ const CellHandler = ({ row, type }: IAdminTableHandler<IAdminProduct>) => {
         return (
           <Link
             href={`/admin/products/${row?.original._id}`}
-            className="w-full min-w-40 h-full text-sm line-clamp-3"
-          >
-            <div className="w-full h-full text-sm textHidden3 ">{row?.original.product_name}</div>
+            className="w-full min-w-40 h-full text-sm line-clamp-3">
+            <div className="w-full h-full text-sm textHidden3 ">
+              {row?.original.product_name}
+            </div>
           </Link>
         );
       case "category":
@@ -187,14 +206,18 @@ const CellHandler = ({ row, type }: IAdminTableHandler<IAdminProduct>) => {
         return (
           <div className="text-sm min-w-40 flex flex-row flex-wrap gap-1">
             {row?.original.product_variants.map((variant, index) => (
-              <Badge key={`variant name ${index}`}>{variant.variant_name}</Badge>
+              <Badge key={`variant name ${index}`}>
+                {variant.variant_name}
+              </Badge>
             ))}
           </div>
         );
       case "price":
         return (
           <div className="text-sm">
-            {row?.original.product_variants.map((variant) => variant.variant_price).join(", ")}
+            {row?.original.product_variants
+              .map((variant) => variant.variant_price)
+              .join(", ")}
           </div>
         );
       case "rating":
@@ -219,7 +242,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
     header: (props: HeaderContext<IAdminProduct, unknown>) => (
       <HeaderHandler {...props} type="select" />
     ),
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="select" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="select" />
+    ),
     enableSorting: false,
     enableHiding: false,
     enableGlobalFilter: false,
@@ -230,7 +255,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
     header: (props: HeaderContext<IAdminProduct, unknown>) => (
       <HeaderHandler {...props} type="img" />
     ),
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="img" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="img" />
+    ),
     enableGlobalFilter: false,
   },
   {
@@ -239,7 +266,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
     header: (props: HeaderContext<IAdminProduct, unknown>) => (
       <HeaderHandler {...props} type="name" />
     ),
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="name" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="name" />
+    ),
     enableGlobalFilter: true,
   },
   {
@@ -270,7 +299,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
     header: (props: HeaderContext<IAdminProduct, unknown>) => (
       <HeaderHandler {...props} type="price" />
     ),
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="price" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="price" />
+    ),
     enableGlobalFilter: true,
     sortingFn: (rowA, rowB, columnId): number => {
       const priceA = rowA.original.product_variants
@@ -292,7 +323,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
       const [min, max] = filterValue;
 
       if (min == max) return prices.some((price) => price == min);
-      return prices.some((price) => price >= (min || 0) && price <= (max || Infinity));
+      return prices.some(
+        (price) => price >= (min || 0) && price <= (max || Infinity)
+      );
     },
   },
   {
@@ -301,7 +334,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
     header: (props: HeaderContext<IAdminProduct, unknown>) => (
       <HeaderHandler {...props} type="rating" />
     ),
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="rating" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="rating" />
+    ),
     enableGlobalFilter: true,
     sortingFn: (rowA, rowB, columnId): number => {
       // console.log("rowArowArowA: ", rowA);
@@ -309,13 +344,17 @@ const columns: ColumnDef<IAdminProduct>[] = [
       // console.log("columnID: ", columnId);
 
       if (
-        rowA.original.product_rating.rating_point * rowA.original.product_rating.rating_count <
-        rowB.original.product_rating.rating_point * rowB.original.product_rating.rating_count
+        rowA.original.product_rating.rating_point *
+          rowA.original.product_rating.rating_count <
+        rowB.original.product_rating.rating_point *
+          rowB.original.product_rating.rating_count
       )
         return -1;
       else if (
-        rowA.original.product_rating.rating_point * rowA.original.product_rating.rating_count >
-        rowB.original.product_rating.rating_point * rowB.original.product_rating.rating_count
+        rowA.original.product_rating.rating_point *
+          rowA.original.product_rating.rating_count >
+        rowB.original.product_rating.rating_point *
+          rowB.original.product_rating.rating_count
       )
         return 1;
       return 0;
@@ -323,7 +362,9 @@ const columns: ColumnDef<IAdminProduct>[] = [
   },
   {
     id: "actions",
-    cell: (props: CellContext<IAdminProduct, unknown>) => <CellHandler {...props} type="action" />,
+    cell: (props: CellContext<IAdminProduct, unknown>) => (
+      <CellHandler {...props} type="action" />
+    ),
     enableHiding: false,
     enableGlobalFilter: false,
   },
