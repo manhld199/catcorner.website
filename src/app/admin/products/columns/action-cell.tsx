@@ -1,7 +1,10 @@
+"use client";
+
 // import libs
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Row } from "@tanstack/react-table";
+import Link from "next/link";
 
 // import components
 import {
@@ -22,13 +25,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Link from "next/link";
 
 // import utils
-// import { IAdminProduct } from "../../../utils/type";
-// import { handleDeleteOne } from "../../../utils/fetch";
-import { METHOD_NAMES } from "@/data/admin";
+import { handleDelete } from "@/utils/functions/client";
+import { PUBLIC_ADMIN_PRODUCTS_URL } from "@/utils/constants/urls";
 
+// import data
+import { METHOD_NAMES } from "@/data/admin";
 import { DIALOG_DATA } from "@/data/dialog";
 
 interface IAdminProduct {
@@ -44,12 +47,13 @@ interface IAdminProduct {
 }
 
 const ActionCell = ({ row }: { row: Row<IAdminProduct> | undefined }) => {
-  const id = row?.original._id;
-  const name = row?.original.product_name;
-  const [open, setOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState(`Bạn có chắc muốn xóa ${name} hay không?`);
-  const defaultDialogContent = `Bạn có chắc muốn xóa ${name} hay không?`;
-  const deleteUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/location/delete`;
+  const id = row?.original._id as string;
+  const name = row?.original.product_name as string;
+  const [open, setOpen] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [dialogContent, setDialogContent] = useState(
+    `${DIALOG_DATA["content-general-delete-rows-1"]} '${name}' ${DIALOG_DATA["content-general-delete-confirm-3"]}`
+  );
   // console.log("deleteUrl", deleteUrl);
 
   return (
@@ -72,7 +76,9 @@ const ActionCell = ({ row }: { row: Row<IAdminProduct> | undefined }) => {
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <div className="w-full text-red-500">{METHOD_NAMES["delete-btn"]}</div>
+              <div className="w-full text-red-500">
+                {METHOD_NAMES["delete-btn"]}
+              </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -81,19 +87,51 @@ const ActionCell = ({ row }: { row: Row<IAdminProduct> | undefined }) => {
               </DialogHeader>
 
               <DialogFooter className="flex flex-row sm:justify-between">
-                <Button type="button" variant="default" onClick={() => setOpen(false)}>
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={() => setOpen(false)}>
                   {DIALOG_DATA["close-btn"]}
                 </Button>
 
-                {dialogContent === defaultDialogContent && (
+                {!isDeleting && (
                   <Button
                     type="button"
                     variant="default"
-                    onClick={
-                      () => {}
-                      //   handleDeleteOne({ id, name, setDialogContent, setOpen, tDialog, deleteUrl })
-                    }
-                  >
+                    onClick={async () => {
+                      try {
+                        setIsDeleting(true);
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-deleting"]} '${name}'`
+                        );
+
+                        const isSuccess: boolean = await handleDelete(
+                          [id],
+                          PUBLIC_ADMIN_PRODUCTS_URL
+                        );
+
+                        if (!isSuccess) {
+                          setDialogContent(
+                            DIALOG_DATA["content-general-delete-fail"]
+                          );
+                          setIsDeleting(false);
+                          return;
+                        }
+
+                        setIsDeleting(false);
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-delete-success-1"]} '${name}' ${DIALOG_DATA["content-general-delete-success-3"]}`
+                        );
+                        setTimeout(() => {
+                          location.reload();
+                        }, 3000);
+                      } catch (err) {
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-delete-fail"]}: ${err}`
+                        );
+                        setIsDeleting(false);
+                      }
+                    }}>
                     {DIALOG_DATA["delete-btn"]}
                   </Button>
                 )}

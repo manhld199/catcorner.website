@@ -41,3 +41,23 @@ export const handleUpdate = async (data: any, url: string) => {
     return { isSuccess: false, err };
   }
 };
+
+export const handleDelete = async (
+  ids: string[],
+  deleteUrl: string
+): Promise<boolean> => {
+  try {
+    const res = await fetch(deleteUrl, {
+      method: "DELETE",
+      body: JSON.stringify({ ids: ids }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status != 200 && res.status != 201) return false;
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
