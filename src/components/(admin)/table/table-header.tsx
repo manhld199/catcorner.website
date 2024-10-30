@@ -252,7 +252,7 @@ function DataTableHeader<T>({
                             return;
                           }
 
-                          setIsDeleting(false);
+                          // setIsDeleting(false);
                           setDeleteDialogContent(
                             `${DIALOG_DATA["content-general-delete-success-1"]} ${selectedRowIds.length} ${DIALOG_DATA["content-general-deleting-2"]} ${DIALOG_DATA["content-general-delete-success-3"]}`
                           );

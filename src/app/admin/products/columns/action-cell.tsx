@@ -118,7 +118,7 @@ const ActionCell = ({ row }: { row: Row<IAdminProduct> | undefined }) => {
                           return;
                         }
 
-                        setIsDeleting(false);
+                        // setIsDeleting(false);
                         setDialogContent(
                           `${DIALOG_DATA["content-general-delete-success-1"]} '${name}' ${DIALOG_DATA["content-general-delete-success-3"]}`
                         );

@@ -33,13 +33,11 @@ export default async function AdminProductPage() {
 
         <Button
           variant="default"
-          // color="secondary"
-          className="h-fit py-2 rounded-md"
-          //   startIcon={}
-        >
+          className="h-fit py-2 rounded-md flex flex-row gap-2"
+          asChild>
           <Link href="/admin/products/add">
             <PlusIcon className="w-6 h-6" />
-            {PAGE_DATA["product-add"]}
+            <span>{PAGE_DATA["product-add"]}</span>
           </Link>
         </Button>
       </section>

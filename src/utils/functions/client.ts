@@ -2,6 +2,14 @@
 
 "use client";
 
+// helpers
+export const extractImageLinksFromHTML = (htmlString: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, "text/html");
+  return Array.from(doc.querySelectorAll("img")).map((img) => img.src);
+};
+
+// fetch funcs
 export const handleAdd = async (data: any, url: string) => {
   // console.log("datadatadata", JSON.stringify(data));
   try {
