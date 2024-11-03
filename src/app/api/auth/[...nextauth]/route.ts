@@ -7,11 +7,30 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+        id: { label: "Id", type: "text" },
         email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
+        token: { label: "Token", type: "text" },
+        name: { label: "Name", type: "text" },
+        role: { label: "Role", type: "text" },
+        refreshToken: { label: "RefreshToken", type: "text" },
+        expiresIn: { label: "ExpiresIn", type: "text" },
+
       },
       async authorize(credentials) {
         try {
+          if (credentials?.token) {
+            return {
+              id: credentials.id || "google-user",
+              name: credentials.name,
+              email: credentials.email,
+              role: credentials.role || "User",
+              accessToken: credentials.token,
+              refreshToken: credentials.refreshToken || "",
+              expiresIn: credentials.expiresIn || 3600
+            };
+          }
+
           const res = await fetch(`${AUTH_URL}/login`, {
             method: 'POST',
             body: JSON.stringify(credentials),
@@ -20,11 +39,9 @@ const authOptions: NextAuthOptions = {
           
           const response = await res.json();
 
-          // Kiểm tra response success và có data
           if (res.ok && response.success && response.data) {
             const { user, token: accessToken, expiresIn } = response.data;
             
-            // Return user object theo format mà NextAuth yêu cầu
             return {
               id: user.id,
               email: user.email,
@@ -36,7 +53,6 @@ const authOptions: NextAuthOptions = {
             };
           }
 
-          // Nếu login thất bại
           throw new Error(response.message || "Login failed");
         } catch (error: any) {
           throw new Error(error.message || "Login failed");
@@ -47,7 +63,6 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Update token với thông tin user khi login
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
@@ -65,7 +80,6 @@ const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        // Update session với thông tin từ token
         session.user.id = token.id;
         session.user.email = token.email as string;
         session.user.name = token.name as string;

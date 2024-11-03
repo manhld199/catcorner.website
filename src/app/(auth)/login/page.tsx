@@ -82,8 +82,8 @@ export default function LoginPage() {
 				setIsRegistering(false);
 				return;
 			}
-			router.push("/");
-			router.refresh();
+			
+			
 		} catch (error) {
 			toast.error("Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
 			setIsRegistering(false);
