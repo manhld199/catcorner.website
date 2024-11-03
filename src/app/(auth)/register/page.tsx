@@ -28,7 +28,7 @@ import { useState, useCallback, CSSProperties, useEffect } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
 import {AUTH_URL} from "@/utils/constants/urls"
-import AuthHeader from "@/partials/(auth)/header/page";
+import AuthHeader from "@/partials/(auth)/header";
 import { useAuth } from "@/hooks/useAuth";
 import { useSession } from "next-auth/react";
 
