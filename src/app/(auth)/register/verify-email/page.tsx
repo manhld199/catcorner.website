@@ -33,22 +33,22 @@ function VerifyEmailContent() {
 		return <div>Loading...</div>;
 	}
 	return (
-		<Card className="w-full max-w-[500px] pt-11 pb-11 px-4 shadow-lg hover:shadow-xl transition-shadow duration-300 mx-auto my-8">
+		<Card className="w-full max-w-[500px] pt-11 pb-11 px-4 shadow-lg hover:shadow-xl transition-shadow duration-300 mx-auto my-8 dark:bg-gray-800">
 			<CardHeader className="text-center">
-				<div className="mx-auto bg-green-100 w-16 h-16 flex items-center justify-center rounded-full mb-4">
-					<Mail className="h-8 w-8 text-green-600" />
+				<div className="mx-auto bg-green-100 dark:bg-green-900 w-16 h-16 flex items-center justify-center rounded-full mb-4">
+					<Mail className="h-8 w-8 text-green-600 dark:text-green-400" />
 				</div>
-				<CardTitle className="text-2xl font-bold text-gray-700">
+				<CardTitle className="text-2xl font-bold text-gray-700 dark:text-white">
 					XÁC MINH EMAIL CỦA BẠN
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="text-left">
-				<p className="text-gray-600 mb-4">
+				<p className="text-gray-600 dark:text-gray-300 mb-4">
 					Vui lòng xác minh địa chỉ email của bạn để hoàn tất việc đăng ký.
 					Chúng tôi đã gửi một email xác nhận tới:
 				</p>
-				<p className="text-green-500 font-semibold mb-4 text-center">{email}</p>
-				<p className="text-sm text-gray-500">
+				<p className="text-green-500 dark:text-green-400 font-semibold mb-4 text-center">{email}</p>
+				<p className="text-sm text-gray-500 dark:text-gray-400">
 					Nhấn &quot;Gửi lại email&quot; nếu bạn không nhận được bất kỳ email
 					nào trong vòng 10 phút.
 				</p>
