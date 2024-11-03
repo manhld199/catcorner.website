@@ -8,7 +8,7 @@ export default withAuth(
 
 
     // Protect admin routes
-    if (path.startsWith("/admin") && token?.role !== "admin") {
+    if (path.startsWith("/admin") && token?.role !== "Admin") {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 

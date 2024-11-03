@@ -190,6 +190,27 @@ export default function RegisterPage() {
 		}
 	};
 
+	const handleLoginWithGoogle = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/google`;
+		
+			} catch (error) {
+				toast.error("Error during Google login. Please try again.");
+				
+			}
+				
+	};
+
+	const handleLoginWithFacebook = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/facebook`;
+		} catch (error) {
+		
+			toast.error("Error during Facebook login. Please try again.");
+			
+		}
+			
+	};
 	return (
 		<>
 		<AuthHeader currentPage="register"></AuthHeader>
@@ -442,6 +463,7 @@ export default function RegisterPage() {
 								<Button
 									variant="custom_outlined"
 									className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+									onClick={handleLoginWithFacebook}
 								>
 									<Image
 										src={`/imgs/auth/fb_logo.svg`}
@@ -456,6 +478,7 @@ export default function RegisterPage() {
 								<Button
 									variant="custom_outlined"
 									className="w-full sm:w-48 text-base sm:text-lg md:text-xl"
+									onClick={handleLoginWithGoogle}
 								>
 									<Image
 										src={`/imgs/auth/gg_logo.svg`}

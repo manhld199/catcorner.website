@@ -22,7 +22,7 @@ const authOptions: NextAuthOptions = {
 
           // Kiểm tra response success và có data
           if (res.ok && response.success && response.data) {
-            const { user, token: accessToken } = response.data;
+            const { user, token: accessToken, expiresIn } = response.data;
             
             // Return user object theo format mà NextAuth yêu cầu
             return {
@@ -31,7 +31,8 @@ const authOptions: NextAuthOptions = {
               name: user.name,
               role: user.role,
               accessToken: accessToken,
-              refreshToken: response.data.refreshToken // Nếu cần dùng refresh token
+              refreshToken: response.data.refreshToken, 
+              expiresIn: response.data.expiresIn
             };
           }
 
@@ -53,8 +54,14 @@ const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
+        token.accessTokenExpires = Date.now() + (user.expiresIn * 1000);
       }
-      return token;
+
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      return await refreshAccessToken(token);
     },
     async session({ session, token }) {
       if (session.user) {
@@ -79,6 +86,36 @@ const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
 };
+async function refreshAccessToken(token: any) {
+  try {
+    const response = await fetch(`${AUTH_URL}/refresh-token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        refreshToken: token.refreshToken
+      })
+    });
 
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.data.token,
+      refreshToken: refreshedTokens.data.refreshToken ?? token.refreshToken,
+      accessTokenExpires: Date.now() + (refreshedTokens.data.expiresIn * 1000),
+    };
+  } catch (error) {
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

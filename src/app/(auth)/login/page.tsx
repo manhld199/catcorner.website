@@ -82,7 +82,6 @@ export default function LoginPage() {
 				setIsRegistering(false);
 				return;
 			}
-
 			router.push("/");
 			router.refresh();
 		} catch (error) {
@@ -93,14 +92,27 @@ export default function LoginPage() {
 		}
 	};
 
-	const handleLoginWithGoogle = () => {
-		signIn("google", { callbackUrl: "/" });
+	const handleLoginWithGoogle = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/google`;
+		
+			} catch (error) {
+				toast.error("Error during Google login. Please try again.");
+				
+			}
+				
 	};
 
-	const handleLoginWithFacebook = () => {
-		signIn("facebook", { callbackUrl: "/" });
+	const handleLoginWithFacebook = async () => {
+		try {
+			window.location.href = `${AUTH_URL}/facebook`;
+		} catch (error) {
+		
+			toast.error("Error during Facebook login. Please try again.");
+			
+		}
+			
 	};
-
 	return (
 		<>
 		<AuthHeader currentPage="login"></AuthHeader>
