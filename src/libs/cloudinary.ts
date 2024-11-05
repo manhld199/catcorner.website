@@ -1,24 +1,31 @@
 "use client";
 
 import { PUBLIC_CLOUDINARY_URL } from "@/utils/constants/urls";
+import { extractImageLinksFromHTML } from "@/utils/functions/client";
 import { convertBlobUrlsToImgFiles } from "@/utils/functions/convert";
 
-function getCldPublicIdFromUrl(url: string): string | undefined {
+const getCldPublicIdFromUrl = (url: string): string | undefined => {
   try {
-    const startIndex = url.indexOf("upload/") + "upload/".length;
-    const str = url.slice(startIndex).split("/").slice(1).join("/");
-    const endIndex = str.lastIndexOf(".");
-    const publicId = str.substring(0, endIndex);
-    return publicId;
+    if (url.startsWith("SEO_Images")) {
+      const splitedArr = url.split("/");
+      const publicId = splitedArr[splitedArr.length - 1];
+      return publicId;
+    } else if (url.startsWith("https://res.cloudinary.com")) {
+      const startIndex = url.indexOf("upload/") + "upload/".length;
+      const str = url.slice(startIndex).split("/").slice(1).join("/");
+      const endIndex = str.lastIndexOf(".");
+      const publicId = str.substring(0, endIndex);
+      return publicId;
+    }
   } catch (error: any) {
     console.error(">> Error in getCldPublicIdFromUrl:", error.message);
     return undefined;
   }
-}
+};
 
 const uploadFilesToCloudinary = async (
   files: File[],
-  folderName?: string
+  folderName: string = "upload"
 ): Promise<string[]> => {
   const formData = new FormData();
 
@@ -41,7 +48,11 @@ const uploadFilesToCloudinary = async (
 
 const removeImgsFromCloudinary = async (imgs: string[]): Promise<void> => {
   const cldPublicIds = imgs
-    .filter((url) => url.startsWith("https://res.cloudinary.com/"))
+    .filter(
+      (url) =>
+        url.startsWith("https://res.cloudinary.com/") ||
+        url.startsWith("SEO_Images")
+    )
     .map((url) => getCldPublicIdFromUrl(url));
 
   if (cldPublicIds.length) {
@@ -58,65 +69,53 @@ const removeImgsFromCloudinary = async (imgs: string[]): Promise<void> => {
 
 const uploadImgsInDesToCloudinary = async (
   description: string,
-  folderName: string
+  folderName: string = "upload"
 ): Promise<string> => {
-  // console.log("descriptiondescription", description);
+  const imgSrcs = extractImageLinksFromHTML(description).filter((src) =>
+    src.startsWith("blob:")
+  );
 
+  if (imgSrcs.length === 0) return description;
+
+  // Convert blob URLs to image files
+  const imgFiles = await convertBlobUrlsToImgFiles(imgSrcs, "description");
+
+  // Upload images to Cloudinary and get URLs
+  const urls = await uploadFilesToCloudinary(imgFiles, folderName);
+
+  // Replace blob URLs with Cloudinary URLs in the HTML string
   const parser = new DOMParser();
-
   const doc = parser.parseFromString(description, "text/html");
-  // console.log("docdocdocdocdocdocdoc", doc);
-
-  const docImgs = Array.from(doc.querySelectorAll("img"));
-  // console.log("docImgsdocImgsdocImgs", docImgs);
-
-  if (!docImgs.length) return description;
-
-  const imgSrcs = docImgs
+  Array.from(doc.querySelectorAll("img"))
     .filter((img) => img.src.startsWith("blob:"))
-    .map((img) => img.src);
-  if (imgSrcs.length > 0) {
-    // console.log("imgSrcsimgSrcsimgSrcs", imgSrcs);
-
-    const imgFiles = await convertBlobUrlsToImgFiles(imgSrcs, "description");
-    // console.log("imgFilesimgFilesimgFiles", imgFiles);
-
-    const urls = await uploadFilesToCloudinary(imgFiles, folderName);
-    // console.log("urlsurlsurlsurlsurlsurls", urls);
-
-    docImgs
-      .filter((img: any) => img.getAttribute("src").startsWith("blob:"))
-      .forEach((img, index) => img.setAttribute("src", urls[index]));
-  }
-  // console.log("docImgsdocImgsdocImgs", docImgs);
-
-  // console.log("doc.querySelectordoc.querySelector", doc.querySelector("body").innerHTML);
+    .forEach((img, index) => img.setAttribute("src", urls[index]));
 
   return (doc.querySelector("body") as any).innerHTML;
 };
 
 const removeImgsInDesFromCloudinary = async (
-  deafultDes: string,
+  defaultDes: string,
   changedDes: string
-): Promise<void> => {
-  const parser = new DOMParser();
+) => {
+  // Get image sources from the default and changed descriptions
+  const defaultSrcs = extractImageLinksFromHTML(defaultDes).filter(
+    (src) =>
+      src.startsWith("https://res.cloudinary.com/") ||
+      src.startsWith("SEO_Images")
+  );
+  const changedSrcs = extractImageLinksFromHTML(changedDes).filter(
+    (src) =>
+      src.startsWith("https://res.cloudinary.com/") ||
+      src.startsWith("SEO_Images")
+  );
 
-  const defaultDoc = parser.parseFromString(deafultDes, "text/html");
-  const changedDoc = parser.parseFromString(changedDes, "text/html");
+  // Identify images in the default description missing from the changed description
+  const missingSrcs = defaultSrcs.filter((src) => !changedSrcs.includes(src));
 
-  const defaultImgs = Array.from(defaultDoc.querySelectorAll("img"));
-  const changedImgs = Array.from(changedDoc.querySelectorAll("img"));
-
-  const defaultSrcs = defaultImgs
-    .filter((img) => img.src.startsWith("https://res.cloudinary.com/"))
-    .map((img) => img.src);
-  const changedtSrcs = changedImgs
-    .filter((img) => img.src.startsWith("https://res.cloudinary.com/"))
-    .map((img) => img.src);
-
-  const missingSrcs = defaultSrcs.filter((src) => !changedtSrcs.includes(src));
-
-  await removeImgsFromCloudinary(missingSrcs);
+  // Remove missing images from Cloudinary
+  if (missingSrcs.length > 0) {
+    await removeImgsFromCloudinary(missingSrcs);
+  }
 };
 
 export {

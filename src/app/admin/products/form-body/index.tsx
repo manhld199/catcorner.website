@@ -1,42 +1,28 @@
 "use client";
 
+// import libs
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { getFormDefaultValues, getFormSchema } from "./form-init-value";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  convertBlobUrlsToImgFiles,
-  getStrOfObj,
-} from "@/utils/functions/convert";
-import { PAGE_DATA } from "@/data/admin";
-import { PLACEHOLDER_DATA } from "@/data/placeholder";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  AdminCustomField,
-  AdminCustomSection,
-  DropZoneMultiImgs,
-  DropZoneSingleImg,
-  EditorRichText,
-} from "@/components";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { getFormDefaultValues, getFormSchema } from "./form-init-value";
 import { Cpu, PawPrint, Plus, Trash2 } from "lucide-react";
+import {
+  removeImgsFromCloudinary,
+  removeImgsInDesFromCloudinary,
+  uploadFilesToCloudinary,
+  uploadImgsInDesToCloudinary,
+} from "@/libs/cloudinary";
+
+// import components
+import { Form, FormLabel, FormMessage } from "@/components/ui/form";
+import { AdminCustomField, AdminCustomSection } from "@/components";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import {
   Dialog,
   DialogClose,
@@ -47,23 +33,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DIALOG_DATA } from "@/data/dialog";
 import { Spinner } from "@/components/ui-expansions/spinner";
+import { Button } from "@/components/ui/button";
+import ProductVariantGroup from "./product-variant-group";
+
+// import data
+import { PAGE_DATA } from "@/data/admin";
+import { PLACEHOLDER_DATA } from "@/data/placeholder";
 import { ERROR_DATA } from "@/data/error";
-import SelectDialog from "@/components/(general)/selects/dialog";
-import {
-  removeImgsFromCloudinary,
-  removeImgsInDesFromCloudinary,
-  uploadFilesToCloudinary,
-  uploadImgsInDesToCloudinary,
-} from "@/libs/cloudinary";
+import { DIALOG_DATA } from "@/data/dialog";
+
+// import utils
 import { PRODUCTS_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
 import { handleAdd, handleUpdate } from "@/utils/functions/client";
 import {
   ADMIN_PRODUCTS,
   PUBLIC_ADMIN_PRODUCTS_URL,
 } from "@/utils/constants/urls";
-import ProductVariantGroup from "./product-variant-group";
+import {
+  convertBlobUrlsToImgFiles,
+  getStrOfObj,
+} from "@/utils/functions/convert";
 
 // for handle array
 const handleAddVariant = (form: any) => {

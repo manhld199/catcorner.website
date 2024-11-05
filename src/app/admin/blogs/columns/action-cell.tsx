@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Row } from "@tanstack/react-table";
+import Link from "next/link";
 
 // import components
 import {
@@ -22,14 +23,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Link from "next/link";
+
+// import data
+import { METHOD_NAMES } from "@/data/admin";
+import { DIALOG_DATA } from "@/data/dialog";
 
 // import utils
-// import { IAdminBlog } from "../../../utils/type";
-// import { handleDeleteOne } from "../../../utils/fetch";
-import { METHOD_NAMES } from "@/data/admin";
-
-import { DIALOG_DATA } from "@/data/dialog";
+import { PUBLIC_ADMIN_BLOGS_URL } from "@/utils/constants/urls";
+import { handleDelete } from "@/utils/functions/client";
 
 interface IAdminBlog {
   _id: string;
@@ -41,14 +42,13 @@ interface IAdminBlog {
 }
 
 const ActionCell = ({ row }: { row: Row<IAdminBlog> | undefined }) => {
-  const id = row?.original._id;
-  const name = row?.original.article_name;
+  const id = row?.original._id as string;
+  const name = row?.original.article_name as string;
   const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [dialogContent, setDialogContent] = useState(
-    `Bạn có chắc muốn xóa ${name} hay không?`
+    `${DIALOG_DATA["content-general-delete-rows-1"]} '${name}' ${DIALOG_DATA["content-general-delete-confirm-3"]}`
   );
-  const defaultDialogContent = `Bạn có chắc muốn xóa ${name} hay không?`;
-  const deleteUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/location/delete`;
   // console.log("deleteUrl", deleteUrl);
 
   return (
@@ -89,14 +89,44 @@ const ActionCell = ({ row }: { row: Row<IAdminBlog> | undefined }) => {
                   {DIALOG_DATA["close-btn"]}
                 </Button>
 
-                {dialogContent === defaultDialogContent && (
+                {!isDeleting && (
                   <Button
                     type="button"
                     variant="default"
-                    onClick={
-                      () => {}
-                      //   handleDeleteOne({ id, name, setDialogContent, setOpen, tDialog, deleteUrl })
-                    }>
+                    onClick={async () => {
+                      try {
+                        setIsDeleting(true);
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-deleting"]} '${name}'`
+                        );
+
+                        const isSuccess: boolean = await handleDelete(
+                          [id],
+                          PUBLIC_ADMIN_BLOGS_URL
+                        );
+
+                        if (!isSuccess) {
+                          setDialogContent(
+                            DIALOG_DATA["content-general-delete-fail"]
+                          );
+                          setIsDeleting(false);
+                          return;
+                        }
+
+                        // setIsDeleting(false);
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-delete-success-1"]} '${name}' ${DIALOG_DATA["content-general-delete-success-3"]}`
+                        );
+                        setTimeout(() => {
+                          location.reload();
+                        }, 3000);
+                      } catch (err) {
+                        setDialogContent(
+                          `${DIALOG_DATA["content-general-delete-fail"]}: ${err}`
+                        );
+                        setIsDeleting(false);
+                      }
+                    }}>
                     {DIALOG_DATA["delete-btn"]}
                   </Button>
                 )}

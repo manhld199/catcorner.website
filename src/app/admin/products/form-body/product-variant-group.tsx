@@ -1,4 +1,7 @@
+// import components
 import { AdminCustomField } from "@/components";
+
+// import data
 import { PAGE_DATA } from "@/data/admin";
 import { PLACEHOLDER_DATA } from "@/data/placeholder";
 

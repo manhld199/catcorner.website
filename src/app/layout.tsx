@@ -11,6 +11,8 @@ import { CustomerFooter, CustomerHeader } from "@/partials";
 
 // import css
 import "./globals.css";
+import { Providers } from "./providers";
+import { PageLoader } from "@/components/(general)/layouts/page-loader";
 
 const josefin = Josefin_Sans({
   subsets: ["latin"],
@@ -29,6 +31,8 @@ export default function RootLayout({
   return (
     <html lang="vi" className={josefin.className}>
       <body>
+      <PageLoader>
+      <Providers>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -36,6 +40,8 @@ export default function RootLayout({
           disableTransitionOnChange>
           {children}
         </ThemeProvider>
+        </Providers>
+      </PageLoader>
       </body>
     </html>
   );

@@ -9,7 +9,7 @@ export default function DefaultLayout({
   return (
     <>
       <CustomerHeader />
-      <BreadCrumb />
+      {/* <BreadCrumb /> */}
       {children}
       <ScrollUp />
       <CustomerFooter />

@@ -1,12 +1,17 @@
+// import libs
+import React from "react";
+import Link from "next/link";
+import { PlusIcon } from "lucide-react";
+
+// import components
 import { AdminTable } from "@/components";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
-import React from "react";
 import columns from "./columns";
 
+// import data
 import { PAGE_DATA } from "@/data/admin";
 
+// import utils
 import { fetchDataNoCache } from "@/utils/functions/server";
 import { ADMIN_BLOGS_URL } from "@/utils/constants/urls";
 
@@ -27,19 +32,19 @@ export default async function AdminBlogsPage() {
 
         <Button
           variant="default"
-          // color="secondary"
-          className="h-fit py-2 rounded-md"
-          //   startIcon={<PlusIcon className="w-6 h-6" />}
-        >
-          <Link href="/admin/blogs/add">{PAGE_DATA["blog-add"]}</Link>
+          className="h-fit py-2 rounded-md flex flex-row gap-2"
+          asChild>
+          <Link href="/admin/blogs/add">
+            <PlusIcon className="w-6 h-6" />
+            <span>{PAGE_DATA["blog-add"]}</span>
+          </Link>
         </Button>
       </section>
 
       <AdminTable
         columns={columns}
         data={blogsData.articles ?? []}
-        deleteUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/blogs/delete`}
-        pageName={"blogs"}
+        deleteUrl={ADMIN_BLOGS_URL}
       />
     </main>
   );

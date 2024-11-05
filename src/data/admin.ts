@@ -10,6 +10,7 @@ export const COLUMN_NAMES = {
   "column-author-name": "Tác giả",
   "column-published-date": "Ngày xuất bản",
   "column-tags": "Gắn thẻ",
+  "column-products-count": "Số sản phẩm",
 };
 
 export const SORT_NAMES = {
@@ -56,6 +57,11 @@ export const PAGE_DATA = {
   "blog-references": "Bài viết tham khảo",
   "blog-author-name": "Tác giả",
   "blog-published-date": "Ngày xuất bản",
+  category: "Quản lý danh mục",
+  "category-info": "Thông tin danh mục",
+  "category-add": "Thêm danh mục",
+  "category-detail": "Chi tiết danh mục",
+  "category-name": "Tên danh mục",
 };
 
 export const METHOD_NAMES = {

@@ -19,7 +19,6 @@ import {
   Row,
   FilterMeta,
 } from "@tanstack/react-table";
-// import { useTranslations } from "next-intl";
 import { rankItem } from "@tanstack/match-sorter-utils";
 
 // import components
@@ -33,20 +32,19 @@ import {
 } from "@/components/ui/table";
 import DataTableHeader from "./table-header";
 import DataTablePagination from "./table-pagination";
-import { normalizeVietnameseStr } from "@/utils/functions/format";
 
 interface IAdminTable<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   deleteUrl: string;
-  pageName: string;
+  filterList?: string[];
 }
 
 function AdminTable<TData, TValue>({
   columns,
   data,
   deleteUrl,
-  pageName,
+  filterList = [],
 }: IAdminTable<TData, TValue>) {
   // const tAdmin = useTranslations("AdminLocation");
   // const tDialog = useTranslations("AdminDialog");
@@ -54,8 +52,11 @@ function AdminTable<TData, TValue>({
   // console.log("datadatadatadata", data);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   const fuzzyFilter = (
@@ -111,7 +112,7 @@ function AdminTable<TData, TValue>({
         columnVisibility={columnVisibility}
         setColumnVisibility={setColumnVisibility}
         deleteUrl={deleteUrl}
-        pageName={pageName}
+        filterList={filterList}
       />
 
       <div className="relative rounded md w-full max-h-[580px] overflow-auto">
@@ -124,7 +125,10 @@ function AdminTable<TData, TValue>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -135,17 +139,24 @@ function AdminTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns?.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns?.length}
+                  className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
