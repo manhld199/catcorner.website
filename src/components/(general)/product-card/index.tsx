@@ -5,6 +5,7 @@
 import { Star } from "lucide-react";
 import { IProductProps } from "@/types/interfaces";
 import { CldImage } from "next-cloudinary";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: IProductProps;
@@ -12,7 +13,9 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800">
+    <Link
+      href={`/${product.product_slug}?pid=${product.product_id_hashed}`}
+      className="relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800">
       {/* Discount Badge */}
       {product.highest_discount ? (
         <div className="absolute top-4 left-4 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
@@ -106,6 +109,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

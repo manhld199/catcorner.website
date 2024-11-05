@@ -1,8 +1,7 @@
-// ProductDetailsPage component (page.tsx)
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   CustomerProductSlider,
   CustomerProductInformation,
@@ -10,97 +9,81 @@ import {
   CustomerProductReview,
 } from "./partials";
 
-// Demo data for product variants
-const demoVariants = [
-  {
-    name: "Variant 1",
-    url: "/product/variant-1",
-    image: {
-      url: "/imgs/test.jpg",
-      alt: "Variant 1 Image",
-    },
-    quantity: 5,
-  },
-  {
-    name: "Variant 2",
-    url: "/product/variant-2",
-    image: {
-      url: "/imgs/test.jpg",
-      alt: "Variant 2 Image",
-    },
-    quantity: 10,
-  },
-  {
-    name: "Variant 3",
-    url: "/product/variant-3",
-    image: {
-      url: "/imgs/test.jpg",
-      alt: "Variant 3 Image",
-    },
-    quantity: 20,
-  },
-];
-
-// Demo data for customer reviews
-const demoReviews = [
-  {
-    id: 1,
-    user: "Phan Nguyễn Hải Yến",
-    date: "19/9/2024",
-    rating: 4,
-    title: "Cat and kitten love it!",
-    content:
-      "As my cat got older, I noticed he was becoming less active and pickier about his food. After consulting with my vet, I switched to this senior cat formula. It's designed with his aging needs in mind, and it's made a noticeable difference. His coat looks healthier, and he seems more lively than before. I appreciate that it's easy for him to chew and digest. This cat food is a lifesaver for my senior feline companion.",
-  },
-  {
-    id: 2,
-    user: "Nguyễn Văn A",
-    date: "15/8/2024",
-    rating: 5,
-    title: "Best food for my senior cat!",
-    content:
-      "I've tried so many brands for my cat, but nothing works as well as this one. His energy levels are better, and he loves the taste!",
-  },
-  {
-    id: 3,
-    user: "Lê Thị B",
-    date: "3/7/2024",
-    rating: 3,
-    title: "Good but a bit expensive",
-    content:
-      "My cat likes it, but I find it a bit on the expensive side compared to other brands. Still, I see some improvement in his coat and energy.",
-  },
-];
-
-// Dữ liệu demo
-const productImgs = [
-  { link: "/imgs/test.jpg", alt: "Product Image 1" },
-  { link: "/imgs/test-1.jpg", alt: "Product Image 2" },
-  { link: "/imgs/test.jpg", alt: "Product Image 3" },
-  { link: "/imgs/test.jpg", alt: "Product Image 4" },
-  { link: "/imgs/test-1.jpg", alt: "Product Image 5" },
-];
+import { IProductDetail } from "./interfaces";
+import { API_BASE_URL } from "@/utils/constants/urls";
 
 export default function ProductDetailsPage() {
+  const [productData, setProductData] = useState<IProductDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [inputQuantity, setInputQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("info");
+  const searchParams = useSearchParams();
+  const pid = searchParams.get("pid");
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      if (!pid) return;
+
+      try {
+        const res = await fetch(
+          `${API_BASE_URL}/guest/product/${encodeURIComponent(
+            pid.replaceAll(" ", "+")
+          )}`
+        );
+
+        const data = await res.json();
+
+        if (data.success && data.data?.product) {
+          setProductData(data.data.product);
+          console.log("Fetched product data:", data.data.product);
+        } else {
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to fetch product data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProductData();
+  }, [pid]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!productData) return <p>Product not found</p>;
 
   const handleVariantSelect = (index: number) => setSelectedVariantIndex(index);
   const handleQuantityChange = (newQuantity: number) =>
     setInputQuantity(newQuantity);
 
   return (
-    <div className="container mx-auto my-6 w-4/5">
+    <div className="container mx-auto my-28 w-4/5">
       <section className="flex flex-col laptop:flex-row gap-12">
         <div className="laptop:w-1/2">
-          <CustomerProductSlider SliderImgs={productImgs} />
+          <CustomerProductSlider SliderImgs={productData.product_imgs} />
         </div>
 
         <div className="laptop:w-2/3">
           <CustomerProductBuyForm
-            pid="12345"
-            demoVariants={demoVariants}
+            pid={pid as string}
+            productName={productData.product_name}
+            shortDescription={productData.product_short_description}
+            avgRating={{
+              rating_point: productData.product_avg_rating.rating_point,
+              rating_count: productData.product_avg_rating.rating_count,
+            }}
+            price={
+              productData.product_variants[selectedVariantIndex].variant_price
+            }
+            discountPrice={
+              productData.product_variants[selectedVariantIndex].variant_price *
+              (1 -
+                productData.product_variants[selectedVariantIndex]
+                  .variant_discount_percent /
+                  100)
+            }
+            variants={productData.product_variants}
             selectedVariantIndex={selectedVariantIndex}
             inputQuantity={inputQuantity}
             onVariantSelect={handleVariantSelect}
@@ -108,6 +91,7 @@ export default function ProductDetailsPage() {
           />
         </div>
       </section>
+
       <section className="mt-8">
         <div className="flex gap-4 border-b pb-2">
           <button
@@ -130,9 +114,11 @@ export default function ProductDetailsPage() {
           </button>
         </div>
         {activeTab === "info" ? (
-          <CustomerProductInformation />
+          <CustomerProductInformation
+            description={productData.product_description}
+          />
         ) : (
-          <CustomerProductReview demoReviews={demoReviews} />
+          <CustomerProductReview reviews={productData.recent_reviews} />
         )}
       </section>
     </div>

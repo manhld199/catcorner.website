@@ -1,5 +1,3 @@
-// partials/review/index.tsx
-
 "use client";
 
 interface Review {
@@ -12,10 +10,10 @@ interface Review {
 }
 
 interface ReviewProps {
-  demoReviews: Review[];
+  reviews: Review[];
 }
 
-export default function CustomerReview({ demoReviews }: ReviewProps) {
+export default function CustomerReview({ reviews }: ReviewProps) {
   return (
     <div className="mt-4 dark:text-gray-200">
       <h2 className="text-xl font-bold mb-4 dark:text-white">
@@ -29,7 +27,7 @@ export default function CustomerReview({ demoReviews }: ReviewProps) {
         </span>
       </div>
       {/* Các thành phần đánh giá khách hàng */}
-      {demoReviews.map((review) => (
+      {reviews.map((review) => (
         <div key={review.id} className="border-b pb-4">
           <div className="flex items-center mb-1">
             <span className="text-yellow-500">{"★".repeat(review.rating)}</span>

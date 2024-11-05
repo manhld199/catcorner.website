@@ -36,7 +36,7 @@ export default function SearchPage() {
         // }
       );
       const data = await res.json();
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx:", data.data); // Kiểm tra dữ liệu trả về
+      // console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx:", data.data);
       return data.data;
     } catch (error) {
       console.error("Lỗi khi gọi API tìm kiếm sản phẩm:", error);
@@ -67,7 +67,7 @@ export default function SearchPage() {
   }, [searchParams]);
 
   return (
-    <div className="container mx-auto my-6 w-4/5">
+    <div className="container mx-auto my-28 w-4/5">
       <h1 className="font-bold text-center mb-8 dark:text-white">
         Search Results
       </h1>

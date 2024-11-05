@@ -13,9 +13,9 @@ import {
   CustomerHeaderMore,
 } from "./components";
 
-export default async function CustomerHeader() {
+export default function CustomerHeader() {
   return (
-    <header className="fixed top-0 bg-white dark:bg-black shadow-sm w-screen z-40">
+    <header className="fixed top-0 bg-white dark:bg-black shadow-sm w-screen z-30">
       <div className="mx-auto flex justify-between items-center phone:w-full desktop:w-4/5 laptop:w-11/12 phone:block laptop:flex">
         <div className="phone:px-4 phone:py-1 phone:bg-pri-1 dark:bg-teal-700 dark:laptop:bg-transparent laptop:bg-transparent phone:flex phone:justify-between laptop:px-0 tablet:px-9">
           <CustomerHeaderLogo></CustomerHeaderLogo>

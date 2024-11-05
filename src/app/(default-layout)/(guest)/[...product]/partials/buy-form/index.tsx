@@ -1,14 +1,27 @@
-// partials/buy-form/index.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { CustomerProductVariant } from "../../components";
 import { CustomerQuantityInputGroup } from "@/components";
-
 interface BuyFormProps {
   pid: string;
-  demoVariants: any[];
+  productName: string;
+  shortDescription: string;
+  avgRating: {
+    rating_point: number;
+    rating_count: number;
+  };
+  price: number;
+  discountPrice: number;
+  variants: {
+    variant_name: string;
+    variant_slug: string;
+    variant_img: string;
+    variant_price: number;
+    variant_stock_quantity: number;
+    variant_discount_percent: number;
+    _id: string;
+  }[];
   selectedVariantIndex: number;
   inputQuantity: number;
   onVariantSelect: (index: number) => void;
@@ -17,14 +30,17 @@ interface BuyFormProps {
 
 export default function CustomerProductBuyForm({
   pid,
-  demoVariants,
+  variants,
   selectedVariantIndex,
   inputQuantity,
   onVariantSelect,
   onQuantityChange,
+  productName,
+  shortDescription,
+  avgRating,
 }: BuyFormProps) {
   useEffect(() => {
-    const maxQuantity = demoVariants[selectedVariantIndex].quantity;
+    const maxQuantity = variants[selectedVariantIndex].variant_stock_quantity;
     if (inputQuantity > maxQuantity) {
       onQuantityChange(maxQuantity);
     }
@@ -32,28 +48,36 @@ export default function CustomerProductBuyForm({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2 dark:text-white">
-        Pate Mèo Trưởng Thành Royal Canin Instinctive 85g
-      </h1>
+      <h1 className="font-bold mb-2 dark:text-white">{productName}</h1>
       <p className="text-gray-500 dark:text-gray-300 mb-4">
-        Short description of the product
+        {shortDescription}
       </p>
 
       <div className="flex items-center mb-4">
-        <span className="text-yellow-500">★★★★☆</span>
+        <span className="text-yellow-500">
+          {"★".repeat(Math.round(avgRating.rating_point)) +
+            "☆".repeat(5 - Math.round(avgRating.rating_point))}
+        </span>
         <span className="ml-2 text-gray-500 dark:text-gray-300">
-          (4.1 rating, 137 reviews)
+          ({avgRating.rating_point} rating, {avgRating.rating_count} reviews)
         </span>
       </div>
 
       <div className="mb-4">
         <p className="font-medium dark:text-gray-200">Chọn phân loại:</p>
         <div className="grid grid-cols-3 laptop:grid-cols-4 desktop:grid-cols-6 gap-2 mt-2">
-          {demoVariants.map((variant, index) => (
+          {variants.map((variant, index) => (
             <CustomerProductVariant
-              key={index}
+              key={variant._id}
               pid={pid}
-              variant={variant}
+              variant={{
+                name: variant.variant_name,
+                url: variant.variant_slug,
+                image: {
+                  url: variant.variant_img,
+                  alt: `${productName} - ${variant.variant_name}`,
+                },
+              }}
               isActive={index === selectedVariantIndex}
               onClick={() => onVariantSelect(index)}
             />
@@ -67,7 +91,7 @@ export default function CustomerProductBuyForm({
           initValue={{
             defaultValue: inputQuantity,
             minValue: 1,
-            maxValue: demoVariants[selectedVariantIndex].quantity,
+            maxValue: variants[selectedVariantIndex].variant_stock_quantity,
           }}
           takeQuantity={onQuantityChange}
         />
@@ -75,10 +99,20 @@ export default function CustomerProductBuyForm({
 
       <div className="flex items-center mb-6 gap-12">
         <p className="text-gray-500 dark:text-gray-400 line-through mr-4">
-          1,112,442đ
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(variants[selectedVariantIndex].variant_price)}
         </p>
         <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
-          567,988đ
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(
+            variants[selectedVariantIndex].variant_price *
+              (1 -
+                variants[selectedVariantIndex].variant_discount_percent / 100)
+          )}
         </p>
       </div>
 
