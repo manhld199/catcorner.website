@@ -80,8 +80,7 @@ export default function CustomerQuantityInputGroup({
           }`}
           onClick={decreaseValue}
           type="button"
-          disabled={inputValue === initValue.minValue}
-        >
+          disabled={inputValue === initValue.minValue}>
           <Minus className="w-4 h-4" />
         </button>
 
@@ -106,8 +105,7 @@ export default function CustomerQuantityInputGroup({
           }`}
           onClick={increaseValue}
           type="button"
-          disabled={inputValue === initValue.maxValue}
-        >
+          disabled={inputValue === initValue.maxValue}>
           <Plus className="w-4 h-4" />
         </button>
       </div>

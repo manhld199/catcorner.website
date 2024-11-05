@@ -4,16 +4,16 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Dữ liệu demo
-const productImgs = [
-  { link: "/imgs/test.jpg", alt: "Product Image 1" },
-  { link: "/imgs/test-1.jpg", alt: "Product Image 2" },
-  { link: "/imgs/test.jpg", alt: "Product Image 3" },
-  { link: "/imgs/test.jpg", alt: "Product Image 4" },
-  { link: "/imgs/test-1.jpg", alt: "Product Image 5" },
-];
+interface SliderImg {
+  link: string;
+  alt: string;
+}
 
-export default function CustomerProductSlider() {
+interface SliderImgProps {
+  SliderImgs: SliderImg[];
+}
+
+export default function CustomerProductSlider({ SliderImgs }: SliderImgProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -33,17 +33,16 @@ export default function CustomerProductSlider() {
   };
 
   const thumbnailsContainer = useRef<HTMLDivElement>(null);
-  const SCROLL_OFFSET = 200;
 
   const handleScrollLeft = () => {
     const newIndex =
-      currentIndex > 0 ? currentIndex - 1 : productImgs.length - 1;
+      currentIndex > 0 ? currentIndex - 1 : SliderImgs.length - 1;
     setCurrentIndex(newIndex);
   };
 
   const handleScrollRight = () => {
     const newIndex =
-      currentIndex < productImgs.length - 1 ? currentIndex + 1 : 0;
+      currentIndex < SliderImgs.length - 1 ? currentIndex + 1 : 0;
     setCurrentIndex(newIndex);
   };
 
@@ -51,46 +50,42 @@ export default function CustomerProductSlider() {
     <section className="relative">
       {/* Ảnh chính */}
       <div className="relative w-full h-96 overflow-hidden">
-        {" "}
         <div className="absolute inset-0 border border-neutral-300">
           <Image
-            src={productImgs[currentIndex].link}
-            alt={productImgs[currentIndex].alt}
+            src={SliderImgs[currentIndex].link}
+            alt={SliderImgs[currentIndex].alt}
             layout="fill"
             className="object-cover"
           />
         </div>
         {/* Nút điều hướng trái */}
         <button
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 shadow-md rounded-full"
-          onClick={handleScrollLeft}
-        >
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-300/70 p-2 shadow-md rounded-full hover:bg-slate-300 dark:hover:bg-white"
+          onClick={handleScrollLeft}>
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </button>
         {/* Nút điều hướng phải */}
         <button
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 shadow-md rounded-full"
-          onClick={handleScrollRight}
-        >
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-300/70 p-2 shadow-md rounded-full hover:bg-slate-300 dark:hover:bg-white"
+          onClick={handleScrollRight}>
           <ChevronRight className="w-6 h-6 text-gray-700" />
         </button>
         {/* Chỉ số ảnh hiện tại */}
         <div className="absolute bottom-4 right-4 bg-gray-800 text-white px-2 py-1 rounded-md z-10">
-          {currentIndex + 1}/{productImgs.length}
+          {currentIndex + 1}/{SliderImgs.length}
         </div>
       </div>
 
       {/* Ảnh thu nhỏ */}
       <div className="flex mt-4 space-x-2">
         <button onClick={handleScrollLeft} className="p-2">
-          <ChevronLeft className="w-6 h-6 text-gray-700" />
+          <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-white" />
         </button>
 
         <div
           className="flex overflow-x-auto space-x-4"
-          ref={thumbnailsContainer}
-        >
-          {productImgs.map((img, index) => (
+          ref={thumbnailsContainer}>
+          {SliderImgs.map((img, index) => (
             <div
               key={index}
               className={`w-20 h-20 relative cursor-pointer ${getClassNames(
@@ -98,8 +93,7 @@ export default function CustomerProductSlider() {
               )}`}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => handleThumbnailClick(index)}
-            >
+              onClick={() => handleThumbnailClick(index)}>
               <Image
                 src={img.link}
                 alt={img.alt}
@@ -111,7 +105,7 @@ export default function CustomerProductSlider() {
         </div>
 
         <button onClick={handleScrollRight} className="p-2">
-          <ChevronRight className="w-6 h-6 text-gray-700" />
+          <ChevronRight className="w-6 h-6 text-gray-700 dark:text-white" />
         </button>
       </div>
     </section>

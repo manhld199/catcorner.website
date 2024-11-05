@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import {
   CustomerHeaderCategories,
@@ -13,9 +13,9 @@ import {
   CustomerHeaderMore,
 } from "./components";
 
-export default function CustomerHeader() {
+export default async function CustomerHeader() {
   return (
-    <header className="fixed top-0 bg-white dark:bg-black shadow-sm w-screen">
+    <header className="fixed top-0 bg-white dark:bg-black shadow-sm w-screen z-40">
       <div className="mx-auto flex justify-between items-center phone:w-full desktop:w-4/5 laptop:w-11/12 phone:block laptop:flex">
         <div className="phone:px-4 phone:py-1 phone:bg-pri-1 dark:bg-teal-700 dark:laptop:bg-transparent laptop:bg-transparent phone:flex phone:justify-between laptop:px-0 tablet:px-9">
           <CustomerHeaderLogo></CustomerHeaderLogo>
@@ -26,12 +26,13 @@ export default function CustomerHeader() {
         <CustomerHeaderCategories></CustomerHeaderCategories>
 
         <div className="phone:px-4 phone:py-3 tablet:px-9 laptop:px-0 flex justify-between">
-          <CustomerHeaderSearch></CustomerHeaderSearch>
+          <Suspense>
+            <CustomerHeaderSearch></CustomerHeaderSearch>
+          </Suspense>
           {/* Cart-phone+tablet */}
           <a
             href="#"
-            className="laptop:hidden relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center"
-          >
+            className="laptop:hidden relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center">
             <div className="relative flex">
               <ShoppingBag />
               <span className="absolute top-3 left-4 bg-orange-500 text-white text-[8px] font-medium w-4 h-4 flex items-center justify-center rounded-full">
