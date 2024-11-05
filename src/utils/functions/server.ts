@@ -2,6 +2,11 @@
 import { NextResponse } from "next/server";
 import { EResponseStatus } from "../constants/variables";
 import { notFound } from "next/navigation";
+import {
+  IBaseResponseProps,
+  INotOkResponseProps,
+  IOkResponseProps,
+} from "@/types/interfaces";
 
 const baseResponse = (props: IBaseResponseProps) => {
   const { status, ...rest } = props;
