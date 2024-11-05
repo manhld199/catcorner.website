@@ -230,7 +230,7 @@ export default function RegisterPage() {
 					</div>
 				</div>
 
-				{/* Right side - Form */}
+				{/* Right sidee - Form */}
 				<div className="w-full lg:w-1/2 px-[42px] py-[103px] mm:py-7 mm:px-0 ml:py-7 ml:px-0 sm:px-[42px] sm:py-[103px] flex flex-col justify-between">
 					<main className="flex-grow">
 						<h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl dark:text-white">
