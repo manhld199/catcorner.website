@@ -284,7 +284,7 @@ export default function LoginPage() {
 
 						<Label className="text-center text-gray-500 dark:text-gray-400 font-light my-3 sm:my-5 text-xs sm:text-sm md:text-base block">
 							Not a member? Get exclusive access to exhibitions and events, free
-							admission every day, and much more.
+							admission every day, and much more
 						</Label>
 					</main>
 				</div>
