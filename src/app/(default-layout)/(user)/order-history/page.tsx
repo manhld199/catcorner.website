@@ -15,21 +15,34 @@ export default function HistoryOrder() {
     
       <UserSidebar></UserSidebar>
       {/* Main Content */}
-      <Card>
+      <Card className="w-[100%]">
         <CardHeader>
           <h2 className="font-bold">Đơn hàng của tôi</h2>
         </CardHeader>
         <CardContent>
           {/* Order Status Tabs */}
           <Tabs defaultValue="all" className="mb-6">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="all">
-                Tất cả <span className="ml-1 rounded-full bg-primary px-2 text-xs text-primary-foreground">4</span>
+              <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px]">
+              <TabsTrigger value="all"
+                           className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]"
+
+              >
+                Tất cả <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">4</span>
               </TabsTrigger>
-              <TabsTrigger value="pending">Chờ xác nhận</TabsTrigger>
-              <TabsTrigger value="shipping">Vận chuyển</TabsTrigger>
-              <TabsTrigger value="completed">Thành công</TabsTrigger>
-              <TabsTrigger value="cancelled">Đã hủy</TabsTrigger>
+              <TabsTrigger value="pending" 
+                           className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]"
+
+              >Chờ xác nhận</TabsTrigger>
+              <TabsTrigger value="shipping"
+                           className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">Vận chuyển</TabsTrigger>
+              <TabsTrigger value="completed"
+                          className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]"
+
+              >Thành công</TabsTrigger>
+              <TabsTrigger value="cancelled"
+                          className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]"
+
+              >Đã hủy</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-4">
@@ -46,11 +59,10 @@ export default function HistoryOrder() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Mã đơn hàng: CHT-913742</span>
-                      <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-600">Đang vận chuyển</span>
-                    </div>
-                   <Link href="order-history/details"> <Button variant="outline" size="sm">Xem chi tiết</Button></Link>
+                  
+                      <span className="text-pri-1 text-2xl">Mã đơn hàng: CHT-913742</span>
+                      <span className="rounded-[32px] bg-blue-100 px-2 py-1 text-xs text-blue-600">Đang vận chuyển</span>
+                   
                   </div>
 
                   <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
@@ -61,7 +73,9 @@ export default function HistoryOrder() {
                     </div>
                     <span>Bình Sơn, Quảng Ngãi</span>
                   </div>
-
+                  <div className="text-right text-pri-1 underline font-semibold">
+                  <Link href="order-history/details">Xem chi tiết</Link>
+                  </div>
                   {/* Product Items */}
                   <div className="space-y-4">
                     <div className="flex items-start gap-4 border-t pt-4">
@@ -110,6 +124,7 @@ export default function HistoryOrder() {
                   </div>
 
                   {/* Total */}
+
                   <div className="mt-4 border-t pt-4 text-right">
                     <span className="font-medium">Thành tiền: </span>
                     <span className="text-lg font-bold text-primary">đ239.000</span>
