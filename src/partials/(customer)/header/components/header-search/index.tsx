@@ -92,34 +92,37 @@ export default function CustomerHeaderSearch() {
         <div className="absolute left-0 top-full w-full laptop:w-[40vw] desktop:w-[30vw] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-2 rounded-lg shadow-lg max-h-90 overflow-y-auto z-10">
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {suggestions.map((product) => (
-              <li
-                key={product.product_id_hashed}
-                className="p-4 flex hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-700 dark:text-white font-semibold">
-                    {product.product_name}
-                  </p>
-                  <div className="flex gap-3 items-center">
-                    <p className="text-sm text-red-500 font-medium">
-                      {product.lowest_price}
+              <Link
+                href={`/${product.product_slug}?pid=${product.product_id_hashed}`}>
+                <li
+                  key={product.product_id_hashed}
+                  className="p-4 flex hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer justify-between items-center">
+                  <div>
+                    <p className="text-sm text-gray-700 dark:text-white font-semibold">
+                      {product.product_name}
                     </p>
-                    {product.product_price && (
-                      <p className="text-xs text-gray-400 line-through">
-                        {product.product_price}
+                    <div className="flex gap-3 items-center">
+                      <p className="text-sm text-red-500 font-medium">
+                        {product.lowest_price}
                       </p>
-                    )}
+                      {product.product_price && (
+                        <p className="text-xs text-gray-400 line-through">
+                          {product.product_price}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <CldImage
-                  src={product.product_img || "/imgs/test.jpg"}
-                  alt={product.product_name}
-                  width={40}
-                  height={40}
-                  className="rounded mr-2 object-cover w-[40px] h-[40px]"
-                  crop="fill"
-                  gravity="auto"
-                />
-              </li>
+                  <CldImage
+                    src={product.product_img || "/imgs/test.jpg"}
+                    alt={product.product_name}
+                    width={40}
+                    height={40}
+                    className="rounded mr-2 object-cover w-[40px] h-[40px]"
+                    crop="fill"
+                    gravity="auto"
+                  />
+                </li>
+              </Link>
             ))}
           </ul>
           {totalSearchResults > 4 && (
