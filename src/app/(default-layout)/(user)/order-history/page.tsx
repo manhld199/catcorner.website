@@ -7,41 +7,206 @@ import Link from "next/link";
 import UserSidebar from "@/partials/(user)/sidebar_nav";
 import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import OrderProductItem from "@/components/(order)/order-product-item";
+
+interface OrderProduct {
+  product_id: string;
+  variant_id: string;
+  quantity: number;
+  unit_price: number;
+  discount_percent: number;
+  product_name: string;
+  product_img: string;
+  variant_name: string;
+  variant_img: string;
+}
+
+interface OrderBuyer {
+  name: string;
+  phone_number: string;
+  address: {
+    province: string;
+    district: string;
+    ward: string;
+    street: string;
+  };
+}
+
+interface Order {
+  _id: string;
+  user_id: string;
+  order_products: OrderProduct[];
+  order_buyer: OrderBuyer;
+  order_note: string;
+  total_products_cost: number;
+  shipping_cost: number;
+  final_cost: number;
+  order_status: "shipping" | "completed" | "pending" | "cancelled";
+  createdAt: string | null;
+}
+
+interface OrdersResponse {
+  status: number;
+  success: boolean;
+  data: {
+    orders: Order[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      total_pages: number;
+    };
+  };
+}
+
+// Thêm hàm tính giá sau khi giảm giá
+const calculateDiscountedPrice = (price: number, discountPercent: number) => {
+  return price * (1 - discountPercent / 100);
+};
+
+// Thêm hàm tính tổng tiền sản phẩm (đã bao gồm số lượng và giảm giá)
+const calculateProductTotal = (product: OrderProduct) => {
+  const discountedPrice = calculateDiscountedPrice(
+    product.unit_price,
+    product.discount_percent
+  );
+  return discountedPrice * product.quantity;
+};
 
 export default function HistoryOrder() {
-  const handleRepurchase = (orderId: string) => {
-    console.log("Repurchase order:", orderId);
-    // Xử lý logic mua lại
+  const { data: session } = useSession();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.accessToken) {
+      fetchOrders();
+    }
+  }, [session, activeTab]);
+
+  const fetchOrders = async () => {
+    if (!session?.user?.accessToken) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const statusParam = activeTab !== "all" ? `status=${activeTab}` : "";
+      const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders${statusParam ? `?${statusParam}` : ""}`;
+
+      console.log("Fetching orders from:", url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        console.error("Error response:", {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData,
+        });
+        throw new Error(errorData?.message || "Failed to fetch orders");
+      }
+
+      const responseData: OrdersResponse = await response.json();
+
+      if (!responseData.success) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      setOrders(responseData.data.orders);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Không thể tải danh sách đơn hàng"
+      );
+      setOrders([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleCancel = (orderId: string) => {
-    console.log("Cancel order:", orderId);
-    // Xử lý logic hủy đơn
+  const handleRepurchase = (orderId: string) => {
+    console.log("Repurchase order:", orderId);
+    // Implement repurchase logic
+  };
+
+  const handleCancel = async (orderId: string) => {
+    if (!session?.user?.accessToken) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to cancel order");
+      }
+
+      toast.success("Hủy đơn hàng thành công");
+      fetchOrders(); // Refresh orders list
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      toast.error("Không thể hủy đơn hàng");
+    }
   };
 
   const handleReview = (orderId: string) => {
     console.log("Review order:", orderId);
-    // Xử lý logic đánh giá
+    // Implement review logic
   };
+
+  const filteredOrders = orders.filter((order) =>
+    searchTerm
+      ? order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.order_products.some((product) =>
+          product.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : true
+  );
+
   return (
     <>
       <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem]">
-        <UserSidebar></UserSidebar>
-        {/* Main Content */}
+        <UserSidebar />
         <Card className="w-[100%]">
           <CardHeader>
             <h2 className="font-bold">Đơn hàng của tôi</h2>
           </CardHeader>
           <CardContent>
-            {/* Order Status Tabs */}
-            <Tabs defaultValue="all" className="mb-6">
+            <Tabs
+              defaultValue="all"
+              className="mb-6"
+              onValueChange={(value) => setActiveTab(value)}>
               <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5">
                 <TabsTrigger
                   value="all"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
                   Tất cả{" "}
                   <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
-                    4
+                    {orders.length}
                   </span>
                 </TabsTrigger>
                 <TabsTrigger
@@ -65,145 +230,111 @@ export default function HistoryOrder() {
                   Đã hủy
                 </TabsTrigger>
               </TabsList>
-
-              <TabsContent value="all" className="space-y-4">
-                {/* Search Bar */}
-                <div className="flex items-center w-full mb-5">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      placeholder="Bạn có thể tìm kiếm theo ID đơn hàng hoặc Tên Sản phẩm"
-                      className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
-                    />
-                    <button
-                      className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-pri-1 dark:bg-teal-700 p-1.5 rounded-full hover:bg-teal-700 dark:hover:bg-teal-500"
-                      type="submit">
-                      <Search className="w-3 h-3 text-white" />
-                    </button>
-                  </div>
+              <div className="flex items-center w-full mb-5">
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Bạn có thể tìm kiếm theo ID đơn hàng hoặc Tên sản phẩm"
+                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
+                  />
+                  <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
-                {/* Order Card */}
-                <Card className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)]">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="flex gap-2 text-pri-1 text-2xl">
-                        {" "}
-                        <ShoppingBag size={24} /> <span>Mã đơn hàng:</span>
-                        <span>CHT-913742</span>
-                      </span>
-                      <StatusBadge status="shipping" />
-                    </div>
-                    <div className="w-full mx-auto py-4">
-                      <div className="flex items-center justify-between gap-14">
-                        <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                          <Truck size={16} />
-                          <span className="text-sm text-pri-1">
-                            Thủ Đức, Tp Hồ Chí Minh
+              </div>
+              <TabsContent value="all" className="space-y-4">
+                {!session?.user?.accessToken ? (
+                  <div className="text-center py-4">
+                    Vui lòng đăng nhập để xem đơn hàng
+                  </div>
+                ) : isLoading ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 mx-auto"></div>
+                    <p className="mt-2">Đang tải...</p>
+                  </div>
+                ) : filteredOrders.length === 0 ? (
+                  <div className="text-center py-4">Không có đơn hàng nào</div>
+                ) : (
+                  filteredOrders.map((order) => (
+                    <Card
+                      key={order._id}
+                      className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)]">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="flex gap-2 text-pri-1 text-2xl">
+                            <ShoppingBag size={24} />
+                            <span>Mã đơn hàng:</span>
+                            <span>{order._id}</span>
                           </span>
+                          <StatusBadge status={order.order_status} />
                         </div>
+                        <div className="w-full mx-auto py-4">
+                          <div className="flex items-center justify-between gap-14">
+                            <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                              <Truck size={16} />
+                              <span className="text-sm text-pri-1">
+                                Thủ Đức, Tp Hồ Chí Minh
+                              </span>
+                            </div>
 
-                        <div className="flex-1 flex items-center gap-2">
-                          <div className="flex items-center flex-1">
-                            <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
-                            <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
-                          </div>
-                          <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                            Giao hàng dự kiến: 28/09/25
-                          </div>
-                          <div className="flex items-center flex-1">
-                            <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
-                            <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300"></div>
-                          </div>
-                        </div>
+                            <div className="flex-1 flex items-center gap-2">
+                              <div className="flex items-center flex-1">
+                                <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
+                                <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
+                              </div>
+                              <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                                Giao hàng dự kiến: 28/09/25
+                              </div>
+                              <div className="flex items-center flex-1">
+                                <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
+                                <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300"></div>
+                              </div>
+                            </div>
 
-                        <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                          <MapPin size={16} />
-                          <span className="text-sm text-pri-1">
-                            Bình Sơn, Quảng Ngãi
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right text-pri-1 underline font-bold pb-4">
-                      <Link href="order-history/details">Xem chi tiết</Link>
-                    </div>
-                    {/* Product Items */}
-                    <div className="space-y-4">
-                      <div className="flex gap-4 border rounded-[8px] p-5 items-center">
-                        <Image
-                          src="/placeholder.svg"
-                          alt="Cat Litter Box"
-                          width={80}
-                          height={80}
-                          className="rounded-lg"
-                        />
-                        <div className="flex-1 text-base">
-                          <span className="font-medium text-pri-1">
-                            Nhà vệ sinh cho mèo PAW Fat Meow Cat Litter Boxes
-                            chất lượng cao hihioeejrhrkhrkrjk
-                          </span>
-                          <div className="mt-1">
-                            <span className="text-sm text-neutral-500">X1</span>
-                            <br />
-                            <span className="text-pri-1">Size M</span>
+                            <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                              <MapPin size={16} />
+                              <span className="text-sm text-pri-1">
+                                {order.order_buyer.address.district},{" "}
+                                {order.order_buyer.address.province}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right inline-flex gap-2">
-                          <span className="line-through text-neutral-400">
-                            ₫200.000
-                          </span>
-                          <div className="font-medium text-pri-1">₫189.000</div>
-                        </div>
-                      </div>
-                      <div className="flex gap-4 border rounded-[8px] p-5 items-center">
-                        <Image
-                          src="/placeholder.svg"
-                          alt="Cat Litter Box"
-                          width={80}
-                          height={80}
-                          className="rounded-lg"
-                        />
-                        <div className="flex-1 text-base">
-                          <span className="font-medium text-pri-1">
-                            Nhà vệ sinh cho mèo PAW Fat Meow Cat Litter Boxes
-                            chất lượng cao hihioeejrhrkhrkrjk
-                          </span>
-                          <div className="mt-1">
-                            <span className="text-sm text-neutral-500">X1</span>
-                            <br />
-                            <span className="text-pri-1">Size M</span>
-                          </div>
-                        </div>
-                        <div className="text-right inline-flex gap-2">
-                          <span className="line-through text-neutral-400">
-                            ₫200.000
-                          </span>
-                          <div className="font-medium text-pri-1">₫189.000</div>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Total */}
+                        <div className="text-right text-pri-1 underline font-bold pb-4">
+                          <Link href={`order-history/details/${order._id}`}>
+                            Xem chi tiết
+                          </Link>
+                        </div>
+                        <div className="space-y-4">
+                          {order.order_products.map((product) => (
+                            <OrderProductItem
+                              key={`${product.product_id}-${product.variant_id}`}
+                              product={product}
+                            />
+                          ))}
+                        </div>
 
-                    <div className="mt-1 pt-1 text-right">
-                      <span className="font-medium">Thành tiền: </span>
-                      <span className="text-lg font-semibold text-pri-7">
-                        ₫239.000
-                      </span>
-                    </div>
+                        <div className="mt-1 pt-1 text-right">
+                          <span className="font-medium">Thành tiền: </span>
+                          <span className="text-lg font-semibold text-pri-7">
+                            ₫{order.final_cost.toLocaleString("vi-VN")}
+                          </span>
+                        </div>
 
-                    <div className="flex gap-4 justify-end mt-9">
-                      <OrderActions
-                        status="completed"
-                        orderId="CHT-913742"
-                        onRepurchase={handleRepurchase}
-                        onCancel={handleCancel}
-                        onReview={handleReview}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
+                        <div className="flex gap-4 justify-end mt-9">
+                          <OrderActions
+                            status={order.order_status}
+                            orderId={order._id}
+                            onRepurchase={handleRepurchase}
+                            onCancel={handleCancel}
+                            onReview={handleReview}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>

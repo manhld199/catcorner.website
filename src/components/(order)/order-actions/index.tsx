@@ -10,6 +10,14 @@ interface OrderActionsProps {
   onCancel?: (orderId: string) => void;
   onReview?: (orderId: string) => void;
 }
+// Thêm interface cho button
+interface ActionButton {
+  label: string;
+  icon?: React.ReactNode; // Làm cho icon là optional
+  variant: "filled" | "filled_outlined";
+  className: string;
+  onClick: () => void;
+}
 
 const OrderActions = ({
   status,
@@ -30,13 +38,13 @@ const OrderActions = ({
     onReview?.(orderId);
   };
 
-  const actionButtons = {
+  const actionButtons: Record<StatusType, ActionButton[]> = {
     completed: [
       {
         label: "Mua lại",
         icon: <RefreshCw size={30} strokeWidth={1.2} />,
         variant: "filled" as const,
-        className: "bg-pri-7 tex-base font-medium px-14",
+        className: "bg-pri-7 text-base font-medium px-14",
         onClick: handleRepurchase,
       },
       {
