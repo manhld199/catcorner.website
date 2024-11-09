@@ -88,6 +88,7 @@ export default function ProductDetailsPage() {
             inputQuantity={inputQuantity}
             onVariantSelect={handleVariantSelect}
             onQuantityChange={handleQuantityChange}
+            productSoldQuantity={productData.product_sold_quantity}
           />
         </div>
       </section>

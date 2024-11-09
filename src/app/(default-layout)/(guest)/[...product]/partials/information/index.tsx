@@ -16,9 +16,9 @@ export default function CustomerProductInformation({
   };
 
   return (
-    <div className="mt-4 dark:text-gray-200">
+    <div className="mt-4 dark:text-white">
       <div
-        className="mb-4 dark:text-gray-400"
+        className="mb-4 dark:text-white"
         dangerouslySetInnerHTML={{
           __html: isExpanded
             ? description

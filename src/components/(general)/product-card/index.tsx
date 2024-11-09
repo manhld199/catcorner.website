@@ -2,10 +2,10 @@
 
 "use client";
 
-import { Star } from "lucide-react";
 import { IProductProps } from "@/types/interfaces";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
+import { CustomerStarRating } from "@/components";
 
 interface ProductCardProps {
   product: IProductProps;
@@ -45,27 +45,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.product_name}
         </h5>
 
-        {/* Rating */}
-        <div className="flex items-center mb-2 gap-1">
-          {[...Array(Math.round(product.product_avg_rating))].map((_, i) => (
-            <Star
-              key={i}
-              fill="currentColor"
-              className="text-yellow-500 w-4 h-4"
-            />
-          ))}
-          {[...Array(5 - Math.round(product.product_avg_rating))].map(
-            (_, i) => (
-              <Star
-                key={i}
-                className="text-gray-300 w-4 h-4 dark:text-gray-500"
-              />
-            )
-          )}
-          <span className="text-gray-500 dark:text-gray-200 text-xs ml-2">
-            ({product.product_sold_quantity} sold)
-          </span>
-        </div>
+        {/* Star Rating */}
+        <CustomerStarRating
+          product_avg_rating={product.product_avg_rating ?? 0}
+          product_sold_quantity={product.product_sold_quantity ?? 0}
+        />
 
         {/* Variant */}
         <div className="flex gap-2 mb-4">

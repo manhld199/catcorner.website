@@ -42,7 +42,7 @@ export default function ProductVariant({
 
       {/* Tên variant */}
       <div
-        className={`text-center text-sm font-medium ${
+        className={`text-center text-sm font-medium mt-2 ${
           isActive ? "text-white" : "text-gray-800 dark:text-white"
         }`}>
         {variant.name}

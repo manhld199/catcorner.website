@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CustomerProductVariant } from "../../components";
-import { CustomerQuantityInputGroup } from "@/components";
+import { CustomerQuantityInputGroup, CustomerStarRating } from "@/components";
 interface BuyFormProps {
   pid: string;
   productName: string;
@@ -24,6 +24,7 @@ interface BuyFormProps {
   }[];
   selectedVariantIndex: number;
   inputQuantity: number;
+  productSoldQuantity: number;
   onVariantSelect: (index: number) => void;
   onQuantityChange: (newQuantity: number) => void;
 }
@@ -38,6 +39,7 @@ export default function CustomerProductBuyForm({
   productName,
   shortDescription,
   avgRating,
+  productSoldQuantity,
 }: BuyFormProps) {
   useEffect(() => {
     const maxQuantity = variants[selectedVariantIndex].variant_stock_quantity;
@@ -52,16 +54,11 @@ export default function CustomerProductBuyForm({
       <p className="text-gray-500 dark:text-gray-300 mb-4">
         {shortDescription}
       </p>
-
-      <div className="flex items-center mb-4">
-        <span className="text-yellow-500">
-          {"★".repeat(Math.round(avgRating.rating_point)) +
-            "☆".repeat(5 - Math.round(avgRating.rating_point))}
-        </span>
-        <span className="ml-2 text-gray-500 dark:text-gray-300">
-          ({avgRating.rating_point} rating, {avgRating.rating_count} reviews)
-        </span>
-      </div>
+      {/* Star Rating */}
+      <CustomerStarRating
+        product_avg_rating={avgRating.rating_point ?? 0}
+        product_sold_quantity={productSoldQuantity ?? 0}
+      />
 
       <div className="mb-4">
         <p className="font-medium dark:text-gray-200">Chọn phân loại:</p>
