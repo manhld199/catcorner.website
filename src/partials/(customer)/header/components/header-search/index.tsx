@@ -93,10 +93,9 @@ export default function CustomerHeaderSearch() {
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {suggestions.map((product) => (
               <Link
+                key={product.product_id_hashed} // Thêm key vào thẻ Link
                 href={`/${product.product_slug}?pid=${product.product_id_hashed}`}>
-                <li
-                  key={product.product_id_hashed}
-                  className="p-4 flex hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer justify-between items-center">
+                <li className="p-4 flex hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer justify-between items-center">
                   <div>
                     <p className="text-sm text-gray-700 dark:text-white font-semibold">
                       {product.product_name}
