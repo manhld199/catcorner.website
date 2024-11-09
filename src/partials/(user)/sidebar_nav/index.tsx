@@ -1,4 +1,4 @@
-import { Home, LogOut, ScrollText, User } from "lucide-react"
+import { Home, LogOut, NotepadText, User } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -26,7 +26,7 @@ export default function UserSidebar() {
           variant="ghost"
           className="w-full justify-start gap-3 text-base px-6 py-7"
         >
-          <User className="h-5 w-5 fill-current" />
+          <User className="h-6 w-6" />
           Thông tin tài khoản
         </Button>
         
@@ -34,7 +34,7 @@ export default function UserSidebar() {
           variant="ghost"
           className="w-full justify-start gap-3 text-base px-6 py-7"
         >
-          <Home className="h-5 w-5" />
+          <Home className="h-7 w-7" />
           Địa chỉ nhận hàng
         </Button>
         
@@ -42,7 +42,7 @@ export default function UserSidebar() {
           variant="ghost"
           className="w-full justify-start gap-3 bg-selected-nav text-pri-1 font-bold text-base rounded-none px-6 py-7"
         >
-          <ScrollText className="h-5 w-5" />
+          <NotepadText />
           Đơn hàng của tôi
         </Button>
       </nav>
@@ -51,7 +51,7 @@ export default function UserSidebar() {
       <div className="border-t p-4 h-full flex items-center">
         <Button
           variant="custom"
-          className="w-full justify-start gap-3 text-white"
+          className="w-full justify-start gap-3 text-white flex justify-center text-base"
         >
           <LogOut className="h-5 w-5" />
           Đăng xuất

@@ -14,7 +14,8 @@ const config: Config = {
         "black-text": "#333333",
         "text-btn-color": "#085457",
         "background-color": "#f7f7f7",
-        'selected-nav': 'rgba(179, 224, 230, 0.4)',
+        "selected-nav": "rgba(179, 224, 230, 0.4)",
+        "light-gray": "#F5F5F5",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
