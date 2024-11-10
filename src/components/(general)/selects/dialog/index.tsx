@@ -29,6 +29,7 @@ const SelectDialog: React.FC<{
   onChange: (value: string | string[]) => void;
   type?: string;
   placeholder?: string;
+  disabled?: boolean;
 }> = ({
   name,
   isMultiChoice,
@@ -37,11 +38,12 @@ const SelectDialog: React.FC<{
   onChange,
   type = "default",
   placeholder = PLACEHOLDER_DATA["select-default"],
+  disabled = false,
 }) => {
-  //   console.log("vaaaaaaaaa", value);
+  // console.log("disableddisableddisabled", disabled);
+  // console.log("vaaaaaaaaa", value);
   //   console.log("options", options);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [tempValue, setTempValue] = useState(value);
@@ -89,9 +91,21 @@ const SelectDialog: React.FC<{
     // console.log("selectedValueselectedValueselectedValue", selectedValue);
 
     if (type == "admin-categories") {
-      setTempValue(selectedValue._id);
-      onChange(selectedValue._id);
-      setIsDialogOpen(false); // Đóng ngay nếu chỉ chọn một giá trị
+      // console.log("aaaaaaaaaa", tempValue);
+      // console.log("selectedValue", selectedValue);
+      if (isMultiChoice) {
+        const updatedValue = Array.isArray(tempValue)
+          ? tempValue.includes(selectedValue._id)
+            ? tempValue.filter((item) => item !== selectedValue._id)
+            : [...tempValue, selectedValue._id]
+          : [selectedValue._id];
+        setTempValue(updatedValue);
+        onChange(updatedValue);
+      } else {
+        setTempValue(selectedValue._id);
+        onChange(selectedValue._id);
+        setIsDialogOpen(false);
+      }
     }
     // Trường hợp mặc định
     else {
@@ -102,10 +116,11 @@ const SelectDialog: React.FC<{
             : [...tempValue, selectedValue]
           : [selectedValue];
         setTempValue(updatedValue);
+        onChange(updatedValue);
       } else {
         setTempValue(selectedValue);
         onChange(selectedValue);
-        setIsDialogOpen(false); // Đóng ngay nếu chỉ chọn một giá trị
+        setIsDialogOpen(false);
       }
     }
   };
@@ -114,7 +129,6 @@ const SelectDialog: React.FC<{
   const handleOkClick = () => {
     onChange(tempValue);
     setIsDialogOpen(false);
-    setIsSheetOpen(false);
   };
 
   return (
@@ -125,9 +139,10 @@ const SelectDialog: React.FC<{
           <RenderTrigger
             options={options}
             placeholder={placeholder}
-            setIsDialogOpen={setIsDialogOpen}
+            setIsDialogOpen={disabled ? () => {} : setIsDialogOpen}
             type={type}
             value={value}
+            disabled={disabled}
           />
         </DialogTrigger>
       </div>

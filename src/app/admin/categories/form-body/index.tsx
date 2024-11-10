@@ -34,7 +34,11 @@ import { DIALOG_DATA } from "@/data/dialog";
 
 // import utils
 import { CATEGORIES_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
-import { handleAdd, handleUpdate } from "@/utils/functions/client";
+import {
+  handleAdd,
+  handleDelete,
+  handleUpdate,
+} from "@/utils/functions/client";
 import {
   ADMIN_CATEGORIES,
   PUBLIC_ADMIN_CATEGORIES_URL,
@@ -92,6 +96,11 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
   // for submtit
   const [openSubmit, setOpenSubmit] = useState<boolean>(false);
+  const [openDeletePopup, setOpenDeletePopup] = useState<boolean>(false);
+  const [deleteDialogContent, setDeleteDialogContent] = useState<string>(
+    DIALOG_DATA["delete-content"]
+  );
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [submitDialogContent, setSubmitDialogContent] = useState<string>(
     DIALOG_DATA["submit-content"]
@@ -120,7 +129,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
       );
       values.category_img = imgUrls[0];
 
-      setSubmitDialogContent(DIALOG_DATA["product-posting"]);
+      setSubmitDialogContent(DIALOG_DATA["category-posting"]);
 
       // post product
       if (id == "" || !id) {
@@ -201,74 +210,180 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
             </>
           </AdminCustomSection>
 
-          <Dialog open={openSubmit}>
-            <DialogTrigger className="z-50 sticky bottom-0 left-0 px-4 py-2 bg-bg-1 dark:bg-zinc-800">
-              <Button
-                type="button"
-                variant="default"
-                className={`${id ? "w-fit" : "w-full"}`}
-                disabled={!isFormChanged}
-                onClick={async () => {
-                  const isValid = await form.trigger(); // Kích hoạt validate toàn bộ form
-                  // console.log("isValidisValid", isValid);
-                  if (isValid) {
-                    setOpenSubmit(true); // Chỉ mở dialog nếu form không có lỗi
-                  } else {
-                    // console.log("Form có lỗi, không mở dialog.", form.formState.errors);
-                    scrollToErr();
-                  }
-                }}>
-                <span className="px-2">{DIALOG_DATA["save-btn"]}</span>
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>
-                  {id == "" || !id
-                    ? DIALOG_DATA["add-category"]
-                    : DIALOG_DATA["update-category"]}
-                </DialogTitle>
-
-                {isSubmiting ? (
-                  <>
-                    <DialogDescription>{submitDialogContent}</DialogDescription>
-                    <Spinner />
-                  </>
-                ) : (
-                  <DialogDescription>{submitDialogContent}</DialogDescription>
-                )}
-              </DialogHeader>
-
-              <DialogFooter className="flex flex-row !justify-between">
-                <DialogClose asChild>
+          <div className="w-full z-50 sticky bottom-0 left-0 px-4 py-2 bg-bg-1 dark:bg-zinc-800 flex flex-row justify-between">
+            {id && (
+              <Dialog open={openDeletePopup}>
+                <DialogTrigger>
                   <Button
                     type="button"
                     variant="default"
+                    className={`${id ? "w-fit" : "w-full"}`}
                     onClick={() => {
-                      setOpenSubmit(false);
-                      setIsSubmiting(false);
+                      setOpenDeletePopup(true);
                     }}>
-                    {DIALOG_DATA["close-btn"]}
+                    <span className="px-2">{DIALOG_DATA["delete-btn"]}</span>
                   </Button>
-                </DialogClose>
+                </DialogTrigger>
 
-                {!isSubmiting && (
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>{DIALOG_DATA["delete-group"]}</DialogTitle>
+
+                    {isDeleting ? (
+                      <>
+                        <DialogDescription>
+                          {deleteDialogContent}
+                        </DialogDescription>
+                        <Spinner />
+                      </>
+                    ) : (
+                      <DialogDescription>
+                        {deleteDialogContent}
+                      </DialogDescription>
+                    )}
+                  </DialogHeader>
+
+                  <DialogFooter className="flex flex-row !justify-between">
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        variant="default"
+                        onClick={() => {
+                          setOpenSubmit(false);
+                          setIsDeleting(false);
+                        }}>
+                        {DIALOG_DATA["close-btn"]}
+                      </Button>
+                    </DialogClose>
+
+                    {!isDeleting && (
+                      <DialogClose asChild>
+                        <Button
+                          type="button"
+                          variant="default"
+                          onClick={async () => {
+                            setIsDeleting(true);
+                            try {
+                              setIsDeleting(true);
+                              setDeleteDialogContent(
+                                `${DIALOG_DATA["content-general-deleting"]} '${name}'`
+                              );
+
+                              const isSuccess: boolean = await handleDelete(
+                                [id],
+                                PUBLIC_ADMIN_CATEGORIES_URL
+                              );
+
+                              if (!isSuccess) {
+                                setDeleteDialogContent(
+                                  DIALOG_DATA["content-general-delete-fail"]
+                                );
+                                setIsDeleting(false);
+                                return;
+                              }
+
+                              // setIsDeleting(false);
+                              setDeleteDialogContent(
+                                `${
+                                  DIALOG_DATA[
+                                    "content-general-delete-success-1"
+                                  ]
+                                } '${form.getValues("category_name")}' ${
+                                  DIALOG_DATA[
+                                    "content-general-delete-success-3"
+                                  ]
+                                }`
+                              );
+                              setTimeout(() => {
+                                location.href = ADMIN_CATEGORIES;
+                              }, 3000);
+                            } catch (err) {
+                              setDeleteDialogContent(
+                                `${DIALOG_DATA["content-general-delete-fail"]}: ${err}`
+                              );
+                              setIsDeleting(false);
+                            }
+                          }}>
+                          {DIALOG_DATA["agree-btn"]}
+                        </Button>
+                      </DialogClose>
+                    )}
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+
+            <Dialog open={openSubmit}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="default"
+                  className={`${id ? "w-fit" : "w-full"}`}
+                  disabled={!isFormChanged}
+                  onClick={async () => {
+                    const isValid = await form.trigger(); // Kích hoạt validate toàn bộ form
+                    // console.log("isValidisValid", isValid);
+                    if (isValid) {
+                      setOpenSubmit(true); // Chỉ mở dialog nếu form không có lỗi
+                    } else {
+                      // console.log("Form có lỗi, không mở dialog.", form.formState.errors);
+                      scrollToErr();
+                    }
+                  }}>
+                  <span className="px-2">{DIALOG_DATA["save-btn"]}</span>
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>
+                    {id == "" || !id
+                      ? DIALOG_DATA["add-category"]
+                      : DIALOG_DATA["update-category"]}
+                  </DialogTitle>
+
+                  {isSubmiting ? (
+                    <>
+                      <DialogDescription>
+                        {submitDialogContent}
+                      </DialogDescription>
+                      <Spinner />
+                    </>
+                  ) : (
+                    <DialogDescription>{submitDialogContent}</DialogDescription>
+                  )}
+                </DialogHeader>
+
+                <DialogFooter className="flex flex-row !justify-between">
                   <DialogClose asChild>
                     <Button
                       type="button"
                       variant="default"
                       onClick={() => {
-                        setIsSubmiting(true);
-                        onSubmit(form.getValues());
+                        setOpenSubmit(false);
+                        setIsSubmiting(false);
                       }}>
-                      {DIALOG_DATA["agree-btn"]}
+                      {DIALOG_DATA["close-btn"]}
                     </Button>
                   </DialogClose>
-                )}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+
+                  {!isSubmiting && (
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        variant="default"
+                        onClick={() => {
+                          setIsSubmiting(true);
+                          onSubmit(form.getValues());
+                        }}>
+                        {DIALOG_DATA["agree-btn"]}
+                      </Button>
+                    </DialogClose>
+                  )}
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </form>
     </Form>

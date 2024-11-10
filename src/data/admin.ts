@@ -11,6 +11,14 @@ export const COLUMN_NAMES = {
   "column-published-date": "Ngày xuất bản",
   "column-tags": "Gắn thẻ",
   "column-products-count": "Số sản phẩm",
+  "column-items-count": "Số thành phần",
+  "column-type": "Phân loại",
+  "column-condition": "Giảm khi đạt",
+  "column-coupon-value": "Giá trị giảm",
+  "column-coupon-max-value": "Giảm tối đa",
+  "column-stock-quantity": "Số lượng tồn",
+  "column-start-time": "Bắt đầu",
+  "column-end-time": "Kết thúc",
 };
 
 export const SORT_NAMES = {
@@ -62,6 +70,27 @@ export const PAGE_DATA = {
   "category-add": "Thêm danh mục",
   "category-detail": "Chi tiết danh mục",
   "category-name": "Tên danh mục",
+  group: "Quản lý nhóm",
+  "group-add": "Thêm nhóm",
+  "group-info": "Thông tin nhóm",
+  "group-name": "Tên nhóm",
+  "group-type": "Loại nhóm",
+  "group-items": "Thành phần",
+  coupon: "Quản lý phiếu giảm giá",
+  "coupon-add": "Thêm phiếu giảm giá",
+  "coupon-info": "Thông tin phiếu giảm giá",
+  "coupon-discount-info": "Thông tin giảm giá",
+  "coupon-name": "Tên phiếu",
+  "coupon-description": "Mô tả",
+  "coupon-type": "Loại phiếu",
+  "coupon-condition": "Giảm khi hơn (đ)",
+  "coupon-value": "Giá trị giảm (% / đ)",
+  "coupon-unit": "Theo phần trăm (%)",
+  "coupon-max-value": "Giảm tối đa (đ)",
+  "coupon-stock-quantity": "Số lượng phiếu",
+  "coupon-start-time": "Thời gian bắt đầu",
+  "coupon-end-time": "Thời gian kết thúc",
+  "coupon-is-all": "Áp dụng cho tất cả",
 };
 
 export const METHOD_NAMES = {
