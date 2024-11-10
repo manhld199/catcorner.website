@@ -1,20 +1,32 @@
-import { Home, LogOut, ScrollText, User } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Home, LogOut, NotepadText, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { signOut, useSession } from "next-auth/react";
 
 export default function UserSidebar() {
+  const handleSignOut = async () => {
+    try {
+      await signOut({
+        callbackUrl: "/login",
+      });
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
+  };
   return (
     <Card className="flex h-[450px] w-[300px] flex-col">
       {/* Profile Section */}
-      <div className="flex items-center gap-3 p-4">
-        <Avatar className="h-16 w-16">
+      <div className="flex items-center gap-3 p-4 z-0">
+        <Avatar className="h-16 w-16 z-0">
           <AvatarImage src="/placeholder.svg" alt="Avatar" />
           <AvatarFallback>TT</AvatarFallback>
         </Avatar>
         <div>
           <h5 className="font-semibold">Chào Trinh</h5>
-          <Button variant="link" className="h-auto p-0 text-sm text-muted-foreground">
+          <Button
+            variant="link"
+            className="h-auto p-0 text-sm text-muted-foreground">
             Chỉnh sửa tài khoản
           </Button>
         </div>
@@ -24,25 +36,22 @@ export default function UserSidebar() {
       <nav className="flex flex-col gap-3 space-y-1">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-base px-6 py-7"
-        >
-          <User className="h-5 w-5 fill-current" />
+          className="w-full justify-start gap-3 text-base px-6 py-7">
+          <User className="h-6 w-6" />
           Thông tin tài khoản
         </Button>
-        
+
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-base px-6 py-7"
-        >
-          <Home className="h-5 w-5" />
+          className="w-full justify-start gap-3 text-base px-6 py-7">
+          <Home className="h-7 w-7" />
           Địa chỉ nhận hàng
         </Button>
-        
+
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 bg-selected-nav text-pri-1 font-bold text-base rounded-none px-6 py-7"
-        >
-          <ScrollText className="h-5 w-5" />
+          className="w-full justify-start gap-3 bg-selected-nav text-pri-1 font-bold text-base rounded-none px-6 py-7">
+          <NotepadText />
           Đơn hàng của tôi
         </Button>
       </nav>
@@ -51,12 +60,12 @@ export default function UserSidebar() {
       <div className="border-t p-4 h-full flex items-center">
         <Button
           variant="custom"
-          className="w-full justify-start gap-3 text-white"
-        >
+          className="w-full justify-start gap-3 text-white flex justify-center text-base"
+          onClick={handleSignOut}>
           <LogOut className="h-5 w-5" />
           Đăng xuất
         </Button>
       </div>
     </Card>
-  )
+  );
 }
