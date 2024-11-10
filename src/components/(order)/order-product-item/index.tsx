@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 
 interface OrderProduct {
   product_id: string;
@@ -22,14 +22,28 @@ const calculateDiscountedPrice = (price: number, discountPercent: number) => {
 
 export default function OrderProductItem({ product }: OrderProductItemProps) {
   return (
-    <div className="flex gap-4 border rounded-[8px] p-3 items-center h-[124px]">
-      <Image
-        src={product.product_img || "/placeholder.svg"}
-        alt={product.product_name}
-        width={96}
-        height={96}
-        className="rounded-[8px] object-cover border border-neutral-200"
-      />
+    <div className="flex items-center gap-4 p-4 border rounded-lg">
+      <div className="relative w-24 h-24">
+        {product.variant_img.startsWith("SEO_Images") ? (
+          <CldImage
+            loading="lazy"
+            src={product.variant_img}
+            alt={product.variant_name}
+            className="object-cover rounded-md"
+            width={96}
+            height={96}
+            sizes="96px"
+          />
+        ) : (
+          <img
+            src={product.variant_img}
+            alt={product.variant_name}
+            width={96}
+            height={96}
+            className="object-cover rounded-md"
+          />
+        )}
+      </div>
       <div className="flex-1 text-base">
         <span className="font-medium text-pri-1">{product.product_name}</span>
         <div className="mt-1">

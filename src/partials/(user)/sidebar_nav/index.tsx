@@ -17,8 +17,8 @@ export default function UserSidebar() {
   return (
     <Card className="flex h-[450px] w-[300px] flex-col">
       {/* Profile Section */}
-      <div className="flex items-center gap-3 p-4">
-        <Avatar className="h-16 w-16">
+      <div className="flex items-center gap-3 p-4 z-0">
+        <Avatar className="h-16 w-16 z-0">
           <AvatarImage src="/placeholder.svg" alt="Avatar" />
           <AvatarFallback>TT</AvatarFallback>
         </Avatar>

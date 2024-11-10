@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderProductItem from "@/components/(order)/order-product-item";
+import { useDebounce } from "use-debounce";
 
 interface OrderProduct {
   product_id: string;
@@ -77,40 +78,61 @@ const calculateProductTotal = (product: OrderProduct) => {
   return discountedPrice * product.quantity;
 };
 
+// Thêm hàm kiểm tra searchTerm có phải là MongoDB ObjectId không
+const isValidObjectId = (str: string) => /^[0-9a-fA-F]{24}$/.test(str);
+
 export default function HistoryOrder() {
   const { data: session } = useSession();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedValue] = useDebounce(searchTerm, 500);
+  const [orderCounts, setOrderCounts] = useState({
+    all: 0,
+    pending: 0,
+    shipping: 0,
+    completed: 0,
+    cancelled: 0,
+  });
 
   useEffect(() => {
     if (session?.user?.accessToken) {
       fetchOrders();
     }
-  }, [session, activeTab]);
+  }, [session, activeTab, activeTab === "all" ? debouncedValue : null]);
 
   const fetchOrders = async () => {
     if (!session?.user?.accessToken) {
       setIsLoading(false);
       return;
     }
-
     try {
       setIsLoading(true);
-      const statusParam = activeTab !== "all" ? `status=${activeTab}` : "";
-      const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders${statusParam ? `?${statusParam}` : ""}`;
 
-      console.log("Fetching orders from:", url);
+      let url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders`;
+
+      // Xử lý params dựa vào activeTab và searchTerm
+      if (activeTab !== "all") {
+        url += `?status=${activeTab}`;
+      } else if (debouncedValue) {
+        // Kiểm tra và gọi API phù hợp dựa vào định dạng searchTerm
+        const cleanedSearch = debouncedValue.trim();
+        if (isValidObjectId(cleanedSearch)) {
+          url += `?order_id=${cleanedSearch}`;
+        } else {
+          url += `?product_name=${cleanedSearch}`;
+        }
+      }
 
       const response = await fetch(url, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${session.user.accessToken}`,
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
       });
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         console.error("Error response:", {
@@ -120,15 +142,25 @@ export default function HistoryOrder() {
         });
         throw new Error(errorData?.message || "Failed to fetch orders");
       }
-
       const responseData: OrdersResponse = await response.json();
-
       if (!responseData.success) {
         throw new Error("Failed to fetch orders");
       }
-
       setOrders(responseData.data.orders);
       setIsLoading(false);
+
+      const resetCounts = {
+        all: 0,
+        pending: 0,
+        shipping: 0,
+        completed: 0,
+        cancelled: 0,
+      };
+
+      setOrderCounts({
+        ...resetCounts,
+        [activeTab]: responseData.data.orders.length,
+      });
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error(
@@ -178,18 +210,9 @@ export default function HistoryOrder() {
     // Implement review logic
   };
 
-  const filteredOrders = orders.filter((order) =>
-    searchTerm
-      ? order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.order_products.some((product) =>
-          product.product_name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : true
-  );
-
   return (
     <>
-      <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem]">
+      <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0">
         <UserSidebar />
         <Card className="w-[100%]">
           <CardHeader>
@@ -200,142 +223,180 @@ export default function HistoryOrder() {
               defaultValue="all"
               className="mb-6"
               onValueChange={(value) => setActiveTab(value)}>
-              <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5">
+              <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0">
                 <TabsTrigger
                   value="all"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
                   Tất cả{" "}
-                  <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
-                    {orders.length}
-                  </span>
+                  {activeTab === "all" && orderCounts.all > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                      {orderCounts.all}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="pending"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
-                  Chờ xác nhận
+                  Chờ xác nhận{" "}
+                  {activeTab === "pending" && orderCounts.pending > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                      {orderCounts.pending}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="shipping"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
-                  Vận chuyển
+                  Vận chuyển{" "}
+                  {activeTab === "shipping" && orderCounts.shipping > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                      {orderCounts.shipping}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="completed"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
-                  Thành công
+                  Thành công{" "}
+                  {activeTab === "completed" && orderCounts.completed > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                      {orderCounts.completed}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="cancelled"
                   className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
-                  Đã hủy
+                  Đã hủy{" "}
+                  {activeTab === "cancelled" && orderCounts.cancelled > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                      {orderCounts.cancelled}
+                    </span>
+                  )}
                 </TabsTrigger>
               </TabsList>
-              <div className="flex items-center w-full mb-5">
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Bạn có thể tìm kiếm theo ID đơn hàng hoặc Tên sản phẩm"
-                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
-                  />
-                  <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              {activeTab === "all" && (
+                <div className="flex items-center w-full mb-5">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Nhập mã đơn hàng hoặc tên sản phẩm để tìm kiếm"
+                      className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
+                    />
+                    <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
-              </div>
-              <TabsContent value="all" className="space-y-4">
-                {!session?.user?.accessToken ? (
-                  <div className="text-center py-4">
-                    Vui lòng đăng nhập để xem đơn hàng
-                  </div>
-                ) : isLoading ? (
-                  <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 mx-auto"></div>
-                    <p className="mt-2">Đang tải...</p>
-                  </div>
-                ) : filteredOrders.length === 0 ? (
-                  <div className="text-center py-4">Không có đơn hàng nào</div>
-                ) : (
-                  filteredOrders.map((order) => (
-                    <Card
-                      key={order._id}
-                      className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)]">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="flex gap-2 text-pri-1 text-2xl">
-                            <ShoppingBag size={24} />
-                            <span>Mã đơn hàng:</span>
-                            <span>{order._id}</span>
-                          </span>
-                          <StatusBadge status={order.order_status} />
-                        </div>
-                        <div className="w-full mx-auto py-4">
-                          <div className="flex items-center justify-between gap-14">
-                            <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                              <Truck size={16} />
-                              <span className="text-sm text-pri-1">
-                                Thủ Đức, Tp Hồ Chí Minh
+              )}
+              {["all", "pending", "shipping", "completed", "cancelled"].map(
+                (tabValue) => (
+                  <TabsContent
+                    key={tabValue}
+                    value={tabValue}
+                    className="space-y-4 relative z-0">
+                    {!session?.user?.accessToken ? (
+                      <div className="text-center py-4">
+                        Vui lòng đăng nhập để xem đơn hàng
+                      </div>
+                    ) : isLoading ? (
+                      <div className="text-center py-4">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 mx-auto"></div>
+                        <p className="mt-2">Đang tải...</p>
+                      </div>
+                    ) : orders.length === 0 ? (
+                      <div className="text-center py-4">
+                        Không có đơn hàng nào
+                      </div>
+                    ) : (
+                      orders.map((order) => (
+                        <Card
+                          key={order._id}
+                          className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)]">
+                          <CardContent className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="flex gap-2 text-pri-1 text-2xl">
+                                <ShoppingBag size={24} />
+                                <span>Mã đơn hàng:</span>
+                                <span>{order._id}</span>
+                              </span>
+                              <StatusBadge status={order.order_status} />
+                            </div>
+                            <div className="w-full mx-auto py-4">
+                              <div className="flex items-center justify-between gap-14">
+                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                                  <Truck size={16} />
+                                  <span className="text-sm text-pri-1">
+                                    Thủ Đức, Tp Hồ Chí Minh
+                                  </span>
+                                </div>
+
+                                <div className="flex-1 flex items-center gap-2">
+                                  <div className="flex items-center flex-1">
+                                    <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
+                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
+                                  </div>
+                                  <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                                    Giao hàng dự kiến: 28/09/25
+                                  </div>
+                                  <div className="flex items-center flex-1">
+                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
+                                    <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300"></div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                                  <MapPin size={16} />
+                                  <span className="text-sm text-pri-1">
+                                    {order.order_buyer.address.district},{" "}
+                                    {order.order_buyer.address.province}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="text-right text-pri-1 underline font-bold pb-4">
+                              <Link href={`order-history/details/${order._id}`}>
+                                Xem chi tiết
+                              </Link>
+                            </div>
+                            <div className="space-y-4">
+                              {order.order_products.map((product) => (
+                                <OrderProductItem
+                                  key={`${product.product_id}-${product.variant_id}`}
+                                  product={{
+                                    ...product,
+                                    variant_img:
+                                      product.variant_img ||
+                                      product.product_img,
+                                  }}
+                                />
+                              ))}
+                            </div>
+
+                            <div className="mt-1 pt-1 text-right">
+                              <span className="font-medium">Thành tiền: </span>
+                              <span className="text-lg font-semibold text-pri-7">
+                                ₫{order.final_cost.toLocaleString("vi-VN")}
                               </span>
                             </div>
 
-                            <div className="flex-1 flex items-center gap-2">
-                              <div className="flex items-center flex-1">
-                                <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
-                                <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
-                              </div>
-                              <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                                Giao hàng dự kiến: 28/09/25
-                              </div>
-                              <div className="flex items-center flex-1">
-                                <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
-                                <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300"></div>
-                              </div>
+                            <div className="flex gap-4 justify-end mt-9">
+                              <OrderActions
+                                status={order.order_status}
+                                orderId={order._id}
+                                onRepurchase={handleRepurchase}
+                                onCancel={handleCancel}
+                                onReview={handleReview}
+                              />
                             </div>
-
-                            <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                              <MapPin size={16} />
-                              <span className="text-sm text-pri-1">
-                                {order.order_buyer.address.district},{" "}
-                                {order.order_buyer.address.province}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="text-right text-pri-1 underline font-bold pb-4">
-                          <Link href={`order-history/details/${order._id}`}>
-                            Xem chi tiết
-                          </Link>
-                        </div>
-                        <div className="space-y-4">
-                          {order.order_products.map((product) => (
-                            <OrderProductItem
-                              key={`${product.product_id}-${product.variant_id}`}
-                              product={product}
-                            />
-                          ))}
-                        </div>
-
-                        <div className="mt-1 pt-1 text-right">
-                          <span className="font-medium">Thành tiền: </span>
-                          <span className="text-lg font-semibold text-pri-7">
-                            ₫{order.final_cost.toLocaleString("vi-VN")}
-                          </span>
-                        </div>
-
-                        <div className="flex gap-4 justify-end mt-9">
-                          <OrderActions
-                            status={order.order_status}
-                            orderId={order._id}
-                            onRepurchase={handleRepurchase}
-                            onCancel={handleCancel}
-                            onReview={handleReview}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </TabsContent>
+                          </CardContent>
+                        </Card>
+                      ))
+                    )}
+                  </TabsContent>
+                )
+              )}
             </Tabs>
           </CardContent>
         </Card>

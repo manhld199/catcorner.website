@@ -291,7 +291,10 @@ export default function OrderDetail() {
               {order.order_products.map((product) => (
                 <OrderProductItem
                   key={`${product.product_id}-${product.variant_id}`}
-                  product={product}
+                  product={{
+                    ...product,
+                    variant_img: product.variant_img || product.product_img, // fallback to product_img if variant_img is empty
+                  }}
                 />
               ))}
 
