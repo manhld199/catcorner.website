@@ -16,18 +16,9 @@ import { CldImage } from "next-cloudinary";
 
 // import components
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import ActionCell from "./action-cell";
-import {
-  DropdownMenu,
-  DropdownMenuRadioItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuRadioGroup,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { AdminColumnSort } from "@/components";
+import ActionCell from "./action-cell";
 
 // import data
 import { COLUMN_NAMES, SORT_NAMES } from "@/data/admin";
@@ -71,68 +62,6 @@ const HeaderHandler = ({
   const filterValue = table.getColumn(column.id)?.getFilterValue();
   const setFilterValue = table.getColumn(column.id)?.setFilterValue;
 
-  const renderColumnFilter = (label: string, options: any[], value: string) => (
-    <div className="flex items-center">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className={`min-w-20 ${
-              isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""
-            }`}>
-            {label}
-            <Filter className="ml-2 h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Lọc</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={value} onValueChange={setFilterValue}>
-            <DropdownMenuRadioItem value="">Không</DropdownMenuRadioItem>
-            {options.map((option) => (
-              <DropdownMenuRadioItem key={option.value} value={option.value}>
-                {option.label}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-
-  const renderColumnSort = (label: string) => (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className={`min-w-20 ${
-            isSortedOrFiltered ? "bg-teal-100 text-teal-600" : ""
-          }`}>
-          {label}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>{SORT_NAMES["sort-label"]}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuRadioGroup value={sortState} onValueChange={setSortState}>
-          <DropdownMenuRadioItem className="capitalize" value="none">
-            {SORT_NAMES["sort-none"]}
-          </DropdownMenuRadioItem>
-
-          <DropdownMenuRadioItem className="capitalize" value="asc">
-            {SORT_NAMES["sort-asc"]}
-          </DropdownMenuRadioItem>
-
-          <DropdownMenuRadioItem className="capitalize" value="desc">
-            {SORT_NAMES["sort-desc"]}
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-
   const getHeader = () => {
     switch (type) {
       case "select":
@@ -155,7 +84,14 @@ const HeaderHandler = ({
   };
 
   if (["name", "price", "rating"].includes(type))
-    return renderColumnSort(getHeader() as string);
+    return (
+      <AdminColumnSort
+        isSortedOrFiltered={isSortedOrFiltered}
+        label={getHeader() as string}
+        setSortState={setSortState}
+        sortState={sortState}
+      />
+    );
   else return getHeader();
 };
 
@@ -339,10 +275,6 @@ const columns: ColumnDef<IAdminProduct>[] = [
     ),
     enableGlobalFilter: true,
     sortingFn: (rowA, rowB, columnId): number => {
-      // console.log("rowArowArowA: ", rowA);
-      // console.log("rowBrowBrowB: ", rowB);
-      // console.log("columnID: ", columnId);
-
       if (
         rowA.original.product_rating.rating_point *
           rowA.original.product_rating.rating_count <

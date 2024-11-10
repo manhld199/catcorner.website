@@ -2,6 +2,7 @@ import React from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/libs/utils";
 import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 
 const RenderOption: React.FC<{
   option: { value?: string; _id?: string; name?: string; img?: string };
@@ -27,7 +28,7 @@ const RenderOption: React.FC<{
         );
       case false:
         return (
-          <div className="relative min-w-5 min-h-5 w-5 h-5">
+          <div className="relative w-5 h-5">
             <div
               className={cn(
                 "w-full h-full rounded-full border-2 flex justify-center items-center transition-all",
@@ -43,34 +44,19 @@ const RenderOption: React.FC<{
 
   const renderOptionContent = () => {
     switch (type) {
-      case "admin-categories":
-        return (
-          <>
-            <div className="flex flex-row gap-2">
-              {renderSelectionIndicator()}
-              {option.name}
-            </div>
-            {option.img && (
-              <div className="relative w-full aspect-square">
-                {option.img.startsWith("SEO_Images") ? (
-                  <CldImage
-                    alt={option.name ?? ""}
-                    src={option.img}
-                    fill={true}
-                  />
-                ) : (
-                  <img alt={option.name} src={option.img} />
-                )}
-              </div>
-            )}
-          </>
-        );
-
       default:
         return (
-          <div className="w-full line-clamp-2">
-            {renderSelectionIndicator()}
-            {option.value}
+          <div className="w-full flex flex-col gap-2">
+            <div className="flex flex-row gap-2">
+              {renderSelectionIndicator()}
+              {option.value}
+            </div>
+
+            {option.img && (
+              <div className="relative w-4/5 m-auto aspect-square">
+                <Image src={option.img} alt={option.value ?? ""} fill={true} />
+              </div>
+            )}
           </div>
         );
     }
@@ -79,10 +65,7 @@ const RenderOption: React.FC<{
   return (
     <div
       className={cn(
-        "cursor-pointer transition-all",
-        type === "admin-categories"
-          ? "p-2 rounded-md bg-pri-2/40 hover:bg-pri-2/60 dark:bg-pri-2/10 dark:hover:bg-pri-2/60 flex flex-col gap-2"
-          : "group flex gap-1 items-center py-1 px-2 rounded-full",
+        "cursor-pointer transition-all p-2 rounded-lg",
         isSelected
           ? "bg-pri-7 text-white"
           : "text-zinc-700 dark:text-white bg-pri-2/20 dark:bg-zinc-700 dark:hover:text-zinc-800 hover:bg-pri-2/60 dark:hover:bg-pri-2"

@@ -2,6 +2,15 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const AUTH_URL = API_BASE_URL + "/auth";
 
+export const ADMIN_USERS_URL = `${process.env.BACKEND_URL}/admin/users`;
+export const PUBLIC_ADMIN_USERS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users`;
+
+export const ADMIN_GROUPS_URL = `${process.env.BACKEND_URL}/admin/groups`;
+export const PUBLIC_ADMIN_GROUPS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/groups`;
+
+export const ADMIN_COUPONS_URL = `${process.env.BACKEND_URL}/admin/coupons`;
+export const PUBLIC_ADMIN_COUPONS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/coupons`;
+
 export const ADMIN_PRODUCTS_URL = `${process.env.BACKEND_URL}/admin/products`;
 export const PUBLIC_ADMIN_PRODUCTS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/products`;
 
@@ -11,10 +20,13 @@ export const PUBLIC_ADMIN_CATEGORIES_URL = `${process.env.NEXT_PUBLIC_BACKEND_UR
 export const ADMIN_BLOGS_URL = `${process.env.BACKEND_URL}/admin/articles`;
 export const PUBLIC_ADMIN_BLOGS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/articles`;
 
-export const PUBLIC_CLOUDINARY_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/cloudinary`;
 export const ADMIN_PRODUCTS = "/admin/products";
 export const ADMIN_BLOGS = "/admin/blogs";
+export const ADMIN_CATEGORIES = "/admin/categories";
+export const ADMIN_GROUPS = "/admin/groups";
+export const ADMIN_COUPONS = "/admin/coupons";
+
+export const PUBLIC_CLOUDINARY_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/cloudinary`;
 
 export const CUSTOMER_PRODUCT_LIST_URL = `${process.env.BACKEND_URL}/guest/productList`;
 export const PUBLIC_CUSTOMER_PRODUCT_LIST_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/productList`;
-export const ADMIN_CATEGORIES = "/admin/categories";

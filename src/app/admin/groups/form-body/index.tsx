@@ -5,21 +5,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, Plus, Trash2 } from "lucide-react";
-import {
-  removeImgsFromCloudinary,
-  removeImgsInDesFromCloudinary,
-  uploadFilesToCloudinary,
-  uploadImgsInDesToCloudinary,
-} from "@/libs/cloudinary";
 
 // import components
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -30,8 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Form, FormLabel } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui-expansions/spinner";
 import { AdminCustomField, AdminCustomSection } from "@/components";
 import { getFormDefaultValues, getFormSchema } from "./form-init-value";
@@ -43,39 +30,15 @@ import { DIALOG_DATA } from "@/data/dialog";
 
 // import utils
 import {
-  convertBlobUrlsToImgFiles,
-  getStrOfObj,
-} from "@/utils/functions/convert";
-import { BLOGS_UPLOAD_FOLDER_NAME } from "@/utils/constants/variables";
-import {
   handleAdd,
   handleDelete,
   handleUpdate,
 } from "@/utils/functions/client";
-import { ADMIN_BLOGS, PUBLIC_ADMIN_BLOGS_URL } from "@/utils/constants/urls";
-
-// for handle array
-const handleAddReference = (form: any) => {
-  const item = form.getValues(`article_references` as any);
-  form.setValue(`article_references` as any, [
-    ...item,
-    {
-      title: "",
-      link: "",
-    },
-  ]);
-};
-
-const handleRemoveReference = (form: any, itemIndex: number) => {
-  const item = form.getValues(`article_references` as any);
-  form.setValue(
-    `article_references` as any,
-    item.filter((_: any, i: number) => i !== itemIndex)
-  );
-};
+import { ADMIN_GROUPS, PUBLIC_ADMIN_GROUPS_URL } from "@/utils/constants/urls";
+import { getStrOfObj } from "@/utils/functions/convert";
 
 // scroll to error func
-const scrollToErr = (form: any, ref: any) => {
+const scrollToErr = () => {
   // Lấy tất cả các thẻ có id chứa 'form-item-message'
   const elements = document.querySelectorAll('[id*="form-item-message"]');
   // console.log("elementsssssss", elements);
@@ -89,29 +52,31 @@ const scrollToErr = (form: any, ref: any) => {
     firstElement.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
-
-  // Cuộn tới variants nếu có lỗi
-  if (Array.isArray(form.formState.errors.product_variants)) {
-    // console.log("reffffffffffffff", ref);
-    ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
 };
 
-const FormBody = ({ data, id }: { data: any; id?: string }) => {
+const FormBody = ({
+  data,
+  productData,
+  userData,
+  id,
+}: {
+  data: any;
+  productData: any;
+  userData: any;
+  id?: string;
+}) => {
   const formSchema = getFormSchema();
   const defaultValues = getFormDefaultValues(data);
   // console.log("datadatadata", data);
-  // console.log("categoriesData", categoriesData);
+  // console.log("productData", productData);
+  // console.log("userData", userData);
   // console.log("defaultValues", defaultValues);
-
-  // for delete imgs
-  const [deletedImgs, setDeletedImgs] = useState<string[]>([]);
-  const [deletedVariantImgs, setDeletedVariantImgs] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
+  // console.log("group_typegroup_typegroup_type", form.watch("group_type"));
 
   // default form value
   const defaultValuesRef = useRef(form.getValues());
@@ -129,69 +94,31 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
   // for submtit
   const [openSubmit, setOpenSubmit] = useState<boolean>(false);
-  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
-  const [submitDialogContent, setSubmitDialogContent] = useState<string>(
-    DIALOG_DATA["submit-content"]
-  );
   const [openDeletePopup, setOpenDeletePopup] = useState<boolean>(false);
   const [deleteDialogContent, setDeleteDialogContent] = useState<string>(
     DIALOG_DATA["delete-content"]
   );
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const [submitDialogContent, setSubmitDialogContent] = useState<string>(
+    DIALOG_DATA["submit-content"]
+  );
   const onSubmit = async (
     values: z.infer<typeof formSchema>
     // event: React.FormEvent<HTMLFormElement>
   ) => {
     // console.log("vaaaaaaaaaaaaaa", values);
-
     try {
-      setSubmitDialogContent(DIALOG_DATA["imgs-deleting"]);
-
-      // delete deleted imgs
-      if (deletedImgs.length > 0) await removeImgsFromCloudinary(deletedImgs);
-      await removeImgsInDesFromCloudinary(
-        defaultValuesRef.current.article_content,
-        values.article_content
-      );
-
-      setSubmitDialogContent(DIALOG_DATA["imgs-uploading"]);
-
-      // upload avt
-      const imgFiles = await convertBlobUrlsToImgFiles(
-        [values.article_avt],
-        "article"
-      );
-      const imgUrls = await uploadFilesToCloudinary(
-        imgFiles,
-        BLOGS_UPLOAD_FOLDER_NAME
-      );
-      values.article_avt = imgUrls[0];
-
-      // upload imgs in description
-      const newDes = await uploadImgsInDesToCloudinary(
-        values.article_content,
-        BLOGS_UPLOAD_FOLDER_NAME
-      );
-      values.article_content = newDes;
-
-      setSubmitDialogContent(DIALOG_DATA["blog-posting"]);
-
+      setSubmitDialogContent(DIALOG_DATA["group-posting"]);
       // post product
       if (id == "" || !id) {
         const { isSuccess, _id, err } = await handleAdd(
           values,
-          PUBLIC_ADMIN_BLOGS_URL
+          PUBLIC_ADMIN_GROUPS_URL
         );
         // console.log("isssssssssssssss", isSuccess);
 
-        // remove imgs when post failed
         if (!isSuccess || err != "") {
-          await removeImgsFromCloudinary(deletedImgs);
-          await removeImgsInDesFromCloudinary(
-            defaultValuesRef.current.article_content,
-            values.article_content
-          );
-
           setIsSubmiting(false);
           setSubmitDialogContent(DIALOG_DATA["post-failed"]);
           return;
@@ -200,12 +127,12 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
         setSubmitDialogContent(DIALOG_DATA["post-success"]);
         setIsSubmiting(false);
         setTimeout(() => {
-          location.href = ADMIN_BLOGS;
+          location.href = ADMIN_GROUPS;
         }, 3000);
       } else {
         const { isSuccess, err } = await handleUpdate(
           values,
-          `${PUBLIC_ADMIN_BLOGS_URL}/${id}`
+          `${PUBLIC_ADMIN_GROUPS_URL}/${id}`
         );
 
         if (!isSuccess || err != "") {
@@ -221,168 +148,81 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
         }, 3000);
       }
     } catch (err) {
-      if (id == "" || !id) {
-        await removeImgsFromCloudinary(deletedImgs);
-        await removeImgsInDesFromCloudinary(
-          defaultValuesRef.current.article_content,
-          values.article_content
-        );
-        return;
-        // remove imgs when post failed
-      }
-
       setIsSubmiting(false);
       console.log("errrrrrrrrrrrrr: ", err);
       setSubmitDialogContent(`${DIALOG_DATA["post-failed"]}: ${err}`);
     }
   };
 
-  // for handle variant error
-  const variantGroupRef = useRef(null);
-  // console.log("variantGroupRef", variantGroupRef);
-
-  // console.log("fffffffffffff", form.watch("category_id"));
-
   return (
     <Form {...form}>
       <form className="w-full  md:max-w-screen-md space-y-2">
         <div className="w-full relative grid grid-cols-1 gap-2 mx-auto">
-          {/* blog info */}
-          <AdminCustomSection title={PAGE_DATA["blog-info"]}>
+          {/* group info */}
+          <AdminCustomSection title={PAGE_DATA["group-info"]}>
             <>
               <AdminCustomField
                 form={form}
-                fieldName="article_name"
-                title={PAGE_DATA["blog-name"]}
+                fieldName="group_name"
+                title={PAGE_DATA["group-name"]}
                 required={true}
                 type="text-80"
-                placeholder={PLACEHOLDER_DATA["blog-name"]}
+                placeholder={PLACEHOLDER_DATA["group-name"]}
               />
 
               <AdminCustomField
                 form={form}
-                fieldName="article_author_name"
-                title={PAGE_DATA["blog-author-name"]}
+                fieldName="group_type"
                 required={true}
-                type="text-80"
-                placeholder={PLACEHOLDER_DATA["blog-author-name"]}
+                type="select-card"
+                selectType="admin"
+                title={PAGE_DATA["group-type"]}
+                selectData={{
+                  name: PAGE_DATA["group-type"],
+                  isMultiChoice: false,
+                  options: [
+                    {
+                      value: "Product",
+                      img: "/imgs/groups/default-product.png",
+                    },
+                    {
+                      value: "User",
+                      img: "/imgs/groups/default-user.png",
+                    },
+                  ],
+                }}
+                handleChange={() => {
+                  form.setValue("group_items", []);
+                }}
               />
 
               <AdminCustomField
                 form={form}
-                fieldName="article_published_date"
-                title={PAGE_DATA["blog-published-date"]}
+                fieldName="group_items"
                 required={true}
-                type="date"
-                placeholder={PLACEHOLDER_DATA["blog-published-date"]}
+                type="select-dialog"
+                selectType="admin-categories"
+                title={PAGE_DATA["group-items"]}
+                selectData={{
+                  name: PAGE_DATA["group-items"],
+                  isMultiChoice: true,
+                  options:
+                    form.watch("group_type") == "Product"
+                      ? productData.map((item: any) => ({
+                          _id: item._id,
+                          img: item.product_img,
+                          name: item.product_name,
+                        }))
+                      : form.watch("group_type") == "User"
+                      ? userData.map((item: any) => ({
+                          _id: item._id,
+                          img: item.user_avt ?? "/imgs/groups/default-user.png",
+                          name: item.user_name,
+                        }))
+                      : [],
+                }}
+                disabled={form.watch("group_type") == ""}
               />
-
-              <AdminCustomField
-                form={form}
-                fieldName="article_avt"
-                title={undefined}
-                required={true}
-                type="single-img"
-                onDelete={setDeletedImgs}
-              />
-
-              <AdminCustomField
-                form={form}
-                fieldName="article_short_description"
-                title={PAGE_DATA["blog-short-description"]}
-                required={false}
-                type="textarea"
-                onDelete={setDeletedImgs}
-                placeholder={PLACEHOLDER_DATA["blog-short-description"]}
-              />
-
-              <AdminCustomField
-                form={form}
-                fieldName="article_tags"
-                title={PAGE_DATA["blog-tags"]}
-                required={false}
-                type="tags"
-              />
-            </>
-          </AdminCustomSection>
-
-          <AdminCustomSection title={PAGE_DATA["blog-content"]}>
-            <AdminCustomField
-              form={form}
-              fieldName="article_content"
-              title={PAGE_DATA["blog-content"]}
-              required={true}
-              type="text-editor"
-              onDelete={setDeletedImgs}
-            />
-          </AdminCustomSection>
-
-          <AdminCustomSection title={PAGE_DATA["blog-references"]}>
-            <>
-              <Accordion
-                type="single"
-                className="w-full flex flex-col gap-2 rounded-md dark:bg-zinc-900"
-                collapsible>
-                {(form.watch("article_references") ?? []).map((item, index) => (
-                  <AccordionItem
-                    key={`blog reference ${index}`}
-                    value={`blog reference ${index}`}
-                    className="relative bg-zinc-100 dark:bg-zinc-950 rounded-md">
-                    <AccordionTrigger className="rounded-md">
-                      <div
-                        className={`w-full flex flex-row justify-between items-center cursor-pointer`}>
-                        <div className="flex flex-row items-center gap-3">
-                          <Link />
-                          <FormLabel className="text-base text-zinc-950 dark:text-zinc-100 font-medium">
-                            {form.watch(`article_references.${index}.title`) !=
-                            ""
-                              ? form.watch(`article_references.${index}.title`)
-                              : `${PAGE_DATA["blog-reference"]} ${index + 1}`}
-                          </FormLabel>
-                        </div>
-
-                        <Button
-                          type="button"
-                          variant="none"
-                          className="hover:bg-red-500 hover:text-white"
-                          onClick={() => handleRemoveReference(form, index)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </AccordionTrigger>
-
-                    <AccordionContent className="mt-2 flex flex-col gap-2">
-                      <AdminCustomField
-                        form={form}
-                        fieldName={`article_references.${index}.title`}
-                        title={PAGE_DATA["reference-title"]}
-                        required={false}
-                        type="text-80"
-                        placeholder={PLACEHOLDER_DATA["reference-title"]}
-                        className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-                      />
-
-                      <AdminCustomField
-                        form={form}
-                        fieldName={`article_references.${index}.link`}
-                        title={PAGE_DATA["reference-link"]}
-                        required={false}
-                        type="text-80"
-                        placeholder={PLACEHOLDER_DATA["reference-link"]}
-                        className="dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900"
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-
-              <Button
-                type="button"
-                variant="none"
-                className="px-0 flex flex-row gap-1 items-center font-bold text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400"
-                onClick={() => handleAddReference(form)}>
-                <Plus className="h-5 w-5" /> {PAGE_DATA["reference-add"]}
-              </Button>
             </>
           </AdminCustomSection>
 
@@ -447,7 +287,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
 
                               const isSuccess: boolean = await handleDelete(
                                 [id],
-                                PUBLIC_ADMIN_BLOGS_URL
+                                PUBLIC_ADMIN_GROUPS_URL
                               );
 
                               if (!isSuccess) {
@@ -464,14 +304,14 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                                   DIALOG_DATA[
                                     "content-general-delete-success-1"
                                   ]
-                                } '${form.getValues("article_name")}' ${
+                                } '${form.getValues("group_name")}' ${
                                   DIALOG_DATA[
                                     "content-general-delete-success-3"
                                   ]
                                 }`
                               );
                               setTimeout(() => {
-                                location.href = ADMIN_BLOGS;
+                                location.href = ADMIN_GROUPS;
                               }, 3000);
                             } catch (err) {
                               setDeleteDialogContent(
@@ -503,7 +343,7 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                       setOpenSubmit(true); // Chỉ mở dialog nếu form không có lỗi
                     } else {
                       // console.log("Form có lỗi, không mở dialog.", form.formState.errors);
-                      scrollToErr(form, variantGroupRef);
+                      scrollToErr();
                     }
                   }}>
                   <span className="px-2">{DIALOG_DATA["save-btn"]}</span>
@@ -514,8 +354,8 @@ const FormBody = ({ data, id }: { data: any; id?: string }) => {
                 <DialogHeader>
                   <DialogTitle>
                     {id == "" || !id
-                      ? DIALOG_DATA["add-blog"]
-                      : DIALOG_DATA["update-blog"]}
+                      ? DIALOG_DATA["add-group"]
+                      : DIALOG_DATA["update-group"]}
                   </DialogTitle>
 
                   {isSubmiting ? (

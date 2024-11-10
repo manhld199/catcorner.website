@@ -12,15 +12,20 @@ export const extractImageLinksFromHTML = (htmlString: string) => {
 // fetch funcs
 export const handleAdd = async (data: any, url: string) => {
   // console.log("datadatadata", JSON.stringify(data));
+  // console.log("urlurlurlurl", url);
   try {
     const res = await fetch(url, {
       method: "POST",
       body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
+    // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
     const resData = await res.json();
-    // console.log("ressssss", res.status);
+    // console.log("ressssss", resData.status);
 
     return {
       isSuccess: res.status == 200 || res.status == 201,

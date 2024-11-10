@@ -21,4 +21,12 @@ export const PLACEHOLDER_DATA = {
   "blog-author-name": "Nhập tên tác giả",
   "blog-published-date": "Nhập ngày xuất bản",
   "category-name": "Nhập tên danh mục",
+  "group-name": "Nhập tên nhóm",
+  "coupon-name": "Nhập tên phiếu giảm giá",
+  "coupon-description": "Nhập mô tả phiếu giảm giá",
+  "coupon-condition":
+    "Nhập số tiền tối thiểu của đơn hàng có thể áp dụng phiếu giảm giá",
+  "coupon-value": "Nhập giá trị giảm (theo % hoặc đ)",
+  "coupon-max-value": "Nhập số tiền tối đa có thể giảm",
+  "coupon-stock-quantity": "Nhập số lượng phiếu giảm giá",
 };

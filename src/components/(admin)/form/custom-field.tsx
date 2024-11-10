@@ -1,9 +1,16 @@
 "use client";
 
-import { EditorRichText, InputTags } from "@/components";
-import DropZoneMultiImgs from "@/components/(general)/dropzones/multi-imgs";
-import DropZoneSingleImg from "@/components/(general)/dropzones/single-img";
-import SelectDialog from "@/components/(general)/selects/dialog";
+import {
+  EditorRichText,
+  InputTags,
+  DropZoneMultiImgs,
+  DropZoneSingleImg,
+  SelectDialog,
+  SelectCard,
+  InputDateTime,
+  InputDate,
+} from "@/components";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormField,
   FormItem,
@@ -18,23 +25,31 @@ import { ReactNode } from "react";
 const CustomFormField = ({
   form,
   fieldName,
+  type,
   title,
   required = false,
-  type,
+  selectType = "",
   placeholder = "",
-  onDelete,
+  onDelete = () => {},
   className = "",
   selectData,
+  handleChange = () => {},
+  disabled = false,
+  checkboxValue,
 }: {
   form: any;
   fieldName: string;
-  title: string | undefined;
-  required?: boolean;
   type: string;
+  title?: string | undefined;
+  required?: boolean;
+  selectType?: string;
   placeholder?: string;
   onDelete?: any;
   className?: string;
   selectData?: any;
+  disabled?: boolean;
+  handleChange?: () => void;
+  checkboxValue?: any[];
 }) => {
   let children: ({}: any) => ReactNode;
 
@@ -71,7 +86,7 @@ const CustomFormField = ({
       <Input
         type="number"
         min={0}
-        value={value}
+        value={value ?? ""}
         onChange={(e) => onChange(Number(e.currentTarget.value))}
         onBlur={onBlur}
         placeholder={placeholder}
@@ -80,6 +95,48 @@ const CustomFormField = ({
           " " +
           className
         }
+      />
+    );
+  else if (type == "date")
+    children = ({ onChange, onBlur, value }) => (
+      <InputDate
+        value={value}
+        type="date"
+        onChange={onChange}
+        onBlur={onBlur}
+        className={
+          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
+          " " +
+          className
+        }
+      />
+    );
+  else if (type == "datetime")
+    children = ({ onChange, onBlur, value }) => (
+      <InputDateTime
+        value={value}
+        type="datetime-local"
+        onChange={onChange}
+        onBlur={onBlur}
+        className={
+          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
+          " " +
+          className
+        }
+      />
+    );
+  else if (type == "checkbox")
+    children = ({ onChange, onBlur, value }) => (
+      <Checkbox
+        checked={value == (checkboxValue as any)[0]}
+        onClick={() => {
+          if (value == (checkboxValue as any)[0])
+            onChange((checkboxValue as any)[1]);
+          else if (value == (checkboxValue as any)[1])
+            onChange((checkboxValue as any)[0]);
+
+          handleChange();
+        }}
       />
     );
   else if (type == "multi-imgs")
@@ -103,12 +160,30 @@ const CustomFormField = ({
     children = ({ onChange, onBlur, value }) => (
       <EditorRichText content={value} onChange={onChange} />
     );
-  else if (type == "select-dialog-single")
+  else if (type == "select-dialog")
     children = ({ onChange, onBlur, value }) => (
       <SelectDialog
         value={value}
-        onChange={onChange}
-        type="admin-categories"
+        onChange={(v) => {
+          onChange(v);
+          handleChange();
+        }}
+        type={selectType}
+        name={selectData.name}
+        isMultiChoice={selectData.isMultiChoice}
+        options={selectData.options}
+        disabled={disabled}
+      />
+    );
+  else if (type == "select-card")
+    children = ({ onChange, onBlur, value }) => (
+      <SelectCard
+        value={value}
+        onChange={(v) => {
+          onChange(v);
+          handleChange();
+        }}
+        type={selectType}
         name={selectData.name}
         isMultiChoice={selectData.isMultiChoice}
         options={selectData.options}
@@ -117,22 +192,6 @@ const CustomFormField = ({
   else if (type == "tags")
     children = ({ onChange, onBlur, value }) => (
       <InputTags value={value} onChange={onChange} />
-    );
-  else if (type == "date")
-    children = ({ onChange, onBlur, value }) => (
-      <Input
-        value={value}
-        type="date"
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        maxLength={80}
-        className={
-          "dark:text-zinc-300 dark:placeholder:text-zinc-500 dark:bg-zinc-900" +
-          " " +
-          className
-        }
-      />
     );
   else children = ({ onChange, onBlur, value }) => <></>;
 
