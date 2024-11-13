@@ -15,7 +15,6 @@ const authOptions: NextAuthOptions = {
         role: { label: "Role", type: "text" },
         refreshToken: { label: "RefreshToken", type: "text" },
         expiresIn: { label: "ExpiresIn", type: "text" },
-
       },
       async authorize(credentials) {
         try {
@@ -27,29 +26,29 @@ const authOptions: NextAuthOptions = {
               role: credentials.role || "User",
               accessToken: credentials.token,
               refreshToken: credentials.refreshToken || "",
-              expiresIn: credentials.expiresIn || 3600
+              expiresIn: credentials.expiresIn || 3600,
             };
           }
 
           const res = await fetch(`${AUTH_URL}/login`, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(credentials),
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
           });
-          
+
           const response = await res.json();
 
           if (res.ok && response.success && response.data) {
             const { user, token: accessToken, expiresIn } = response.data;
-            
+
             return {
               id: user.id,
               email: user.email,
               name: user.name,
               role: user.role,
               accessToken: accessToken,
-              refreshToken: response.data.refreshToken, 
-              expiresIn: response.data.expiresIn
+              refreshToken: response.data.refreshToken,
+              expiresIn: response.data.expiresIn,
             };
           }
 
@@ -57,7 +56,7 @@ const authOptions: NextAuthOptions = {
         } catch (error: any) {
           throw new Error(error.message || "Login failed");
         }
-      }
+      },
     }),
   ],
   callbacks: {
@@ -69,7 +68,7 @@ const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
-        token.accessTokenExpires = Date.now() + (user.expiresIn * 1000);
+        token.accessTokenExpires = Date.now() + user.expiresIn * 1000;
       }
 
       if (Date.now() < (token.accessTokenExpires as number)) {
@@ -87,29 +86,29 @@ const authOptions: NextAuthOptions = {
         session.user.accessToken = token.accessToken;
       }
       return session;
-    }
+    },
   },
   pages: {
-    signIn: '/login',
-    error: '/auth/error',
+    signIn: "/login",
+    error: "/auth/error",
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 };
 async function refreshAccessToken(token: any) {
   try {
     const response = await fetch(`${AUTH_URL}/refresh-token`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        refreshToken: token.refreshToken
-      })
+        refreshToken: token.refreshToken,
+      }),
     });
 
     const refreshedTokens = await response.json();
@@ -122,7 +121,7 @@ async function refreshAccessToken(token: any) {
       ...token,
       accessToken: refreshedTokens.data.token,
       refreshToken: refreshedTokens.data.refreshToken ?? token.refreshToken,
-      accessTokenExpires: Date.now() + (refreshedTokens.data.expiresIn * 1000),
+      accessTokenExpires: Date.now() + refreshedTokens.data.expiresIn * 1000,
     };
   } catch (error) {
     return {
