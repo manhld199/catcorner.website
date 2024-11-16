@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
   ChevronDown,
@@ -26,7 +26,8 @@ import { format, parse, isValid } from "date-fns";
 import { vi } from "date-fns/locale";
 import UserSidebar from "@/partials/(user)/sidebar_nav";
 import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,6 +41,18 @@ import {
 } from "@/components/ui/form";
 import { AlertCircle } from "lucide-react";
 import { IMaskInput } from "react-imask";
+import BeatLoader from "react-spinners/BeatLoader";
+import type { CSSProperties } from "react";
+import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
+import { fetchWithAuth } from "@/utils/functions/server";
+import { AUTH_URL } from "@/utils/constants/urls";
+
+// Thêm style cho loading
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+};
 
 // Update the userData state interface to match API response
 interface UserData {
@@ -52,7 +65,7 @@ interface UserData {
 
 type Gender = "Nam" | "Nữ" | "Khác";
 
-// Cập nhật schema validation
+//  schema cho thông tin cá nhân
 const profileSchema = z.object({
   user_name: z
     .string()
@@ -87,6 +100,21 @@ const profileSchema = z.object({
     .optional()
     .or(z.literal("")), // Cho phép bỏ trống
 });
+//  schema cho đổi mật khẩu
+const passwordSchema = z
+  .object({
+    current_password: z
+      .string()
+      .min(8, { message: "Mật khẩu phải có ít nhất 8 ký tự" }),
+    new_password: z
+      .string()
+      .min(8, { message: "Mật khẩu mới phải có ít nhất 8 ký tự" }),
+    confirm_password: z.string(),
+  })
+  .refine((data) => data.new_password === data.confirm_password, {
+    message: "Mật khẩu xác nhận không khớp",
+    path: ["confirm_password"],
+  });
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -114,26 +142,16 @@ export default function ProfilePage() {
   };
   const [isLoading, setIsLoading] = useState(true);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!session?.user?.accessToken) return;
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${session.user.accessToken}`,
-            },
-          }
+        const data = await fetchWithAuth(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`
         );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile");
-        }
-
-        const data = await response.json();
         console.log("Profile data:", data); // Log để debug
 
         if (data.success && data.data?.user) {
@@ -195,7 +213,8 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = async (values: z.infer<typeof profileSchema>) => {
     if (!session?.user?.accessToken) return;
-
+    setIsSubmitting(true);
+    setIsProcessing(true);
     try {
       const formData = new FormData();
       let hasChanges = false;
@@ -251,25 +270,16 @@ export default function ProfilePage() {
         console.log(`Sending ${key}:`, value);
       });
 
-      const response = await fetch(
+      const data = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
         {
           method: "PUT",
-          headers: {
-            Authorization: `Bearer ${session.user.accessToken}`,
-          },
           body: formData,
         }
       );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to update profile");
-      }
-
       if (data.success) {
-        toast.success("Cập nhật thông tin thành công!");
+        toast.success("Cập nhật thông tin thành công! 🎉");
         setImageFile(null);
 
         // Cập nhật lại userData với những giá trị mới
@@ -288,6 +298,9 @@ export default function ProfilePage() {
       toast.error(
         error instanceof Error ? error.message : "Lỗi cập nhật thông tin"
       );
+    } finally {
+      setIsSubmitting(false);
+      setIsProcessing(false);
     }
   };
 
@@ -399,45 +412,113 @@ export default function ProfilePage() {
       setImage(null);
     }
   };
+
+  const passwordForm = useForm<z.infer<typeof passwordSchema>>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: {
+      current_password: "",
+      new_password: "",
+      confirm_password: "",
+    },
+  });
+
+  // Thêm handlers cho form mới
+  const handleChangePassword = async (
+    values: z.infer<typeof passwordSchema>
+  ) => {
+    if (!session?.user?.accessToken) {
+      toast.error("Vui lòng đăng nhập để thực hiện thao tác này");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setIsProcessing(true);
+
+      toast.loading("Đang cập nhật mật khẩu...", {
+        toastId: "updatePassword",
+      });
+      const payload = {
+        current_password: values.current_password,
+        new_password: values.new_password,
+      };
+
+      const data = await fetchWithAuth(`${AUTH_URL}/change-password`, {
+        method: "PUT",
+        body: payload,
+      });
+      if (data.success) {
+        toast.update("updatePassword", {
+          render: "Cập nhật mật khẩu thành công! 🎉",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        passwordForm.reset();
+      }
+    } catch (error) {
+      toast.update("updatePassword", {
+        render:
+          error instanceof Error
+            ? error.message
+            : "Lỗi cập nhật mật khẩu. Vui lòng thử lại!",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    } finally {
+      setIsSubmitting(false);
+      setIsProcessing(false);
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full md:w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 px-4 md:px-0">
+    <div className="flex flex-col md:flex-row w-full md:w-[90%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 px-4 md:px-0">
       <UserSidebar />
-      <div className="w-full">
+      <div className="w-full space-y-[20px]">
         <Collapsible
           open={isOpen}
           onOpenChange={setIsOpen}
-          className="border border-border-color rounded-[8px] w-full">
-          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50">
+          className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black">
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
             <h2 className="font-bold text-center">Thông tin tài khoản</h2>
             <ChevronDown
-              className={`text-pri-1 w-7 h-7 transition-transform ${
+              className={`text-pri-1 dark:text-gray-300 w-7 h-7 transition-transform ${
                 isOpen ? "transform rotate-180" : ""
               }`}
             />
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="p-4 space-y-6 pt-0">
+            <div className="p-4 space-y-4 pt-0">
               {/* avatar */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 mb-6 p-4 md:p-[20px] border border-border-color rounded-[8px]">
+              <div className="flex flex-col sm:flex-row items-center gap-4 p-4 md:p-[20px] border border-border-color rounded-[8px] dark:border-gray-700 dark:bg-black">
                 <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 flex-shrink-0">
                   {image ? (
-                    <img
+                    <Image
                       src={image}
                       alt="Profile"
                       className="w-full h-full object-cover"
+                      width={1000}
+                      height={1000}
+                      quality={100}
+                      priority
                     />
                   ) : userData.user_avt ? (
-                    <img
+                    <Image
                       src={userData.user_avt}
                       alt="Profile"
                       className="w-full h-full object-cover"
+                      width={1000}
+                      height={1000}
+                      quality={100}
+                      priority
                     />
                   ) : (
-                    <div className="w-full h-full bg-muted" />
+                    <div className="w-full h-full bg-muted dark:bg-gray-900" />
                   )}
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -461,13 +542,13 @@ export default function ProfilePage() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(handleUpdateProfile)}
-                  className="space-y-4">
+                  className="space-y-4 p-4 md:p-[20px] border border-border-color rounded-[8px] dark:border-gray-700 dark:bg-black">
                   <FormField
                     control={form.control}
                     name="user_name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-gray-600">
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
                           Họ tên <span className="text-red-600">*</span>
                         </FormLabel>
                         <div className="relative">
@@ -475,7 +556,7 @@ export default function ProfilePage() {
                             <Input
                               {...field}
                               placeholder="Nhập họ tên của bạn"
-                              className={`bg-white ${
+                              className={`bg-white dark:bg-gray-900 dark:text-white dark:border-gray-700 ${
                                 field.value && !form.formState.errors.user_name
                                   ? "border-green-500"
                                   : form.formState.errors.user_name
@@ -498,7 +579,7 @@ export default function ProfilePage() {
                     name="user_phone_number"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-gray-600">
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
                           Số điện thoại
                         </FormLabel>
                         <div className="relative">
@@ -507,7 +588,7 @@ export default function ProfilePage() {
                               {...field}
                               type="tel"
                               placeholder="Nhập số điện thoại của bạn"
-                              className={`bg-white ${
+                              className={`bg-white dark:bg-gray-900 dark:text-white dark:border-gray-700 ${
                                 field.value &&
                                 !form.formState.errors.user_phone_number
                                   ? "border-green-500"
@@ -531,7 +612,7 @@ export default function ProfilePage() {
                     name="user_sex"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-gray-600">
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
                           Giới tính
                         </FormLabel>
                         <FormControl>
@@ -543,11 +624,11 @@ export default function ProfilePage() {
                               <RadioGroupItem
                                 value="Nam"
                                 id="nam"
-                                className="text-pri-1"
+                                className="text-pri-1 dark:text-gray-300"
                               />
                               <Label
                                 htmlFor="nam"
-                                className="text-base text-pri-1">
+                                className="text-base text-pri-1 dark:text-gray-300">
                                 Nam
                               </Label>
                             </div>
@@ -555,11 +636,11 @@ export default function ProfilePage() {
                               <RadioGroupItem
                                 value="Nữ"
                                 id="nu"
-                                className="text-pri-1"
+                                className="text-pri-1 dark:text-gray-300"
                               />
                               <Label
                                 htmlFor="nu"
-                                className="text-base text-pri-1">
+                                className="text-base text-pri-1 dark:text-gray-300">
                                 Nữ
                               </Label>
                             </div>
@@ -567,11 +648,11 @@ export default function ProfilePage() {
                               <RadioGroupItem
                                 value="Khác"
                                 id="khac"
-                                className="text-pri-1"
+                                className="text-pri-1 dark:text-gray-300"
                               />
                               <Label
                                 htmlFor="khac"
-                                className="text-base text-pri-1">
+                                className="text-base text-pri-1 dark:text-gray-300">
                                 Khác
                               </Label>
                             </div>
@@ -587,10 +668,10 @@ export default function ProfilePage() {
                     name="user_birth_day"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-gray-600">
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
                           Ngày sinh
                         </FormLabel>
-                        <div className="relative flex w-full sm:w-[50%] md:w-[40%] lg:w-[25%]">
+                        <div className="relative flex w-full sm:w-[50%] md:w-[100%] lg:w-[30%]">
                           <FormControl>
                             <IMaskInput
                               mask="00/00/0000"
@@ -636,7 +717,7 @@ export default function ProfilePage() {
                               lazy={false}
                               placeholderChar="_"
                               placeholder="dd/mm/yyyy"
-                              className={`w-full rounded-r-none text-base text-pri-1 h-10 px-3 py-2 border ${
+                              className={`w-full rounded-r-none text-base text-pri-1 dark:text-white dark:bg-gray-900 dark:border-gray-700 h-10 px-3 py-2 border ${
                                 dateInput &&
                                 !form.formState.errors.user_birth_day
                                   ? "border-green-500"
@@ -650,18 +731,20 @@ export default function ProfilePage() {
                             <PopoverTrigger asChild>
                               <Button
                                 variant="outline"
-                                className="rounded-l-none border-l-0">
-                                <CalendarIcon className="h-4 w-4 text-pri-1" />
+                                className="rounded-l-none border-l-0 dark:bg-gray-900 dark:border-gray-700">
+                                <CalendarIcon className="h-4 w-4 text-pri-1 dark:text-gray-300" />
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="end">
+                            <PopoverContent
+                              className="w-auto p-0 dark:bg-gray-900 dark:border-gray-700"
+                              align="end">
                               <Calendar
                                 mode="single"
                                 selected={date}
                                 onSelect={handleCalendarSelect}
                                 initialFocus
                                 locale={vi}
-                                className="text-base text-pri-1"
+                                className="text-base text-pri-1 dark:text-gray-300"
                               />
                             </PopoverContent>
                           </Popover>
@@ -674,16 +757,27 @@ export default function ProfilePage() {
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Button
                       variant="filled"
-                      className="w-full sm:w-auto bg-pri-7 px-7"
+                      className="w-full sm:w-auto bg-pri-7 px-7 dark:bg-pri-8 dark:hover:bg-pri-9 dark:text-white dark:disabled:bg-gray-700 dark:disabled:text-gray-500"
                       type="submit"
-                      disabled={!form.formState.isDirty && !imageFile}>
-                      Cập nhật
+                      disabled={
+                        (!form.formState.isDirty && !imageFile) ||
+                        isSubmitting ||
+                        isProcessing
+                      }>
+                      {isSubmitting ? (
+                        <BeatLoader color="#ffffff" size={8} />
+                      ) : isProcessing ? (
+                        "Đang xử lý..."
+                      ) : (
+                        "Cập nhật"
+                      )}
                     </Button>
                     <Button
                       type="button"
                       variant="filled_outlined"
-                      className="w-full sm:w-auto border-pri-7 text-pri-7 px-7"
-                      onClick={handleReset}>
+                      className="w-full sm:w-auto border-pri-7 text-pri-7 px-7 dark:border-pri-8 dark:text-pri-8 dark:hover:bg-pri-8/10 disabled:border-gray-500 disabled:text-gray-500 dark:disabled:border-gray-700 dark:disabled:text-gray-500"
+                      onClick={handleReset}
+                      disabled={isSubmitting || isProcessing}>
                       Hủy bỏ
                     </Button>
                   </div>
@@ -692,7 +786,99 @@ export default function ProfilePage() {
             </div>
           </CollapsibleContent>
         </Collapsible>
+        {/* Collapsible đổi mật khẩu */}
+        <Collapsible className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black">
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
+            <h2 className="font-bold text-center">Thay đổi mật khẩu</h2>
+            <ChevronDown className="text-pri-1 dark:text-gray-300 w-7 h-7 transition-transform" />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="p-4 space-y-4 pt-0">
+              <Form {...passwordForm}>
+                <form
+                  onSubmit={passwordForm.handleSubmit(handleChangePassword)}
+                  className="space-y-4 p-4 md:p-[20px] border border-border-color rounded-[8px] dark:border-gray-700 dark:bg-black">
+                  <FormField
+                    control={passwordForm.control}
+                    name="current_password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
+                          Mật khẩu hiện tại
+                        </FormLabel>
+                        <FormControl>
+                          <PasswordInput
+                            {...field}
+                            placeholder="Mật khẩu phải có ít nhất 8 ký tự"
+                            className="dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={passwordForm.control}
+                    name="new_password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
+                          Mật khẩu mới
+                        </FormLabel>
+                        <FormControl>
+                          <PasswordInput
+                            {...field}
+                            placeholder="Mật khẩu phải có ít nhất 8 ký tự"
+                            className="dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={passwordForm.control}
+                    name="confirm_password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base text-gray-600 dark:text-gray-300">
+                          Xác nhận mật khẩu mới
+                        </FormLabel>
+                        <FormControl>
+                          <PasswordInput
+                            {...field}
+                            placeholder="Nhập lại mật khẩu của bạn"
+                            className="dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    variant="filled"
+                    className="w-full sm:w-auto bg-pri-7 px-7 dark:bg-pri-8 dark:hover:bg-pri-9 dark:text-white dark:disabled:bg-gray-700 dark:disabled:text-gray-500"
+                    disabled={
+                      !passwordForm.formState.isDirty ||
+                      isSubmitting ||
+                      isProcessing
+                    }>
+                    {isSubmitting ? (
+                      <BeatLoader color="#ffffff" size={8} />
+                    ) : isProcessing ? (
+                      "Đang xử lý..."
+                    ) : (
+                      "Cập nhật"
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
+      <ToastContainer className="!z-[99999] !mt-[50px] !w-fit max-w-[420px]" />
     </div>
   );
 }

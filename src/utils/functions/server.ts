@@ -7,6 +7,9 @@ import {
   INotOkResponseProps,
   IOkResponseProps,
 } from "@/types/interfaces";
+import { getSession, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { refreshTokenAndSignIn } from "@/utils/auth";
 
 const baseResponse = (props: IBaseResponseProps) => {
   const { status, ...rest } = props;
@@ -92,5 +95,109 @@ export const fetchDataNoCache = async (url: string) => {
   } catch (err) {
     console.log("Fetch data error: ", err);
     return notFound();
+  }
+};
+
+interface FetchOptions extends RequestInit {
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  body?: any;
+}
+
+export const fetchWithAuth = async (
+  url: string,
+  options: FetchOptions = { method: "GET" }
+) => {
+  try {
+    const session = await getSession();
+    if (!session?.user?.accessToken) {
+      throw new Error("No access token available");
+    }
+    const isFormData = options.body instanceof FormData;
+    // Xử lý headers
+    const headers = isFormData
+      ? {
+          Authorization: `Bearer ${session.user.accessToken}`,
+          ...options.headers,
+        }
+      : {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.user.accessToken}`,
+          ...options.headers,
+        };
+
+    // Tạo request config
+    const requestConfig = {
+      method: options.method || "GET",
+      headers,
+      // Xử lý body
+      ...(options.body && {
+        body: isFormData ? options.body : JSON.stringify(options.body),
+      }),
+      // Spread các options khác ngoại trừ body và headers
+      ...Object.entries(options).reduce((acc, [key, value]) => {
+        if (key !== "body" && key !== "headers") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as any),
+    };
+
+    // Thực hiện request
+    const response = await fetch(url, requestConfig);
+
+    // Xử lý refresh token khi 401
+    if (response.status === 401) {
+      try {
+        // Sử dụng hàm mới từ auth.ts
+        if (!session?.user?.refreshToken) {
+          throw new Error("No refresh token available");
+        }
+        await refreshTokenAndSignIn(session.user.refreshToken);
+        // Lấy session mới sau khi refresh
+        const newSession = await getSession();
+        if (!newSession?.user?.accessToken) {
+          throw new Error("No new access token available");
+        }
+
+        // Thử lại request với token mới
+        const newHeaders = {
+          ...headers,
+          Authorization: `Bearer ${newSession.user.accessToken}`,
+        };
+
+        const retryResponse = await fetch(url, {
+          ...options,
+          headers: newHeaders,
+        });
+
+        if (!retryResponse.ok) {
+          const errorData = await retryResponse.json();
+          throw new Error(
+            errorData.message || "Request failed after token refresh"
+          );
+        }
+
+        return retryResponse.json();
+      } catch (refreshError) {
+        if (
+          refreshError instanceof Error &&
+          (refreshError.message === "Refresh token has expired" ||
+            refreshError.message.includes("Failed to sign in"))
+        ) {
+          await signOut({ callbackUrl: "/login" });
+        }
+        throw refreshError;
+      }
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Request failed");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
   }
 };

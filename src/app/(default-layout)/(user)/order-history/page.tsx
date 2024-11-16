@@ -212,64 +212,64 @@ export default function HistoryOrder() {
 
   return (
     <>
-      <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0">
+      <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 dark:bg-black">
         <UserSidebar />
-        <Card className="w-[100%]">
+        <Card className="w-[100%] dark:bg-black dark:border-gray-700">
           <CardHeader>
-            <h2 className="font-bold">Đơn hàng của tôi</h2>
+            <h2 className="font-bold dark:text-white">Đơn hàng của tôi</h2>
           </CardHeader>
           <CardContent>
             <Tabs
               defaultValue="all"
               className="mb-6"
               onValueChange={(value) => setActiveTab(value)}>
-              <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0">
+              <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-900">
                 <TabsTrigger
                   value="all"
-                  className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
+                  className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                   Tất cả{" "}
                   {activeTab === "all" && orderCounts.all > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
                       {orderCounts.all}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="pending"
-                  className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
+                  className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                   Chờ xác nhận{" "}
                   {activeTab === "pending" && orderCounts.pending > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
                       {orderCounts.pending}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="shipping"
-                  className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
+                  className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                   Vận chuyển{" "}
                   {activeTab === "shipping" && orderCounts.shipping > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
                       {orderCounts.shipping}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="completed"
-                  className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
+                  className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                   Thành công{" "}
                   {activeTab === "completed" && orderCounts.completed > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
                       {orderCounts.completed}
                     </span>
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="cancelled"
-                  className="data-[state=active]:text-pri-1 data-[state=active]:font-bold text-base rounded-[50px]">
+                  className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                   Đã hủy{" "}
                   {activeTab === "cancelled" && orderCounts.cancelled > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1">
+                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
                       {orderCounts.cancelled}
                     </span>
                   )}
@@ -283,7 +283,7 @@ export default function HistoryOrder() {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Nhập mã đơn hàng hoặc tên sản phẩm để tìm kiếm"
-                      className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-800 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
+                      className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-900 rounded-full border border-neutral-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
                     />
                     <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   </div>
@@ -301,21 +301,21 @@ export default function HistoryOrder() {
                       </div>
                     ) : isLoading ? (
                       <div className="text-center py-4">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 mx-auto"></div>
-                        <p className="mt-2">Đang tải...</p>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 dark:border-pri-6 mx-auto"></div>
+                        <p className="mt-2 dark:text-gray-300">Đang tải...</p>
                       </div>
                     ) : orders.length === 0 ? (
-                      <div className="text-center py-4">
+                      <div className="text-center py-4 dark:text-gray-300">
                         Không có đơn hàng nào
                       </div>
                     ) : (
                       orders.map((order) => (
                         <Card
                           key={order._id}
-                          className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)]">
+                          className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:bg-black dark:border-gray-700">
                           <CardContent className="p-6">
                             <div className="flex items-center justify-between mb-4">
-                              <span className="flex gap-2 text-pri-1 text-2xl">
+                              <span className="flex gap-2 text-pri-1 dark:text-pri-6 text-2xl">
                                 <ShoppingBag size={24} />
                                 <span>Mã đơn hàng:</span>
                                 <span>{order._id}</span>
@@ -324,30 +324,37 @@ export default function HistoryOrder() {
                             </div>
                             <div className="w-full mx-auto py-4">
                               <div className="flex items-center justify-between gap-14">
-                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                                  <Truck size={16} />
-                                  <span className="text-sm text-pri-1">
+                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px]">
+                                  <Truck
+                                    size={16}
+                                    className="dark:text-gray-300"
+                                  />
+                                  <span className="text-sm text-pri-1 dark:text-pri-6">
                                     Thủ Đức, Tp Hồ Chí Minh
                                   </span>
                                 </div>
 
                                 <div className="flex-1 flex items-center gap-2">
                                   <div className="flex items-center flex-1">
-                                    <div className="w-2 h-2 rounded-full bg-neutral-300"></div>
-                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
+                                    <div className="w-2 h-2 rounded-full bg-neutral-300 dark:bg-gray-600"></div>
+
+                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)] dark:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#4b5563_2px,#4b5563_8px)]" />
                                   </div>
-                                  <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 rounded-[32px]">
+                                  <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px] dark:text-gray-300">
                                     Giao hàng dự kiến: 28/09/25
                                   </div>
                                   <div className="flex items-center flex-1">
-                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)]" />
-                                    <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300"></div>
+                                    <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)] dark:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#4b5563_2px,#4b5563_8px)]" />
+                                    <div className="w-2 h-2 rotate-45 border-t-2 border-r-2 border-neutral-300 dark:border-gray-600"></div>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 rounded-[32px]">
-                                  <MapPin size={16} />
-                                  <span className="text-sm text-pri-1">
+                                <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px]">
+                                  <MapPin
+                                    size={16}
+                                    className="dark:text-gray-300"
+                                  />
+                                  <span className="text-sm text-pri-1 dark:text-pri-6">
                                     {order.order_buyer.address.district},{" "}
                                     {order.order_buyer.address.province}
                                   </span>
@@ -355,7 +362,7 @@ export default function HistoryOrder() {
                               </div>
                             </div>
 
-                            <div className="text-right text-pri-1 underline font-bold pb-4">
+                            <div className="text-right text-pri-1 dark:text-white underline font-bold pb-4 hover:opacity-80 dark:hover:text-pri-6 transition-colors">
                               <Link href={`order-history/details/${order._id}`}>
                                 Xem chi tiết
                               </Link>
@@ -375,8 +382,10 @@ export default function HistoryOrder() {
                             </div>
 
                             <div className="mt-1 pt-1 text-right">
-                              <span className="font-medium">Thành tiền: </span>
-                              <span className="text-lg font-semibold text-pri-7">
+                              <span className="font-medium dark:text-gray-300">
+                                Thành tiền:{" "}
+                              </span>
+                              <span className="text-lg font-semibold text-pri-7 dark:text-pri-6">
                                 ₫{order.final_cost.toLocaleString("vi-VN")}
                               </span>
                             </div>

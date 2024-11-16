@@ -9,9 +9,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { getLastName } from "@/utils/string-utils";
 
 export default function CustomerHeaderUser() {
-  const { data: session, status } = useSession(); // Lấy thông tin session
+  const { data: session } = useSession(); // Lấy thông tin session
 
   const handleSignOut = async () => {
     try {
@@ -22,11 +23,7 @@ export default function CustomerHeaderUser() {
       console.error("Lỗi khi đăng xuất:", error);
     }
   };
-  const getLastName = (fullName: string | null | undefined) => {
-    if (!fullName) return "User";
-    const nameParts = fullName.trim().split(" ");
-    return nameParts[nameParts.length - 1];
-  };
+
   if (!session) {
     return (
       <>
@@ -68,14 +65,16 @@ export default function CustomerHeaderUser() {
           href="#"
           className="tablet:hidden laptop:flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center">
           <Image
-            src="/imgs/test.jpg"
-            alt="tes-timg"
-            width={30}
-            height={30}
+            src={session.user?.userAvt || "/imgs/test.jpg"}
+            alt="User Avatar"
+            width={100}
+            height={100}
+            quality={100}
             className="rounded-full mr-2 object-cover w-[30px] h-[30px]"
+            priority
           />
           <span className="font-semibold laptop:block desktop:block">
-            Hi, {getLastName(session.user?.name) || "User"}
+            Hi, {getLastName(session.user?.name)}
           </span>
         </a>
 

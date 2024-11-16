@@ -1,8 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AUTH_URL } from "@/utils/constants/urls";
+import { refreshAccessToken } from "@/utils/auth";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -15,6 +16,7 @@ const authOptions: NextAuthOptions = {
         role: { label: "Role", type: "text" },
         refreshToken: { label: "RefreshToken", type: "text" },
         expiresIn: { label: "ExpiresIn", type: "text" },
+        userAvt: { label: "UserAvt", type: "text" },
       },
       async authorize(credentials) {
         try {
@@ -25,6 +27,7 @@ const authOptions: NextAuthOptions = {
               email: credentials.email,
               role: credentials.role || "User",
               accessToken: credentials.token,
+              userAvt: credentials.userAvt,
               refreshToken: credentials.refreshToken || "",
               expiresIn: credentials.expiresIn || 3600,
             };
@@ -47,6 +50,7 @@ const authOptions: NextAuthOptions = {
               name: user.name,
               role: user.role,
               accessToken: accessToken,
+              userAvt: user.user_avt,
               refreshToken: response.data.refreshToken,
               expiresIn: response.data.expiresIn,
             };
@@ -66,24 +70,50 @@ const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.name = user.name;
         token.role = user.role;
+        token.userAvt = user.userAvt;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
         token.accessTokenExpires = Date.now() + user.expiresIn * 1000;
       }
 
-      if (Date.now() < (token.accessTokenExpires as number)) {
+      const shouldRefreshTime = Math.round(
+        (token.accessTokenExpires as number) - Date.now()
+      );
+
+      if (shouldRefreshTime > 5 * 60 * 1000) {
         return token;
       }
 
-      return await refreshAccessToken(token);
+      try {
+        if (!token.refreshToken) {
+          throw new Error("No refresh token available");
+        }
+        const refreshedToken = await refreshAccessToken(token.refreshToken);
+
+        return {
+          ...token,
+          accessToken: refreshedToken.accessToken,
+          refreshToken: refreshedToken.refreshToken,
+          accessTokenExpires: Date.now() + refreshedToken.expiresIn * 1000,
+          error: undefined,
+        };
+      } catch (error) {
+        console.error("Error refreshing token in NextAuth:", error);
+        return {
+          ...token,
+          error: "RefreshAccessTokenError",
+        };
+      }
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.userAvt = token.userAvt as string;
         session.user.role = token.role;
         session.user.accessToken = token.accessToken;
+        session.user.refreshToken = token.refreshToken;
       }
       return session;
     },
@@ -99,36 +129,6 @@ const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 };
-async function refreshAccessToken(token: any) {
-  try {
-    const response = await fetch(`${AUTH_URL}/refresh-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        refreshToken: token.refreshToken,
-      }),
-    });
 
-    const refreshedTokens = await response.json();
-
-    if (!response.ok) {
-      throw refreshedTokens;
-    }
-
-    return {
-      ...token,
-      accessToken: refreshedTokens.data.token,
-      refreshToken: refreshedTokens.data.refreshToken ?? token.refreshToken,
-      accessTokenExpires: Date.now() + refreshedTokens.data.expiresIn * 1000,
-    };
-  } catch (error) {
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
-  }
-}
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

@@ -22,7 +22,7 @@ const calculateDiscountedPrice = (price: number, discountPercent: number) => {
 
 export default function OrderProductItem({ product }: OrderProductItemProps) {
   return (
-    <div className="flex items-center gap-4 p-4 border rounded-lg">
+    <div className="flex items-center gap-4 p-4 border rounded-lg dark:border-gray-600">
       <div className="relative w-24 h-24">
         {product.variant_img.startsWith("SEO_Images") ? (
           <CldImage
@@ -44,21 +44,24 @@ export default function OrderProductItem({ product }: OrderProductItemProps) {
           />
         )}
       </div>
-      <div className="flex-1 text-base">
-        <span className="font-medium text-pri-1">{product.product_name}</span>
-        <div className="mt-1">
-          <span className="text-sm text-neutral-500">x{product.quantity}</span>
-          <br />
-          <span className="text-pri-1">{product.variant_name}</span>
-        </div>
+      <div className="flex-1">
+        <h3 className="font-medium text-base dark:text-white">
+          {product.product_name}
+        </h3>
+        <p className="text-sm text-muted-foreground dark:text-gray-400">
+          Phân loại: {product.variant_name}
+        </p>
+        <p className="text-sm text-muted-foreground dark:text-gray-400">
+          x{product.quantity}
+        </p>
       </div>
       <div className="text-right inline-flex gap-2">
         {product.discount_percent > 0 && (
-          <span className="line-through text-neutral-400">
+          <span className="line-through text-neutral-400 dark:text-gray-500">
             ₫{product.unit_price.toLocaleString("vi-VN")}
           </span>
         )}
-        <div className="font-medium text-pri-1">
+        <div className="font-medium text-pri-1 dark:text-white">
           ₫
           {calculateDiscountedPrice(
             product.unit_price,
