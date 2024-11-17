@@ -1,7 +1,7 @@
 // **********************GENERAL**********************
 export { default as ScrollUp } from "./(general)/scroll-up";
 export { default as BreadCrumb } from "./(general)/breadcrumb";
-export { default as CustomerQuantityInputGroup } from "./(general)/quantity-input-group";
+export { default as CustomerQuantityInputGroup } from "./(general)/inputs/quantity-input-group";
 export { default as CustomerProductCard } from "./(general)/product-card";
 export { default as CustomerStarRating } from "./(general)/star-rating";
 
@@ -20,10 +20,14 @@ export { default as EditorRichText } from "./(general)/text-editors/rich-text/ed
 export { default as InputTags } from "./(general)/inputs/tags";
 export { default as InputDateTime } from "./(general)/inputs/input-date-time";
 export { default as InputDate } from "./(general)/inputs/input-date";
+export { default as InputGroupQuantity } from "./(general)/inputs/quantity-input-group";
 
 // selects
 export { default as SelectDialog } from "./(general)/selects/dialog";
 export { default as SelectCard } from "./(general)/selects/card";
+
+// rows
+export { default as RowCart } from "./(general)/rows/cart";
 
 // **********************ADMIN**********************
 export { default as AdminTable } from "./(admin)/table";

@@ -24,3 +24,20 @@ export const convertBlobUrlsToImgFiles = async (
           )
       )
   );
+
+export const convertNumberToVND = (amount: number): string => {
+  if (isNaN(amount)) {
+    return "0đ";
+  }
+
+  // Làm tròn lên số tiền
+  const roundedAmount = Math.ceil(amount);
+
+  // Định dạng số tiền thành chuỗi có dấu chấm phân cách
+  const formattedAmount = roundedAmount
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  // Thêm đơn vị "đ"
+  return `${formattedAmount}đ`;
+};

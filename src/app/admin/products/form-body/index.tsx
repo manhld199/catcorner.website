@@ -421,7 +421,7 @@ const FormBody = ({
                         <AccordionContent className="mt-2">
                           <ProductVariantGroup
                             form={form}
-                            index={0}
+                            index={index}
                             setDeletedImgs={setDeletedVariantImgs}
                           />
                         </AccordionContent>

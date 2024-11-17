@@ -2,6 +2,8 @@
 
 "use client";
 
+import { notFound } from "next/navigation";
+
 // helpers
 export const extractImageLinksFromHTML = (htmlString: string) => {
   const parser = new DOMParser();
@@ -72,5 +74,32 @@ export const handleDelete = async (
     return true;
   } catch (error) {
     return false;
+  }
+};
+
+export const fetchDataClientWithBodyNoCache = async (
+  url: string,
+  body: any
+) => {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+    });
+
+    if (!res.ok) return notFound();
+
+    const json = await res.json();
+
+    const data = json.data;
+
+    return data;
+  } catch (err) {
+    console.log("Fetch data error: ", err);
+    return notFound();
   }
 };

@@ -30,18 +30,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={josefin.className}>
-      <body>
-      <PageLoader>
-      <Providers>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
-        </Providers>
-      </PageLoader>
+      <body className="bg-bg-1 dark:bg-bg-dark-1">
+        <PageLoader>
+          <Providers>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange>
+              {children}
+            </ThemeProvider>
+          </Providers>
+        </PageLoader>
       </body>
     </html>
   );

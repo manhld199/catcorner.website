@@ -65,6 +65,7 @@ const config: Config = {
         "pri-6": "#315475",
         "pri-7": "#669E9E",
         "bg-1": "#f5f5f5",
+        "bg-dark-1": "#0A0A0A",
       },
       borderRadius: {
         lg: "var(--radius)",

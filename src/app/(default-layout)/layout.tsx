@@ -10,7 +10,9 @@ export default function DefaultLayout({
     <>
       <CustomerHeader />
       {/* <BreadCrumb /> */}
-      {children}
+      <main className="my-24 mx-auto w-4/5 max-w-[1152px] min-h-[80vh]">
+        {children}
+      </main>
       <ScrollUp />
       <CustomerFooter />
     </>

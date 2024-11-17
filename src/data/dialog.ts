@@ -1,9 +1,12 @@
 export const DIALOG_DATA = {
   "delete-btn": "Xóa",
   "title-general-delete": "Xóa dữ liệu",
+  "title-delete-cart": "Xóa sản phẩm khỏi giỏ hàng",
   "content-general-delete-rows-1": "Bạn có chắc muốn xóa",
   "content-general-delete-confirm-2": "thành phần hay không?",
   "content-general-delete-confirm-3": "hay không?",
+  "content-delete-cart-3": "ra khỏi giỏ hàng",
+  "content-delete-cart-2": "sản phẩm ra khỏi giỏ hàng",
   "content-general-deleting": "Đang xóa dữ liệu",
   "content-general-deleting-2": "thành phần",
   "content-general-delete-fail": "Xóa dữ liệu thất bại!",

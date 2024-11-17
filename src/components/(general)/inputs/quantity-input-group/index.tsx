@@ -34,6 +34,8 @@ export default function CustomerQuantityInputGroup({
       ) {
         setInputValue(newValue);
         setError(null); // Nếu hợp lệ, xóa thông báo lỗi
+
+        if (takeQuantity) takeQuantity(newValue);
       } else {
         // Nếu không hợp lệ, hiển thị thông báo lỗi
         setError(
@@ -43,16 +45,12 @@ export default function CustomerQuantityInputGroup({
     }
   };
 
-  useEffect(() => {
-    if (takeQuantity) {
-      takeQuantity(inputValue);
-    }
-  }, [inputValue, takeQuantity]);
-
   const decreaseValue = () => {
     if (inputValue > (initValue?.minValue ?? 1)) {
       setInputValue(inputValue - 1);
       setError(null); // Xóa lỗi khi giá trị hợp lệ
+
+      if (takeQuantity) takeQuantity(inputValue - 1);
     }
   };
 
@@ -60,6 +58,8 @@ export default function CustomerQuantityInputGroup({
     if (inputValue < (initValue?.maxValue ?? 100)) {
       setInputValue(inputValue + 1);
       setError(null); // Xóa lỗi khi giá trị hợp lệ
+
+      if (takeQuantity) takeQuantity(inputValue + 1);
     }
   };
 
