@@ -219,7 +219,7 @@ export default function LoginPage() {
 
               <p className="text-center text-xs sm:text-sm text-muted-foreground mt-2 dark:text-gray-400">
                 <Link
-                  href="/password-reset"
+                  href="/forgot-password"
                   className="underline text-sm sm:text-base font-medium dark:text-gray-300">
                   Bạn quên mật khẩu ư ?
                 </Link>
