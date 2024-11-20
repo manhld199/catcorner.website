@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={josefin.className}>
-      <body className="bg-bg-1 dark:bg-bg-dark-1">
+      <body className="ml:bg-white md:bg-bg-1 dark:bg-bg-dark-1">
         <PageLoader>
           <Providers>
             <ThemeProvider

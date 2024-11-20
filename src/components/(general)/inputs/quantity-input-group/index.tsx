@@ -19,6 +19,12 @@ export default function CustomerQuantityInputGroup({
   const [inputValue, setInputValue] = useState<number>(
     initValue?.defaultValue ?? 1
   );
+
+  // Theo dõi sự thay đổi của initValue.defaultValue
+  useEffect(() => {
+    setInputValue(initValue?.defaultValue ?? 1);
+  }, [initValue?.defaultValue]);
+
   const [error, setError] = useState<string | null>(null); // Trạng thái cho thông báo lỗi
 
   // Hàm xử lý thay đổi giá trị trong ô input
@@ -87,7 +93,7 @@ export default function CustomerQuantityInputGroup({
         {/* Input số lượng */}
         <input
           ref={inputRef}
-          className="w-12 h-8 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-600 no-arrows"
+          className="w-12 h-8 text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-600 no-arrows"
           type="number"
           onChange={handleValueChange}
           onClick={handleClick}

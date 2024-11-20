@@ -212,11 +212,17 @@ export default function RowCart({
   };
 
   return (
-    <div className="hover:bg-teal-50 py-3 px-4 grid grid-cols-[4%_52%_16%_23%] gap-2 items-center">
-      <Checkbox checked={isSelected} onCheckedChange={handleChangeChecked} />
-      <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+    <div
+      className={`hover:bg-teal-100/50 ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] gap-1 items-center ${isSelected ? "bg-teal-100" : ""}`}>
+      <Checkbox
+        checked={isSelected}
+        onCheckedChange={handleChangeChecked}
+        className="data-[state=checked]:bg-pri-1"
+      />
+
+      <div className="grid ml:grid-cols-[60px_1fr] md:grid-cols-[72px_1fr] lg:grid-cols-[100px_1fr] md:gap-1 lg:gap-2 items-center">
         {variant && variant.variant_img.startsWith("SEO") ? (
-          <div className="relative w-[100px] aspect-square">
+          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <CldImage
               src={variant.variant_img}
               alt={variant.variant_name}
@@ -224,7 +230,7 @@ export default function RowCart({
             />
           </div>
         ) : (
-          <div className="relative w-[100px] aspect-square">
+          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <Image
               src={variant.variant_img}
               alt={variant.variant_name}
@@ -233,21 +239,34 @@ export default function RowCart({
           </div>
         )}
 
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-col md:gap-1 lg:gap-2">
           <h6 className="line-clamp-2">
             {cartProducts[cartIndex].product_name}
           </h6>
           <Select
             onValueChange={handleChangeVariant}
-            defaultValue={cartProducts[cartIndex].variant_id}>
-            <SelectTrigger className="w-fit bg-pri-2 text-stone-700 font-medium">
+            value={cartProducts[cartIndex].variant_id}>
+            <SelectTrigger className="w-fit bg-pri-2 text-stone-700 font-medium border-none hover:bg-pri-7 hover:text-white">
               <SelectValue placeholder={variant.variant_name} />
             </SelectTrigger>
             <SelectContent>
               {cartProducts[cartIndex].product_variants.map((item, index) => (
                 <SelectItem
                   key={`${cartProducts[cartIndex].product_name} ${item.variant_name} ${index}`}
-                  value={item._id}>
+                  value={item._id}
+                  disabled={
+                    item._id == cartProducts[cartIndex].variant_id ||
+                    cartProducts
+                      .filter(
+                        (cartProduct, itemIndex) =>
+                          itemIndex != cartIndex &&
+                          cartProduct.product_id ==
+                            cartProducts[cartIndex].product_id
+                      )
+                      .findIndex(
+                        (cartProduct) => cartProduct.variant_id == item._id
+                      ) != -1
+                  }>
                   {item.variant_name}
                 </SelectItem>
               ))}

@@ -29,6 +29,9 @@ export { default as SelectCard } from "./(general)/selects/card";
 // rows
 export { default as RowCart } from "./(general)/rows/cart";
 
+// dropdowns
+export { default as DropdownSort } from "./(general)/dropdowns/sort";
+
 // **********************ADMIN**********************
 export { default as AdminTable } from "./(admin)/table";
 export { default as AdminCustomSection } from "./(admin)/form/custom-section";

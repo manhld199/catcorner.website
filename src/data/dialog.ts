@@ -1,5 +1,6 @@
 export const DIALOG_DATA = {
   "delete-btn": "Xóa",
+  "quick-delete-btn": "Xóa nhanh",
   "title-general-delete": "Xóa dữ liệu",
   "title-delete-cart": "Xóa sản phẩm khỏi giỏ hàng",
   "content-general-delete-rows-1": "Bạn có chắc muốn xóa",

@@ -2,12 +2,12 @@
 
 // import libs
 import { Fragment, useEffect, useState } from "react";
-import { Eraser } from "lucide-react";
+import { ArrowUpDown, Eraser } from "lucide-react";
 import Link from "next/link";
 
 // import components
 import { Checkbox } from "@/components/ui/checkbox";
-import { RowCart } from "@/components";
+import { DropdownSort, RowCart } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,6 +31,16 @@ import { ICartProduct } from "@/types/interfaces";
 // import data
 import { PAGE_DATA } from "@/data/customer";
 import { DIALOG_DATA } from "@/data/dialog";
+import { SORT_NAMES } from "@/data/admin";
+import {
+  DropdownMenu,
+  DropdownMenuRadioItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+} from "@/components/ui/dropdown-menu";
 
 const cartData: ICartProduct[] = [
   {
@@ -61,6 +71,9 @@ const cartData: ICartProduct[] = [
 ];
 
 export default function CartPage() {
+  const [defaultCartProducts, setDefaultCartProducts] = useState<
+    ICartProduct[]
+  >([]);
   const [cartProducts, setCartProducts] = useState<ICartProduct[]>([]);
   const [originalTotalPrice, setOriginalTotalPrice] = useState<number>(0);
   const [discountedTotalPrice, setDiscountedTotalPrice] = useState<number>(0);
@@ -72,6 +85,10 @@ export default function CartPage() {
   const [deletedCartProducts, setDeletedCartProducts] = useState<
     ICartProduct[]
   >([]);
+  const [sortNameState, setSortNameState] = useState<string>("none");
+  const [sortQuantityState, setSortQuantityState] = useState<string>("none");
+  const [sortTotalPriceState, setSortTotalPriceState] =
+    useState<string>("none");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +98,7 @@ export default function CartPage() {
       );
 
       setCartProducts(data.products);
+      setDefaultCartProducts(data.products);
     };
 
     fetchData();
@@ -158,77 +176,188 @@ export default function CartPage() {
     setSelectedCartProducts([]);
   };
 
+  const handleSort = (key: string, sortState: string) => {
+    console.log("deffffffff", defaultCartProducts);
+    console.log("name state", sortNameState);
+    console.log("sort state", sortState);
+
+    let sortedData = [
+      ...defaultCartProducts.filter(
+        (defCartProduct) =>
+          cartProducts.findIndex(
+            (cartProduct) =>
+              cartProduct.product_id == defCartProduct.product_id &&
+              cartProduct.variant_id == defCartProduct.variant_id
+          ) != -1
+      ),
+    ];
+
+    if (sortState == "none") {
+      setSortNameState(sortState);
+      setSortQuantityState(sortState);
+      setSortTotalPriceState(sortState);
+      setCartProducts(sortedData);
+      return;
+    }
+
+    if (key == "name") {
+      setSortNameState(sortState);
+      setSortQuantityState("none");
+      setSortTotalPriceState("none");
+
+      sortedData = sortedData.sort((a, b) => {
+        const nameA = a.product_name.toLowerCase();
+        const nameB = b.product_name.toLowerCase();
+
+        if (nameA < nameB) return sortState === "asc" ? -1 : 1;
+        if (nameA > nameB) return sortState === "asc" ? 1 : -1;
+        return 0;
+      });
+    } else if (key == "quantity") {
+      setSortQuantityState(sortState);
+      setSortNameState("none");
+      setSortTotalPriceState("none");
+
+      sortedData = sortedData.sort((a, b) => {
+        const quantityA = a.quantity;
+        const quantityB = b.quantity;
+
+        if (quantityA < quantityB) return sortState === "asc" ? -1 : 1;
+        if (quantityA > quantityB) return sortState === "asc" ? 1 : -1;
+        return 0;
+      });
+    } else if (key == "total-price") {
+      setSortTotalPriceState(sortState);
+      setSortQuantityState("none");
+      setSortNameState("none");
+
+      sortedData = sortedData.sort((a, b) => {
+        const variantA = a.product_variants.find(
+          (item) => item._id == a.variant_id
+        );
+        const totalPriceA =
+          (a.quantity *
+            variantA.variant_price *
+            (100 - variantA.variant_discount_percent)) /
+          100;
+
+        const variantB = b.product_variants.find(
+          (item) => item._id == b.variant_id
+        );
+        const totalPriceB =
+          (b.quantity *
+            variantB.variant_price *
+            (100 - variantB.variant_discount_percent)) /
+          100;
+
+        if (totalPriceA < totalPriceB) return sortState === "asc" ? -1 : 1;
+        if (totalPriceA > totalPriceB) return sortState === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    console.log("sorted", sortedData);
+
+    setCartProducts(sortedData);
+  };
+
   return (
-    <div className="relative w-full h-fit grid grid-cols-[7fr_3fr] gap-3">
-      <section className="bg-white w-full flex flex-col rounded-2xl">
-        <div className="py-3 px-4 grid grid-cols-[4%_52%_16%_19%_4%] gap-2 items-center">
-          <Checkbox
-            checked={isSelectedAll}
-            onCheckedChange={handleChangeCheckAll}
-          />
-          <h4 className="text-center">{PAGE_DATA["cart-product"]}</h4>
-          <h4 className="text-center">{PAGE_DATA["cart-quantity"]}</h4>
-          <h4 className="text-center">{PAGE_DATA["cart-total-price"]}</h4>
-          {selectedCartProducts.length > 0 && (
-            <Dialog>
-              <DialogTrigger asChild>
+    <div className="relative w-full h-fit grid md:grid-cols-[7fr_3fr] gap-3">
+      <div className="flex flex-col gap-2 items-end">
+        {selectedCartProducts.length > 0 && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="destructive"
+                className="flex flex-row items-center ml:mr-4 md:mr-0">
                 <div className="cursor-pointer">
-                  <Eraser className="w-6 h-6 fill-red-500 stroke-red-800 hover:fill-red-600" />
+                  <Eraser className="min-w-6 w-6 min-h-6 h-6 fill-white stroke-red-800 hover:fill-red-600" />
                 </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{DIALOG_DATA["title-delete-cart"]}</DialogTitle>
-                  <DialogDescription>
-                    {`${DIALOG_DATA["content-general-delete-rows-1"]} ${selectedCartProducts.length} ${DIALOG_DATA["content-delete-cart-2"]} ${DIALOG_DATA["content-general-delete-confirm-3"]}`}
-                  </DialogDescription>
-                </DialogHeader>
+                <p className="mt-1">{DIALOG_DATA["quick-delete-btn"]}</p>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{DIALOG_DATA["title-delete-cart"]}</DialogTitle>
+                <DialogDescription>
+                  {`${DIALOG_DATA["content-general-delete-rows-1"]} ${selectedCartProducts.length} ${DIALOG_DATA["content-delete-cart-2"]} ${DIALOG_DATA["content-general-delete-confirm-3"]}`}
+                </DialogDescription>
+              </DialogHeader>
 
-                <DialogFooter className="flex !justify-between">
-                  <DialogClose>
-                    <Button type="button" variant="outline">
-                      {DIALOG_DATA["close-btn"]}
-                    </Button>
-                  </DialogClose>
-                  <DialogClose>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      onClick={handleDeleteCartProducts}>
-                      {DIALOG_DATA["delete-btn"]}
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-
-        <div className="border-[1px]"></div>
-
-        {cartProducts && cartProducts.length > 0 ? (
-          cartProducts.map((cartProduct, index) => (
-            <Fragment key={`cart product ${index}`}>
-              <RowCart
-                cartIndex={index}
-                cartProducts={cartProducts}
-                setCartProducts={setCartProducts}
-                selectedCartProducts={selectedCartProducts}
-                setSelectedCartProducts={setSelectedCartProducts}
-                setIsSelectedAll={setIsSelectedAll}
-                setDeletedCartProducts={setDeletedCartProducts}
-              />
-              {index != cartProducts.length - 1 && (
-                <div className="border-[1px]"></div>
-              )}
-            </Fragment>
-          ))
-        ) : (
-          <>khoong cs data</>
+              <DialogFooter className="flex !justify-between">
+                <DialogClose>
+                  <Button type="button" variant="outline">
+                    {DIALOG_DATA["close-btn"]}
+                  </Button>
+                </DialogClose>
+                <DialogClose>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDeleteCartProducts}>
+                    {DIALOG_DATA["delete-btn"]}
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
-      </section>
 
-      <section className="sticky top-20 right-0 p-4 bg-white w-full h-fit flex flex-col gap-3 rounded-2xl">
+        <section className="ml:mx-4 md:mx-0 bg-white flex flex-col ml:border-2 md:border-none rounded-2xl">
+          <div className="ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
+            <Checkbox
+              checked={isSelectedAll}
+              onCheckedChange={handleChangeCheckAll}
+              className="data-[state=checked]:bg-pri-1"
+            />
+
+            <DropdownSort
+              sortState={sortNameState}
+              title={PAGE_DATA["cart-product"]}
+              sortType="name"
+              handleSort={handleSort}
+            />
+
+            <DropdownSort
+              sortState={sortQuantityState}
+              title={PAGE_DATA["cart-quantity"]}
+              sortType="quantity"
+              handleSort={handleSort}
+            />
+
+            <DropdownSort
+              sortState={sortTotalPriceState}
+              title={PAGE_DATA["cart-total-price"]}
+              sortType="total-price"
+              handleSort={handleSort}
+            />
+          </div>
+
+          <div className="border-[1px]"></div>
+
+          {cartProducts && cartProducts.length > 0 ? (
+            cartProducts.map((cartProduct, index) => (
+              <Fragment key={`cart product ${index}`}>
+                <RowCart
+                  cartIndex={index}
+                  cartProducts={cartProducts}
+                  setCartProducts={setCartProducts}
+                  selectedCartProducts={selectedCartProducts}
+                  setSelectedCartProducts={setSelectedCartProducts}
+                  setIsSelectedAll={setIsSelectedAll}
+                  setDeletedCartProducts={setDeletedCartProducts}
+                />
+                {index != cartProducts.length - 1 && (
+                  <div className="border-[1px]"></div>
+                )}
+              </Fragment>
+            ))
+          ) : (
+            <>khoong cs data</>
+          )}
+        </section>
+      </div>
+
+      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white w-full h-fit flex flex-col gap-3 rounded-2xl">
         <div className="flex flex-row justify-between">
           <p className="text-gray-600">{PAGE_DATA["cart-price"]}</p>
           <p>{convertNumberToVND(originalTotalPrice)}</p>
@@ -246,7 +375,9 @@ export default function CartPage() {
           <h4 className="text-pri-6">{convertNumberToVND(totalPrice)}</h4>
         </div>
 
-        <Button variant="filled">{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</Button>
+        <Button variant="filled">
+          <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
+        </Button>
 
         <p className="text-center text-sm">
           <span className="text-center">{PAGE_DATA["cart-term-1"]}</span>
