@@ -30,7 +30,6 @@ import { AUTH_URL } from "@/utils/constants/urls";
 import AuthHeader from "@/partials/(auth)/header";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { LoadingScreen } from "@/components/(general)/loading/loading-screen";
 
 const override: CSSProperties = {
   display: "block",

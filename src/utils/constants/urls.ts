@@ -1,6 +1,7 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const AUTH_URL = API_BASE_URL + "/auth";
+export const ORDER_URL = API_BASE_URL + "/orders";
 
 export const ADMIN_USERS_URL = `${process.env.BACKEND_URL}/admin/users`;
 export const PUBLIC_ADMIN_USERS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users`;
