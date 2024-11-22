@@ -31,3 +31,7 @@ export const INPUT_DATA = {
   "tags-input-placeholder":
     "Nhập các thẻ, ngăn cách bởi dấu phẩy, dấu cách, hoặc xuống dòng...",
 };
+
+export const TOGGGLE_THEME = {
+  "change-theme": "Thay đổi chủ đề",
+};

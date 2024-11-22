@@ -24,7 +24,7 @@ export default async function AdminBlogsPage() {
       <section className="flex flex-row justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200 text-wrap">
+            <h1 className="ml-8 text-3xl font-bold text-gray-900 dark:text-gray-200 text-wrap">
               {PAGE_DATA["blog"]}
             </h1>
           </div>

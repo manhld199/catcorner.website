@@ -3,6 +3,8 @@ import React from "react";
 
 // import components
 import { ToogleThemeMode } from "@/components";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AdminSideBar } from "@/partials";
 
 export default function AdminLayout({
   children,
@@ -10,12 +12,12 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-row gap-2 bg-bg-1 dark:bg-zinc-800">
-      <div className="mm:hidden lg:block md:w-1/5 h-screen bg-slate-500">
-        <ToogleThemeMode />
-      </div>
-
-      <div className="p-2 mx-auto w-full h-fit">{children}</div>
-    </div>
+    <SidebarProvider>
+      <AdminSideBar />
+      <main className="p-2 mx-auto w-full h-fit">
+        <SidebarTrigger className="absolute top-4 bg-white rounded-full hover:bg-white hover:shadow-md" />
+        {children}
+      </main>
+    </SidebarProvider>
   );
 }
