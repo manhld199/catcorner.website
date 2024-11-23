@@ -12,9 +12,13 @@ import {
   ShoppingCart,
   TicketPercent,
   Plus,
+  ChevronRight,
+  LayoutDashboard,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 // import components
 import {
@@ -38,9 +42,16 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { ToogleThemeMode } from "@/components";
-import { useSession } from "next-auth/react";
+
+// import data
+import { ADMIN_SIDE_BAR } from "@/data/components";
 
 const sidebarData = [
+  {
+    title: "Bảng điều khiển",
+    icon: LayoutDashboard,
+    url: "/admin/dashboard",
+  },
   {
     title: "Sản phẩm",
     icon: ShoppingCart,
@@ -125,6 +136,7 @@ const sidebarData = [
 
 export default function AdminSidebar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   return (
     <Sidebar>
@@ -143,7 +155,7 @@ export default function AdminSidebar() {
 
           <div>
             <h4 className="text-center">{session?.user?.name}</h4>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
               {session?.user?.email}
             </span>
           </div>
@@ -152,62 +164,92 @@ export default function AdminSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Các trang quản lý</SidebarGroupLabel>
+          <SidebarGroupLabel>{ADMIN_SIDE_BAR["label"]}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarData.map((item) => (
-                <Collapsible
-                  defaultOpen={false}
-                  key={item.title}
-                  className="group/collapsible">
-                  <SidebarMenuItem>
-                    <SidebarGroup>
-                      <SidebarGroupLabel asChild>
-                        <CollapsibleTrigger>
+              {sidebarData.map((item) => {
+                if (Array.isArray(item.items))
+                  return (
+                    <Collapsible
+                      defaultOpen={false}
+                      key={item.title}
+                      className="group/collapsible">
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger className="w-full">
                           <SidebarMenuButton>
                             <item.icon />
                             {item.title}
                             <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
-                      </SidebarGroupLabel>
-                      <CollapsibleContent>
-                        <SidebarGroupContent />
-                      </CollapsibleContent>
-                    </SidebarGroup>
+                        <CollapsibleContent>
+                          <SidebarGroupContent />
+                        </CollapsibleContent>
 
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items.map((subItem: any) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton>
-                              <subItem.icon />
-                              <Link href={subItem.url}>{subItem.title}</Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.items.map((subItem: any) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                  className={`px-0  ${
+                                    pathname === subItem.url
+                                      ? "bg-teal-500 text-white hover:bg-teal-500 hover:text-white"
+                                      : ""
+                                  }`}>
+                                  <Link
+                                    href={subItem.url}
+                                    className="w-full h-fit px-2 flex flex-row gap-2 items-start justify-between">
+                                    <div className="flex flex-row gap-2">
+                                      <subItem.icon className="w-4 h-4" />
+                                      <span className="line-clamp-1 ">
+                                        {subItem.title}
+                                      </span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4" />
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                else
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        className={`px-0  ${
+                          pathname === item.url
+                            ? "bg-teal-500 text-white hover:bg-teal-500 hover:text-white"
+                            : ""
+                        }`}>
+                        <Link
+                          href={item.url}
+                          className="w-full h-fit px-2 flex flex-row gap-2 items-start justify-between">
+                          <div className="flex flex-row gap-2">
+                            <item.icon className="w-4 h-4" />
+                            <span className="line-clamp-1 ">{item.title}</span>
+                          </div>
+                          <ChevronRight className="w-4 h-4" />
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+              })}
 
               <Collapsible defaultOpen className="group/collapsible">
                 <SidebarMenuItem>
-                  <SidebarGroup>
-                    <SidebarGroupLabel asChild>
-                      <CollapsibleTrigger>
-                        <SidebarMenuButton>
-                          <Settings />
-                          Cài đặt
-                          <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                    </SidebarGroupLabel>
-                    <CollapsibleContent>
-                      <SidebarGroupContent />
-                    </CollapsibleContent>
-                  </SidebarGroup>
+                  <CollapsibleTrigger className="w-full">
+                    <SidebarMenuButton>
+                      <Settings />
+                      {ADMIN_SIDE_BAR["setting"]}
+                      <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarGroupContent />
+                  </CollapsibleContent>
 
                   <CollapsibleContent>
                     <SidebarMenuSub>
@@ -220,7 +262,7 @@ export default function AdminSidebar() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton className="hover:bg-red-500 hover:text-white group/logout">
                           <LogOut className="group-hover/logout:stroke-white" />
-                          Đăng xuất
+                          {ADMIN_SIDE_BAR["logout"]}
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>

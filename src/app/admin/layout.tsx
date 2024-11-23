@@ -14,10 +14,10 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSideBar />
-      <main className="p-2 mx-auto w-full h-fit">
-        <SidebarTrigger className="absolute top-4 bg-white rounded-full hover:bg-white hover:shadow-md" />
+      <div className="p-2 mx-auto w-full h-fit">
+        <SidebarTrigger className="absolute top-4 bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-full hover:bg-white hover:shadow-md" />
         {children}
-      </main>
+      </div>
     </SidebarProvider>
   );
 }

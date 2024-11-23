@@ -25,9 +25,12 @@ export const convertBlobUrlsToImgFiles = async (
       )
   );
 
-export const convertNumberToVND = (amount: number): string => {
+export const convertNumberToVND = (
+  amount: number,
+  includeUnit: boolean = true
+): string => {
   if (isNaN(amount)) {
-    return "0đ";
+    return `0${includeUnit ? "đ" : ""}`;
   }
 
   // Làm tròn lên số tiền
@@ -39,5 +42,5 @@ export const convertNumberToVND = (amount: number): string => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   // Thêm đơn vị "đ"
-  return `${formattedAmount}đ`;
+  return `${formattedAmount}${includeUnit ? "đ" : ""}`;
 };

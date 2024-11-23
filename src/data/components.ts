@@ -35,3 +35,9 @@ export const INPUT_DATA = {
 export const TOGGGLE_THEME = {
   "change-theme": "Thay đổi chủ đề",
 };
+
+export const ADMIN_SIDE_BAR = {
+  label: "Các trang quản lý",
+  setting: "Cài đặt",
+  logout: "Đăng xuất",
+};

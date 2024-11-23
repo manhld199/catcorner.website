@@ -91,6 +91,23 @@ export const PAGE_DATA = {
   "coupon-start-time": "Thời gian bắt đầu",
   "coupon-end-time": "Thời gian kết thúc",
   "coupon-is-all": "Áp dụng cho tất cả",
+  dashboard: "Bảng điều khiển",
+  "dashboard-revenue": "Doanh thu",
+  "dashboard-registation": "Đăng ký mới",
+  "dashboard-order": "Đơn hàng mới",
+  "dashboard-rating": "Đánh giá mới",
+  "dashboard-revenue-chart-title": "Thống kê doanh thu bán hàng",
+  "dashboard-revenue-chart-description":
+    "Biểu đồ dưới đây thể hiện doanh thu của từng tháng trong năm, tháng hiện tại được tô viền.",
+  "dashboard-revenue-chart-footer":
+    "So với tháng trước, tháng này có xu hướng tăng",
+  "dashboard-order-chart-title": "Thống kê đơn hàng theo quý",
+  "dashboard-order-chart-description":
+    "Biểu đồ dưới đây thể hiện số đơn hàng được đặt, đã thanh toán, và bị hủy trong quý hiện tại.",
+  "dashboard-product-by-category-chart-title":
+    "Thống kê doanh thu theo danh mục sản phẩm",
+  "dashboard-product-by-category-chart-description":
+    "Biểu đồ dưới đây thể hiện số doanh thu ttheo từng danh mục của sản phẩm.",
 };
 
 export const METHOD_NAMES = {

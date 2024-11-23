@@ -26,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Image */}
       <div className="flex justify-center">
         <CldImage
-          src={product.product_img}
+          src={product.product_imgs[0]}
           alt={product.product_slug}
           width={200}
           height={200}
