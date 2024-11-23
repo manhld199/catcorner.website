@@ -112,7 +112,7 @@ export default function CustomerHeaderSearch() {
                     </div>
                   </div>
                   <CldImage
-                    src={product.product_img || "/imgs/test.jpg"}
+                    src={product.product_imgs[0] || "/imgs/test.jpg"}
                     alt={product.product_name}
                     width={40}
                     height={40}
