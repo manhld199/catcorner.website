@@ -8,7 +8,9 @@ import { toast } from "react-toastify";
 import { ORDER_URL } from "@/utils/constants/urls";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Cat, Package, Phone } from "lucide-react";
+import { ShoppingBag, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function OrderTrackingResult() {
   const searchParams = useSearchParams();
@@ -59,49 +61,67 @@ export default function OrderTrackingResult() {
   }
 
   return (
-    <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 dark:bg-black">
+    <div className="flex flex-col md:flex-row w-full md:w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative dark:bg-black">
       {/* Sidebar */}
       <Card
         className="
-        md:flex h-auto md:h-[450px] w-full md:w-[300px] flex-col
-        fixed md:relative top-0 left-0 z-40 flex 
-        bg-white dark:black
+        flex flex-col
+        w-full md:w-[300px] 
+        h-auto md:h-[450px]
+        bg-white dark:bg-black
         md:bg-transparent
+        sticky top-4
+        z-10
         transition-all duration-300">
-        <CardContent className="pt-6 space-y-6">
-          <div className="flex items-center justify-center gap-2 text-xl font-medium">
-            <Cat className="w-6 h-6 text-teal-600" />
-            <span>
-              CAT<span className="text-neutral-950">CORNER</span>
-            </span>
+        <CardContent className="pt-6 space-y-6 h-auto">
+          {/* Logo */}
+          <div className="flex justify-center md:justify-start items-center">
+            <Image
+              src="/imgs/logo-pri.webp"
+              alt="Logo CATCORNER"
+              width={241}
+              height={85}
+              className="w-[180px] md:w-[241px] h-auto object-contain"
+            />
           </div>
-
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 text-neutral-950" />
-              <span className="text-sm">Mã đơn hàng: {order._id}</span>
+            <div className="flex items-center gap-2 py-3">
+              <ShoppingBag size={24} />
+              <span className="text-sm">
+                Mã đơn hàng: <span className="font-bold">{order._id}</span>
+              </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 py-3">
               <Phone className="w-4 h-4 text-neutral-950" />
               <span className="text-sm">
-                Số điện thoại: {order.order_buyer.phone_number}
+                Số điện thoại:{" "}
+                <span className="font-bold">
+                  {order.order_buyer.phone_number}
+                </span>
               </span>
             </div>
           </div>
-
-          <Button className="w-full bg-[#1d4443] hover:bg-[#1d4443]/90 text-white">
-            Tra cứu lại
-          </Button>
         </CardContent>
+        <div className="flex justify-center pb-6">
+          <Link href="/order-tracking" className="w-[70%]">
+            <Button
+              className="w-full bg-[#1d4443] hover:bg-[#1d4443]/90 text-white"
+              variant="custom">
+              Tra cứu lại
+            </Button>
+          </Link>
+        </div>
       </Card>
 
-      <OrderDetails
-        order={order}
-        onRepurchase={() => {}}
-        onCancel={() => {}}
-        onReview={() => {}}
-      />
+      <div className="relative z-5">
+        <OrderDetails
+          order={order}
+          onRepurchase={() => {}}
+          onCancel={() => {}}
+          onReview={() => {}}
+        />
+      </div>
     </div>
   );
 }
