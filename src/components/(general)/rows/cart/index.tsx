@@ -240,7 +240,7 @@ export default function RowCart({
         )}
 
         <div className="w-full flex flex-col md:gap-1 lg:gap-2">
-          <h6 className="line-clamp-2">
+          <h6 className={`line-clamp-2 ${isSelected ? "dark:text-black" : ""}`}>
             {cartProducts[cartIndex].product_name}
           </h6>
           <Select
@@ -278,7 +278,7 @@ export default function RowCart({
                 {convertNumberToVND(variant.variant_price)}
               </p>
             )}
-            <p>
+            <p className={`${isSelected ? "dark:text-black" : ""}`}>
               {convertNumberToVND(
                 (variant.variant_price *
                   (100 - variant.variant_discount_percent)) /
@@ -302,7 +302,9 @@ export default function RowCart({
         <Dialog>
           <DialogTrigger asChild>
             <div className="absolute top-0 right-0 p-2 hover:bg-white group cursor-pointer rounded-full shadow-sm">
-              <Eraser className="w-5 h-5 group-hover:fill-red-500 group-hover:stroke-red-800" />
+              <Eraser
+                className={`w-5 h-5 group-hover:fill-red-500 group-hover:stroke-red-800 ${isSelected ? "dark:text-black" : ""}`}
+              />
             </div>
           </DialogTrigger>
           <DialogContent>
@@ -336,7 +338,7 @@ export default function RowCart({
             {convertNumberToVND(quantity * variant.variant_price)}
           </p>
         )}
-        <p className="text-center">
+        <p className={`text-center ${isSelected ? "dark:text-black" : ""}`}>
           {convertNumberToVND(
             (quantity *
               (variant.variant_price *

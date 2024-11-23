@@ -2,7 +2,7 @@
 
 // import libs
 import { Fragment, useEffect, useState } from "react";
-import { ArrowUpDown, Eraser } from "lucide-react";
+import { Eraser } from "lucide-react";
 import Link from "next/link";
 
 // import components
@@ -31,16 +31,6 @@ import { ICartProduct } from "@/types/interfaces";
 // import data
 import { PAGE_DATA } from "@/data/customer";
 import { DIALOG_DATA } from "@/data/dialog";
-import { SORT_NAMES } from "@/data/admin";
-import {
-  DropdownMenu,
-  DropdownMenuRadioItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuRadioGroup,
-} from "@/components/ui/dropdown-menu";
 
 const cartData: ICartProduct[] = [
   {
@@ -302,7 +292,7 @@ export default function CartPage() {
           </Dialog>
         )}
 
-        <section className="ml:mx-4 md:mx-0 bg-white flex flex-col ml:border-2 md:border-none rounded-2xl">
+        <section className="ml:mx-4 md:mx-0 bg-white dark:bg-black flex flex-col ml:border-2 md:border-none rounded-2xl">
           <div className="ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
             <Checkbox
               checked={isSelectedAll}
@@ -357,7 +347,7 @@ export default function CartPage() {
         </section>
       </div>
 
-      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white w-full h-fit flex flex-col gap-3 rounded-2xl">
+      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white dark:bg-black w-full h-fit flex flex-col gap-3 rounded-2xl">
         <div className="flex flex-row justify-between">
           <p className="text-gray-600">{PAGE_DATA["cart-price"]}</p>
           <p>{convertNumberToVND(originalTotalPrice)}</p>
