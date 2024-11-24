@@ -2,33 +2,48 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ProductCard from "../product-card/index";
 import { useState } from "react";
+import ProductCard from "@/components/(general)/product-card";
 
 const products = [
   {
-    name: "Tên sản phẩm Tên sản phẩm nè",
-    image: "/imgs/home/product.png",
-    rating: 4,
-    weights: ["100 g", "200 g", "300 g"],
-    originalPrice: "456.789đ",
-    salePrice: "123.456đ",
+    product_id_hashed: "1",
+    product_slug: "san-pham-1",
+    product_img: "/imgs/home/product.png",
+    product_name: "Tên sản phẩm Tên sản phẩm nè",
+    category_name: "Thức ăn",
+    product_avg_rating: 4,
+    product_sold_quantity: 100,
+    variant_name: ["100g", "200g", "300g"],
+    product_price: 456789,
+    lowest_price: 123456,
+    highest_discount: 10,
   },
   {
-    name: "Tên sản phẩm Tên sản phẩm nè",
-    image: "/imgs/home/product.png",
-    rating: 4,
-    weights: ["100 g", "200 g", "300 g"],
-    originalPrice: "456.789đ",
-    salePrice: "123.456đ",
+    product_id_hashed: "2",
+    product_slug: "san-pham-2",
+    product_img: "/imgs/home/product.png",
+    product_name: "Tên sản phẩm Tên sản phẩm nè",
+    category_name: "Thức ăn",
+    product_avg_rating: 4,
+    product_sold_quantity: 100,
+    variant_name: ["100g", "200g", "300g"],
+    product_price: 456789,
+    lowest_price: 123456,
+    highest_discount: 10,
   },
   {
-    name: "Tên sản phẩm Tên sản phẩm nè",
-    image: "/imgs/home/product.png",
-    rating: 4,
-    weights: ["100 g", "200 g", "300 g"],
-    originalPrice: "456.789đ",
-    salePrice: "123.456đ",
+    product_id_hashed: "3",
+    product_slug: "san-pham-3",
+    product_img: "/imgs/home/product.png",
+    product_name: "Tên sản phẩm Tên sản phẩm nè",
+    category_name: "Thức ăn",
+    product_avg_rating: 4,
+    product_sold_quantity: 100,
+    variant_name: ["100g", "200g", "300g"],
+    product_price: 456789,
+    lowest_price: 123456,
+    highest_discount: 10,
   },
 ];
 
@@ -60,12 +75,12 @@ export default function ProductSlider() {
 
         <div className="overflow-hidden">
           <div
-            className="flex transition-transform duration-300 ease-in-out"
+            className="flex transition-transform duration-300 ease-in-out pb-6"
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
             {products.map((product, index) => (
               <div key={index} className="flex-none w-1/3 px-4">
                 <div className="flex justify-center">
-                  <ProductCard {...product} />
+                  <ProductCard product={product} />
                 </div>
               </div>
             ))}
