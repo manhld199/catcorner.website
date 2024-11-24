@@ -52,23 +52,27 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
 
         {/* Variant */}
-        <div className="flex gap-2 mb-4">
-          {product.variant_name.slice(0, 3).map((variant, index) => (
-            <span
-              key={index}
-              className="px-2 text-center w-[64px] py-1 border border-teal-600 rounded-full text-xs text-teal-600 dark:text-teal-500 dark:border-teal-500 truncate"
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}>
-              {variant}
-            </span>
-          ))}
-          {product.variant_name.length > 3 && (
-            <span className="px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-500">
-              ...
-            </span>
+        <div className="h-[52px]">
+          {product.variant_name.length > 0 && (
+            <div className="flex gap-2 mb-4">
+              {product.variant_name.slice(0, 3).map((variant, index) => (
+                <span
+                  key={index}
+                  className="px-2 text-center w-[64px] py-1 border border-teal-600 rounded-full text-xs text-teal-600 dark:text-teal-500 dark:border-teal-500 truncate"
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}>
+                  {variant}
+                </span>
+              ))}
+              {product.variant_name.length > 3 && (
+                <span className="px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-500">
+                  ...
+                </span>
+              )}
+            </div>
           )}
         </div>
 
