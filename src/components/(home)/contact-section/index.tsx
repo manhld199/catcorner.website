@@ -8,7 +8,7 @@ export default function ContactSection() {
   return (
     <div className="container mx-auto px-4 py-12 w-[80%]">
       <h2 className="text-3xl font-bold text-center mb-8">
-        Do you have any questions? Don't hesitate to contact us!
+        Do you have any questions? Don&apos;t hesitate to contact us!
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

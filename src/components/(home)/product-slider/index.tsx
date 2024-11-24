@@ -61,7 +61,7 @@ export default function ProductSlider() {
   return (
     <div className="container w-[80%] mx-auto py-8">
       <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
-        CatCorner's Today
+        CatCorner&apos;s Today
       </h2>
 
       <div className="relative px-12">
