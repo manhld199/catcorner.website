@@ -1,21 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 
 const RedirectPage = () => {
-  const router = useRouter();
-
-  const { query } = router;
-  const { email, token } = query;
+  const searchParams = useSearchParams();
 
   useEffect(() => {
+    const email = searchParams.get("email");
+    const token = searchParams.get("token");
+
     // Địa chỉ deep link của ứng dụng
     const appLink = `catcorner://verify-email?email=${email}&token=${token}`;
 
     // Cố gắng mở ứng dụng
     window.location.href = appLink;
-  }, [router]);
+  }, []);
 
   return (
     <div>
