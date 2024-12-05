@@ -80,7 +80,8 @@ export default function ProductSlider() {
             {products.map((product, index) => (
               <div key={index} className="flex-none w-1/3 px-4">
                 <div className="flex justify-center">
-                  <ProductCard product={product} />
+                  {/* Sau này xóa any đi fix chỗ này */}
+                  <ProductCard product={product as any} />
                 </div>
               </div>
             ))}
