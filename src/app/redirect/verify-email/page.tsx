@@ -11,7 +11,7 @@ const RedirectPage = () => {
     const token = searchParams.get("token");
 
     // Địa chỉ deep link của ứng dụng
-    const appLink = `${process.env.NEXT_PUBLIC_APP_NAME}://verify-email?email=${email}&token=${token}`;
+    const appLink = `${process.env.NEXT_PUBLIC_MOBILE_URL}/verify-email?email=${email}&token=${token}`;
 
     // Cố gắng mở ứng dụng
     window.location.href = appLink;
