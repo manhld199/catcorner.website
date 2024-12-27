@@ -12,6 +12,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  console.log("prooooooooooo", product);
   return (
     <Link
       href={`/${product.product_slug}?pid=${product.product_id_hashed}`}
@@ -26,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Image */}
       <div className="flex justify-center">
         <CldImage
-          src={product.product_imgs[0]}
+          src={product.product_img || product.product_imgs[0]}
           alt={product.product_slug}
           width={200}
           height={200}
