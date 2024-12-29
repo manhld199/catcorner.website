@@ -2,8 +2,10 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "@/components/(general)/product-card";
+import { Product, IProductProps } from "@/types/product";
+import { PRODUCT_LIST_URL } from "@/utils/constants/urls";
 
 const products = [
   {
@@ -49,6 +51,44 @@ const products = [
 
 export default function ProductSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${PRODUCT_LIST_URL}/getTopRatedProducts`);
+        const data = await response.json();
+        if (data.success) {
+          setProducts(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const transformProduct = (product: any): IProductProps => {
+    console.log(product);
+    const hasMultipleVariants = product.variant_names.length > 1;
+
+    return {
+      product_id_hashed: product.product_id_hashed,
+      product_slug: product.product_slug,
+      product_img: product.product_img,
+      product_name: product.product_name,
+      category_name: product.category_name,
+      product_avg_rating: product.product_avg_rating.rating_point,
+      product_sold_quantity: product.product_sold_quantity,
+      variant_name: hasMultipleVariants
+        ? product.variant_names.map((v: any) => v || "")
+        : [],
+      product_price: product.lowest_price,
+      lowest_price: product.lowest_price * product.highest_discount,
+      highest_discount: product.highest_discount,
+    };
+  };
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev === products.length - 3 ? 0 : prev + 1));
@@ -80,8 +120,7 @@ export default function ProductSlider() {
             {products.map((product, index) => (
               <div key={index} className="flex-none w-1/3 px-4">
                 <div className="flex justify-center">
-                  {/* Sau này xóa any đi fix chỗ này */}
-                  <ProductCard product={product as any} />
+                  <ProductCard product={transformProduct(product) as any} />
                 </div>
               </div>
             ))}
