@@ -77,7 +77,7 @@ export default function Home() {
   return (
     <div className="w-full">
       <CustomerHeader />
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col bg-white">
         <div className="w-full relative">
           <Image
             src="/imgs/home/thumb.png"
