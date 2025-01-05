@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CustomerFooter() {
   return (
@@ -15,39 +16,33 @@ export default function CustomerFooter() {
             className="object-contain desktop:w-[241px] desktop:h-[85px] phone:w-[calc(0.8*241px)] phone:h-[calc(0.8*85px)]"
           />
         </div>
-
         {/* Links */}
         <div className="flex flex-col tablet:flex-row tablet:space-x-8 laptop:space-x-16 desktop:space-x-20 laptop:text-lg desktop:text-xl font-medium mt-4 tablet:mt-0">
-          <a
-            href="#"
-            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0"
-          >
+          <Link
+            href="/"
+            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
             Home
-          </a>
-          <a
-            href="#"
-            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0"
-          >
-            About Us
-          </a>
-          <a
-            href="#"
-            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0"
-          >
+          </Link>
+          <Link
+            href="/blogs"
+            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
             Blogs
-          </a>
-          <a
-            href="#"
-            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0"
-          >
+          </Link>
+          <Link
+            href="/about-us"
+            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
+            About Us
+          </Link>
+          <Link
+            href="/privacy-policy"
+            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
             Policies
-          </a>
-          <a
-            href="#"
-            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0"
-          >
+          </Link>
+          <Link
+            href="/delivery-and-payment"
+            className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
             Delivery and Payment
-          </a>
+          </Link>
         </div>
       </div>
 

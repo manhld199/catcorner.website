@@ -102,11 +102,11 @@ export default function BlogListPage() {
         {isLoading ? (
           <p>Đang tải dữ liệu...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {filteredBlogs.map((blog, index) => (
               <Link
                 key={index}
-                href={`/blog/${blog.article_slug}/${encodeURIComponent(
+                href={`/blogs/${blog.article_slug}/${encodeURIComponent(
                   blog.article_id_hashed
                 )}`}>
                 <BlogCardFull
@@ -173,13 +173,14 @@ export default function BlogListPage() {
         {/* Bài viết nổi bật */}
         <div>
           <h2 className="text-xl font-bold mb-4">Bài viết nổi bật</h2>
-          <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-1">
             {featuredBlogs.map((blog, index) => (
               <Link
                 key={index}
-                href={`/blog/${blog.article_slug}/${encodeURIComponent(
+                href={`/blogs/${blog.article_slug}/${encodeURIComponent(
                   blog.article_id_hashed
-                )}`}>
+                )}`}
+                className="block">
                 <BlogCardShort
                   image={blog.article_avt}
                   date={`${blog.article_author_name} - ${new Date(
