@@ -9,8 +9,8 @@ import {
   CustomerProductReview,
 } from "./partials";
 
-import { IProductDetail } from "./interfaces";
 import { API_BASE_URL } from "@/utils/constants/urls";
+import { IProductDetail } from "@/types/interfaces";
 
 export default function ProductDetailsPage() {
   const [productData, setProductData] = useState<IProductDetail | null>(null);
@@ -58,7 +58,7 @@ export default function ProductDetailsPage() {
     setInputQuantity(newQuantity);
 
   return (
-    <div className="container mx-auto my-28 w-4/5">
+    <div className="container mx-auto my-28">
       <section className="flex flex-col laptop:flex-row gap-12">
         <div className="laptop:w-1/2">
           <CustomerProductSlider SliderImgs={productData.product_imgs} />

@@ -10,7 +10,7 @@ export default function DefaultLayout({
     <>
       <CustomerHeader />
       {/* <BreadCrumb /> */}
-      <main className="ml:my-36 md:my-32 lg:my-24 mx-auto md:w-[93%] lg:w-4/5 max-w-[1152px] min-h-[80vh]">
+      <main className="my-36 md:my-32 lg:my-24 mx-auto md:w-[93%] lg:w-11/12 max-w-[1152px] min-h-[80vh]">
         {children}
       </main>
       <ScrollUp />

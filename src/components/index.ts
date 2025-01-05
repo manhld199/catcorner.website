@@ -9,6 +9,9 @@ export { default as CustomerStarRating } from "./(general)/star-rating";
 export { default as ToogleThemeMode } from "./(general)/toogles/toogle-theme-mode";
 export { default as ToogleThemeModeMobile } from "./(general)/toogles/toogle-theme-mode-mobile";
 
+// modal
+export { default as Modal } from "./(general)/modal";
+
 // dropzones
 export { default as DropZoneMultiImgs } from "./(general)/dropzones/multi-imgs";
 export { default as DropZoneSingleImg } from "./(general)/dropzones/single-img";

@@ -37,7 +37,7 @@ export default function CustomerHeaderSearch() {
       const data = await response.json();
 
       if (data.data.searchKey === inputValue) {
-        console.log("Trả về cho data", data.data);
+        // console.log("Data gợi ý ở header:", data.data);
         setSuggestions(data.data.recommendedProducts.slice(0, 4));
         setTotalSearchResults(data.data.totalProducts);
         setIsSuggestionsVisible(true);
@@ -112,7 +112,7 @@ export default function CustomerHeaderSearch() {
                     </div>
                   </div>
                   <CldImage
-                    src={product.product_imgs[0] || "/imgs/test.jpg"}
+                    src={product.product_img || "/imgs/test.jpg"}
                     alt={product.product_name}
                     width={40}
                     height={40}

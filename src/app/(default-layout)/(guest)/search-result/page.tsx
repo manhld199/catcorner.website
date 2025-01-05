@@ -67,7 +67,7 @@ export default function SearchPage() {
   }, [searchParams]);
 
   return (
-    <div className="container mx-auto my-28 w-4/5">
+    <div className="container mx-auto my-28">
       <h1 className="font-bold text-center mb-8 dark:text-white">
         Search Results
       </h1>

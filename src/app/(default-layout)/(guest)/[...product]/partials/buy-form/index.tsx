@@ -1,33 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Modal } from "@/components";
 import { CustomerProductVariant } from "../../components";
 import { CustomerQuantityInputGroup, CustomerStarRating } from "@/components";
-interface BuyFormProps {
-  pid: string;
-  productName: string;
-  shortDescription: string;
-  avgRating: {
-    rating_point: number;
-    rating_count: number;
-  };
-  price: number;
-  discountPrice: number;
-  variants: {
-    variant_name: string;
-    variant_slug: string;
-    variant_img: string;
-    variant_price: number;
-    variant_stock_quantity: number;
-    variant_discount_percent: number;
-    _id: string;
-  }[];
-  selectedVariantIndex: number;
-  inputQuantity: number;
-  productSoldQuantity: number;
-  onVariantSelect: (index: number) => void;
-  onQuantityChange: (newQuantity: number) => void;
-}
+import { IBuyFormProps, ICartProduct } from "@/types/interfaces";
 
 export default function CustomerProductBuyForm({
   pid,
@@ -40,13 +17,61 @@ export default function CustomerProductBuyForm({
   shortDescription,
   avgRating,
   productSoldQuantity,
-}: BuyFormProps) {
+}: IBuyFormProps) {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State quản lý modal
+
   useEffect(() => {
     const maxQuantity = variants[selectedVariantIndex].variant_stock_quantity;
     if (inputQuantity > maxQuantity) {
       onQuantityChange(maxQuantity);
     }
   }, [selectedVariantIndex]);
+
+  // Hàm thêm vào giỏ hàng
+  const handleAddToCart = (): void => {
+    try {
+      // Lấy giỏ hàng hiện tại từ localStorage
+      const existingCart = localStorage.getItem("cart");
+      const cart: ICartProduct[] = existingCart ? JSON.parse(existingCart) : [];
+
+      // Tạo sản phẩm mới để thêm vào giỏ hàng
+      const selectedVariant = variants[selectedVariantIndex];
+      const newCartItem: ICartProduct = {
+        product_id: pid,
+        variant_id: selectedVariant._id,
+        quantity: inputQuantity,
+        product_name: productName,
+        product_slug: selectedVariant.variant_slug,
+      };
+
+      // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+      const existingItemIndex = cart.findIndex(
+        (item: ICartProduct) =>
+          item.product_id === pid && item.variant_id === selectedVariant._id
+      );
+
+      if (existingItemIndex !== -1) {
+        // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+        cart[existingItemIndex].quantity += inputQuantity;
+      } else {
+        // Nếu sản phẩm chưa tồn tại, thêm mới
+        cart.push(newCartItem);
+      }
+
+      // Lưu giỏ hàng mới vào localStorage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Thông báo thành công
+      setIsModalOpen(true);
+
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Lỗi khi thêm vào giỏ hàng:", error);
+      alert("Đã xảy ra lỗi, vui lòng thử lại.");
+    }
+  };
 
   return (
     <div>
@@ -114,13 +139,23 @@ export default function CustomerProductBuyForm({
       </div>
 
       <div className="flex gap-4">
-        <button className="border border-pri-1 text-pri-1 dark:border-teal-500 dark:text-teal-500 w-48 py-3 rounded-lg hover:bg-teal-700 hover:text-white dark:hover:bg-teal-600">
+        <button
+          className="border border-pri-1 text-pri-1 dark:border-teal-500 dark:text-teal-500 w-48 py-3 rounded-lg hover:bg-teal-700 hover:text-white dark:hover:bg-teal-600"
+          onClick={handleAddToCart}>
           Thêm vào giỏ hàng
         </button>
         <button className="bg-pri-1 dark:bg-teal-500 text-white w-48 py-3 rounded-lg hover:bg-teal-700 dark:hover:bg-teal-600">
           Mua ngay
         </button>
       </div>
+
+      {/* Modal thêm vào giỏ hàng */}
+      <Modal
+        title="Sản phẩm đã được thêm vào giỏ hàng!"
+        message="Bạn có thể kiểm tra giỏ hàng của mình ngay bây giờ."
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

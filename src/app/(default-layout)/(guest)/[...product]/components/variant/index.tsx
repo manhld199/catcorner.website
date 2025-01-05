@@ -26,7 +26,7 @@ export default function ProductVariant({
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col items-center justify-start p-2 ${
+      className={`flex flex-col items-center justify-start px-2 py-1 ${
         isActive
           ? "bg-pri-7 text-white border-2 border-pri-7"
           : "border border-gray-300"
@@ -35,8 +35,8 @@ export default function ProductVariant({
       <CldImage
         src={variant.image.url}
         alt={variant.image.alt}
-        width={70}
-        height={70}
+        width={90}
+        height={90}
         className="object-cover rounded mb-1"
       />
 
