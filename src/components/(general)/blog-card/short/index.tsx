@@ -9,25 +9,22 @@ interface BlogCardProps {
   date: string;
   title: string;
   hashtags: string[];
-  isOdd: boolean;
 }
 
-export default function BlogCard({
-  image = "/placeholder.svg?height=400&width=600",
-  date = "Tên tác giả - 13/05/2024",
-  title = "Tên bài viết",
+export default function BlogCardShort({
+  image,
+  date,
+  title,
   hashtags = ["hashtag", "hashtag"],
-  isOdd,
 }: BlogCardProps) {
   return (
-    <Card
-      className={`[height:fit-content] overflow-hidden min-w-[223px] max-w-[300px] rounded-[8px] p-3 ${isOdd ? "mt-16" : ""}`}>
+    <Card className="[height:fit-content] overflow-hidden min-w-[223px] max-w-[300px] rounded-[8px] p-3">
       <div className="relative aspect-[1.5] w-full">
         <Image
           src={image}
           alt={title}
           fill
-          className="object-cover"
+          className="object-cover rounded-md"
           quality={100}
         />
       </div>
