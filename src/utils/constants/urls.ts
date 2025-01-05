@@ -39,3 +39,6 @@ export const PUBLIC_CUSTOMER_CART_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/
 
 export const GUEST_CART_URL = `${process.env.BACKEND_URL}/guest/cart`;
 export const PUBLIC_GUEST_CART_URL = `${process.env.BACKEND_URL}/guest/cart`;
+
+export const GUEST_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/article`;
+export const GUEST_DETAIL_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/article`;

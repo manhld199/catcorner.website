@@ -146,3 +146,22 @@ interface IBuyFormProps {
   onVariantSelect: (index: number) => void;
   onQuantityChange: (newQuantity: number) => void;
 }
+
+export interface IArticle {
+  article_id_hashed: string;
+  article_slug: string;
+  article_name: string;
+  article_avt: string;
+  article_short_description: string;
+  article_author_name: string;
+  article_published_date: string;
+  article_tags: string[];
+  article_content: string;
+  related_articles: RelatedArticle[];
+}
+
+export interface IRelatedArticle {
+  article_slug: string;
+  article_id_hashed: string;
+  article_name: string;
+}

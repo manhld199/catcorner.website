@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Search } from "lucide-react";
 import { BlogCardFull, BlogCardShort } from "@/components";
 import {
@@ -11,31 +13,70 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { GUEST_BLOG_URL } from "@/utils/constants/urls";
+
+// Hàm chuẩn hóa chuỗi (bỏ dấu, viết thường)
+const normalizeString = (str: string) => {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+};
 
 export default function BlogListPage() {
-  // Demo data
-  const allBlogCards = Array(12).fill({
-    image: "/imgs/test.jpg",
-    date: "Tên tác giả - 19/09/2003",
-    title: "Tên bài viết Tên bài viết",
-    shortDescription:
-      "Short description Short dsad description Short description Short...",
-    hashtags: ["hashtag", "hashtag", "hashtag"],
-  });
-
-  // State cho danh sách bài viết và từ khóa tìm kiếm
-  const [blogCards, setBlogCards] = useState(allBlogCards);
+  const [blogCards, setBlogCards] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [featuredBlogs, setFeaturedBlogs] = useState([]);
+
+  // Hàm fetch dữ liệu từ API
+  const fetchBlogs = async (page = 1) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${GUEST_BLOG_URL}?page=${page}&limit=9`);
+
+      const data = await res.json();
+
+      if (data.status === 200 && data.success) {
+        setBlogCards(data.data.articles);
+        setMaxPage(data.data.maxPage);
+
+        // Chọn 3 bài viết ngẫu nhiên từ danh sách dữ liệu
+        const randomBlogs = data.data.articles
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3); // Lấy 3 bài viết
+        setFeaturedBlogs(randomBlogs);
+      } else {
+        console.error("Failed to fetch articles:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogs(currentPage);
+  }, [currentPage]);
 
   // Hàm xử lý tìm kiếm
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
+  const handleSearch = (e: any) => {
+    setSearchQuery(e.target.value.toLowerCase());
+  };
 
-    const filteredBlogs = allBlogCards.filter((blog) =>
-      blog.title.toLowerCase().includes(query)
-    );
-    setBlogCards(filteredBlogs);
+  // Lọc bài viết theo từ khóa tìm kiếm
+  const filteredBlogs = blogCards.filter((blog) =>
+    normalizeString(blog.article_name).includes(normalizeString(searchQuery))
+  );
+
+  // Hàm xử lý chuyển trang
+  const handlePageChange = (page: any) => {
+    if (page > 0 && page <= maxPage) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -58,42 +99,55 @@ export default function BlogListPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {blogCards.map((blog, index) => (
-            <BlogCardFull
-              key={index}
-              image={blog.image}
-              date={blog.date}
-              title={blog.title}
-              shortDescription={blog.shortDescription}
-              hashtags={blog.hashtags}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <p>Đang tải dữ liệu...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {filteredBlogs.map((blog, index) => (
+              <Link
+                key={index}
+                href={`/blog/${blog.article_slug}/${encodeURIComponent(
+                  blog.article_id_hashed
+                )}`}>
+                <BlogCardFull
+                  image={blog.article_avt}
+                  date={`${blog.article_author_name} - ${new Date(
+                    blog.article_published_date
+                  ).toLocaleDateString()}`}
+                  title={blog.article_name}
+                  shortDescription={blog.article_short_description}
+                  hashtags={blog.article_tags || []}
+                />
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Pagination */}
         <div className="mt-4">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                <PaginationPrevious
+                  href="#"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                />
               </PaginationItem>
+              {Array.from({ length: maxPage }, (_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    href="#"
+                    isActive={currentPage === index + 1}
+                    onClick={() => handlePageChange(index + 1)}>
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
               <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext
+                  href="#"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
@@ -109,7 +163,7 @@ export default function BlogListPage() {
             {["hashtag", "hashtag", "hashtag", "hashtag"].map((tag, index) => (
               <span
                 key={index}
-                className="px-3 py-1 text-sm bg-[#FFF1D0] text-black rounded-full">
+                className="px-3 py-1 text-sm bg-pri-5 text-black rounded-full">
                 #{tag}
               </span>
             ))}
@@ -120,22 +174,22 @@ export default function BlogListPage() {
         <div>
           <h2 className="text-xl font-bold mb-4">Bài viết nổi bật</h2>
           <div className="space-y-4">
-            {Array(3)
-              .fill({
-                image: "/imgs/test.jpg",
-                date: "Tên tác giả - 13/05/2024",
-                title: "Tên bài viết",
-                hashtags: ["hashtag", "hashtag"],
-              })
-              .map((blog, index) => (
+            {featuredBlogs.map((blog, index) => (
+              <Link
+                key={index}
+                href={`/blog/${blog.article_slug}/${encodeURIComponent(
+                  blog.article_id_hashed
+                )}`}>
                 <BlogCardShort
-                  key={index}
-                  image={blog.image}
-                  date={blog.date}
-                  title={blog.title}
-                  hashtags={blog.hashtags}
+                  image={blog.article_avt}
+                  date={`${blog.article_author_name} - ${new Date(
+                    blog.article_published_date
+                  ).toLocaleDateString()}`}
+                  title={blog.article_name}
+                  hashtags={blog.article_tags || []}
                 />
-              ))}
+              </Link>
+            ))}
           </div>
         </div>
       </aside>

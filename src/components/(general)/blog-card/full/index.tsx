@@ -22,18 +22,21 @@ export default function BlogCardFull({
     <Card className="rounded-lg overflow-hidden shadow-md border border-gray-200 bg-white">
       {/* Header */}
       <div className="bg-pri-4 px-4 py-2">
-        <h3 className="text-lg font-bold">{title}</h3>
+        <h3 className="text-lg font-bold line-clamp-1">{title}</h3>
       </div>
 
       {/* Content */}
       <CardContent className="p-3">
         {/* Date */}
-        <p className=" text-sm mb-2">{date}</p>
+        <p className="mb-2 text-xs">{date}</p>
         {/* Short description */}
-        <p className="text-gray-500 text-sm mb-4">{shortDescription}</p>
+        <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+          {shortDescription}
+        </p>
         {/* Hashtags */}
-        <div className="flex flex-wrap gap-2">
-          {hashtags.map((tag, index) => (
+        <div className="flex flex-wrap gap-2 items-center">
+          {/* Hiển thị tối đa 3 hashtag */}
+          {hashtags.slice(0, 3).map((tag, index) => (
             <Badge
               key={index}
               variant="secondary"
@@ -41,7 +44,12 @@ export default function BlogCardFull({
               #{tag}
             </Badge>
           ))}
+          {/* Hiển thị dấu "..." nếu có nhiều hơn 3 hashtag */}
+          {hashtags.length > 3 && (
+            <span className="text-gray-500 text-sm font-light">...</span>
+          )}
         </div>
+
         {/* Image */}
         <div className="relative w-full aspect-video mt-4">
           <Image

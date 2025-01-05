@@ -28,9 +28,9 @@ export default function BlogCardShort({
           quality={100}
         />
       </div>
-      <p className="text-muted-foreground text-sm pt-2">{date}</p>
+      <p className="text-muted-foreground text-xs pt-2">{date}</p>
       <CardContent className="space-y-2 p-0 pt-1">
-        <h3 className="text-xl font-bold tracking-tight mt-0">{title}</h3>
+        <h5 className="font-bold tracking-tight mt-0 line-clamp-2">{title}</h5>
         <div className="flex gap-1 flex-wrap text-xs">
           {hashtags.map((tag, index) => (
             <Badge
