@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // import components
 import { BreadCrumb, ScrollUp } from "@/components";
@@ -42,6 +43,7 @@ export default function RootLayout({
             </ThemeProvider>
           </Providers>
         </PageLoader>
+        <SpeedInsights />
       </body>
     </html>
   );
