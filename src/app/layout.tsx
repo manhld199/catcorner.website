@@ -40,10 +40,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange>
               {children}
+              <SpeedInsights />
             </ThemeProvider>
           </Providers>
         </PageLoader>
-        <SpeedInsights />
       </body>
     </html>
   );
