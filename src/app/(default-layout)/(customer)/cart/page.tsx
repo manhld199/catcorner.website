@@ -34,28 +34,28 @@ import { DIALOG_DATA } from "@/data/dialog";
 
 const cartData: ICartProduct[] = [
   {
-    product_id: "660d58878be4c0f5e0b5c37e",
-    variant_id: "67069a7d2d723e958da39590",
+    product_id: "660d58878be4c0f5e0b5c36e",
+    variant_id: "6762d7ad27f4c8a669dfbea0",
     quantity: 100,
   },
   {
-    product_id: "660d58878be4c0f5e0b5c3ec",
-    variant_id: "67069a7d2d723e958da395a1",
+    product_id: "660d58878be4c0f5e0b5c36e",
+    variant_id: "6762d7ad27f4c8a669dfbea1",
     quantity: 192,
   },
   {
-    product_id: "6617f0ede1d3208ee924ec1a",
-    variant_id: "67069a7d2d723e958da395d4",
+    product_id: "660d58878be4c0f5e0b5c37e",
+    variant_id: "6762d7ad27f4c8a669dfbea4",
     quantity: 28,
   },
   {
-    product_id: "660d58878be4c0f5e0b5c37e",
-    variant_id: "67069a7d2d723e958da39592",
+    product_id: "660d58878be4c0f5e0b5c42f",
+    variant_id: "6762d7ae27f4c8a669dfbed4",
     quantity: 18,
   },
   {
-    product_id: "6617f0ede1d3208ee924ec72",
-    variant_id: "67069a7d2d723e958da395e4",
+    product_id: "660d58878be4c0f5e0b5c43f",
+    variant_id: "6762d7ae27f4c8a669dfbef7",
     quantity: 57,
   },
 ];
