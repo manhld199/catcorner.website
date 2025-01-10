@@ -6,8 +6,8 @@ export { default as CustomerStarRating } from "./(general)/star-rating";
 
 // card
 export { default as CustomerProductCard } from "./(general)/product-card";
-export { default as BlogCardFull } from "./(general)/blog-card/full";
-export { default as BlogCardShort } from "./(general)/blog-card/short";
+export { default as BlogCardFull } from "./(general)/(blog-card)/full";
+export { default as BlogCardShort } from "./(general)/(blog-card)/short";
 
 // toogles
 export { default as ToogleThemeMode } from "./(general)/toogles/toogle-theme-mode";
