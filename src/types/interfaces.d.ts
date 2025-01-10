@@ -68,7 +68,8 @@ export interface IProductProps {
 }
 
 export interface ICartProduct {
-  product_id: string;
+  product_id?: string;
+  product_hashed_id: string;
   variant_id: string;
   quantity: number;
   product_name?: string;
