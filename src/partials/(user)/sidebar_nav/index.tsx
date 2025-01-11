@@ -40,7 +40,7 @@ export default function UserSidebar() {
         fixed md:relative top-0 left-0 z-40
         ${isMenuOpen ? "flex" : "hidden"}
         bg-white dark:black
-        md:bg-transparent
+        md:bg-white
         transition-all duration-300
       `}>
         {/* Profile Section */}

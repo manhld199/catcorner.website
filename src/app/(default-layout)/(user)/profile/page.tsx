@@ -477,13 +477,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full md:w-[90%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 px-4 md:px-0">
-      <UserSidebar />
+    <>
       <div className="w-full space-y-[20px]">
         <Collapsible
           open={isOpen}
           onOpenChange={setIsOpen}
-          className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black">
+          className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
           <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
             <h2 className="font-bold text-center">Thông tin tài khoản</h2>
             <ChevronDown
@@ -787,7 +786,7 @@ export default function ProfilePage() {
           </CollapsibleContent>
         </Collapsible>
         {/* Collapsible đổi mật khẩu */}
-        <Collapsible className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black">
+        <Collapsible className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
           <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
             <h2 className="font-bold text-center">Thay đổi mật khẩu</h2>
             <ChevronDown className="text-pri-1 dark:text-gray-300 w-7 h-7 transition-transform" />
@@ -879,6 +878,6 @@ export default function ProfilePage() {
         </Collapsible>
       </div>
       <ToastContainer className="!z-[99999] !mt-[50px] !w-fit max-w-[420px]" />
-    </div>
+    </>
   );
 }
