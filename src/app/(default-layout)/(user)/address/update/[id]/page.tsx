@@ -23,6 +23,7 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BeatLoader from "react-spinners/BeatLoader";
+import { useParams } from "next/navigation";
 
 import {
   Card,
@@ -90,6 +91,7 @@ const customStyles: StylesConfig = {
     color: "#315475",
   }),
 };
+
 const formSchema = z.object({
   full_name: z.string().min(1, { message: "Họ tên là bắt buộc" }),
   phone: z
@@ -114,12 +116,12 @@ export default function AddAddressPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [address, setAddress] = useState(null);
+  const [isDefault, setIsDefault] = useState(false);
 
-  useEffect(() => {
-    if (status !== "authenticated" && session) {
-      router.replace("/login");
-    }
-  }, [status, session, router]);
+  const params = useParams();
+  const addressId = params.id;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -129,6 +131,66 @@ export default function AddAddressPage() {
     },
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (status !== "authenticated" && session) {
+      router.replace("/login");
+    }
+  }, [status, session, router]);
+
+  useEffect(() => {
+    const fetchAddressById = async () => {
+      console.log("addressid", addressId);
+
+      if (!session?.user?.accessToken) return;
+      try {
+        console.log(addressId);
+        const response = await fetch(`${USER_URL}/addresses/${addressId}`, {
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setAddress(data.data[0]); // Assuming data contains an array of addresses
+          console.log("Data", data.data);
+          // Set the fetched address data into the form
+          form.setValue("full_name", data.data[0].full_name);
+          form.setValue("phone", data.data[0].phone);
+          form.setValue("detail_address", data.data[0].detail_address);
+          form.setValue("is_default", data.data[0].is_default);
+          setIsDefault(data.data[0].is_default);
+          // Set province, district, and ward
+          const province = {
+            value: data.data[0].province.id,
+            label: data.data[0].province.name,
+          };
+          const district = {
+            value: data.data[0].district.id,
+            label: data.data[0].district.name,
+          };
+          const ward = {
+            value: data.data[0].ward.id,
+            label: data.data[0].ward.name,
+          };
+
+          setSelectedProvince(province);
+          setSelectedDistrict(district);
+          setSelectedWard(ward);
+        } else {
+          toast.error(data.message || "Could not fetch address.");
+        }
+      } catch (error) {
+        toast.error("Error fetching address.");
+      }
+    };
+
+    if (addressId) {
+      fetchAddressById();
+    }
+  }, [session, addressId, form]);
 
   useEffect(() => {
     // Fetch provinces on component load
@@ -172,31 +234,28 @@ export default function AddAddressPage() {
         detail_address: values.detail_address,
         is_default: values.is_default,
       };
-
+      console.log(JSON.stringify(addressData));
       // Gọi API
-      const response = await fetch(
-        `${USER_URL}/${session?.user?.id}/addresses`,
-        {
-          method: "POST",
-          body: JSON.stringify(addressData),
-          headers: {
-            Authorization: `Bearer ${session.user.accessToken}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${USER_URL}/addresses/${addressId}`, {
+        method: "PUT",
+        body: JSON.stringify(addressData),
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
 
       const data = await response.json();
       if (response.ok) {
-        toast.success("Địa chỉ đã được thêm thành công!");
+        toast.success("Địa chỉ đã được cập nhật thành công!");
         // Xử lý khi thêm địa chỉ thành công (ví dụ: reset form, chuyển trang, v.v.)
       } else {
-        toast.error(data.message || "Có lỗi xảy ra khi thêm địa chỉ.");
+        toast.error(data.message || "Có lỗi xảy ra khi cập nhật địa chỉ.");
       }
     } catch (error) {
       toast.error(
-        "Có lỗi xảy ra trong quá trình thêm địa chỉ. Vui lòng thử lại."
+        "Có lỗi xảy ra trong quá trình cập nhật địa chỉ. Vui lòng thử lại."
       );
       setIsRegistering(false);
     } finally {
@@ -210,7 +269,7 @@ export default function AddAddressPage() {
       <div className="container mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Thêm địa chỉ mới</CardTitle>
+            <CardTitle>Chỉnh sửa địa chỉ</CardTitle>
             <CardDescription>
               Vui lòng điền đầy đủ thông tin địa chỉ của bạn
             </CardDescription>
@@ -332,6 +391,12 @@ export default function AddAddressPage() {
                         id="isDefault"
                         checked={field.value}
                         onCheckedChange={(checked) => field.onChange(checked)}
+                        disabled={isDefault} // Disable checkbox if the value is true
+                        title={
+                          isDefault === true
+                            ? "Vui lòng cập nhật 1 địa chỉ khác làm địa chỉ mặc định !!!"
+                            : ""
+                        } // Set title when it's true
                       />
                       <Label
                         htmlFor="isDefault"

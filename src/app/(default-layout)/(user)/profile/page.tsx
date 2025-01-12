@@ -58,7 +58,7 @@ const override: CSSProperties = {
 interface UserData {
   user_name: string;
   user_phone_number: string;
-  user_sex: "Nam" | "Nữ" | "Khác" | undefined | "";
+  user_gender: "Nam" | "Nữ" | "Khác" | undefined | "";
   user_birth_day: string;
   user_avt?: string;
 }
@@ -83,7 +83,7 @@ const profileSchema = z.object({
     })
     .optional()
     .or(z.literal("")), // Cho phép chuỗi rỗng
-  user_sex: z
+  user_gender: z
     .enum(["Nam", "Nữ", "Khác"] as const)
     .optional()
     .or(z.literal("")), // Cho phép bỏ trống
@@ -125,7 +125,7 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<UserData>({
     user_name: "",
     user_phone_number: "",
-    user_sex: undefined,
+    user_gender: undefined,
     user_birth_day: "",
     user_avt: "",
   });
@@ -161,7 +161,7 @@ export default function ProfilePage() {
           setUserData({
             user_name: profile.user_name || "",
             user_phone_number: profile.user_phone_number || "",
-            user_sex: normalizeGenderValue(profile.user_sex),
+            user_gender: normalizeGenderValue(profile.user_gender),
             user_birth_day: profile.user_birth_day || "",
             user_avt: profile.user_avt || "",
           });
@@ -194,7 +194,7 @@ export default function ProfilePage() {
     defaultValues: {
       user_name: userData.user_name,
       user_phone_number: userData.user_phone_number,
-      user_sex: userData.user_sex || "",
+      user_gender: userData.user_gender || "",
       user_birth_day: userData.user_birth_day,
     },
   });
@@ -205,7 +205,7 @@ export default function ProfilePage() {
       form.reset({
         user_name: userData.user_name,
         user_phone_number: userData.user_phone_number,
-        user_sex: userData.user_sex,
+        user_gender: userData.user_gender,
         user_birth_day: userData.user_birth_day,
       });
     }
@@ -226,7 +226,7 @@ export default function ProfilePage() {
         const oldValue = userData[fieldKey];
 
         // Đặc biệt x lý cho trường user_sex
-        if (fieldKey === "user_sex") {
+        if (fieldKey === "user_gender") {
           // Chỉ append nếu newValue không phải empty string và khác với oldValue
           if (newValue && newValue !== "" && newValue !== oldValue) {
             console.log(`Field ${fieldKey} changed:`, {
@@ -285,7 +285,7 @@ export default function ProfilePage() {
         // Cập nhật lại userData với những giá trị mới
         const updatedValues = {
           ...values,
-          user_sex: values.user_sex || undefined, // Chuyển empty string thành undefined
+          user_gender: values.user_gender || undefined, // Chuyển empty string thành undefined
         };
 
         setUserData((prev) => ({
@@ -361,7 +361,7 @@ export default function ProfilePage() {
 
   // Update the form input handlers
   const handleInputChange = (field: keyof UserData, value: string) => {
-    if (field === "user_sex") {
+    if (field === "user_gender") {
       setUserData((prev) => ({
         ...prev,
         [field]: value as Gender,
@@ -386,9 +386,9 @@ export default function ProfilePage() {
       user_name: userData.user_name,
       user_phone_number: userData.user_phone_number,
       // Chỉ set giá trị cho user_sex và user_birth_day nếu có giá trị ban đầu
-      ...(userData.user_sex
-        ? { user_sex: userData.user_sex }
-        : { user_sex: "" }),
+      ...(userData.user_gender
+        ? { user_gender: userData.user_gender }
+        : { user_gender: "" }),
       ...(userData.user_birth_day
         ? { user_birth_day: userData.user_birth_day }
         : { user_birth_day: "" }),
@@ -608,7 +608,7 @@ export default function ProfilePage() {
 
                   <FormField
                     control={form.control}
-                    name="user_sex"
+                    name="user_gender"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base text-gray-600 dark:text-gray-300">

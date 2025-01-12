@@ -85,7 +85,7 @@ export default function UserSidebar() {
               variant="ghost"
               className={`w-full justify-start gap-3 text-sm md:text-base px-4 md:px-6 py-5 md:py-7
                 ${
-                  pathname === "/address"
+                  pathname.includes("/address")
                     ? "bg-selected-nav text-pri-1 font-bold rounded-none dark:bg-gray-900 dark:text-white"
                     : "dark:text-gray-300 dark:hover:bg-gray-700"
                 }
