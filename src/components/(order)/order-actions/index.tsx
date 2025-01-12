@@ -1,7 +1,7 @@
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type StatusType = "shipping" | "completed" | "pending" | "cancelled";
+type StatusType = "unpaid" | "delivering" | "delivered" | "canceled";
 
 interface OrderActionsProps {
   status: StatusType;
@@ -39,7 +39,7 @@ const OrderActions = ({
   };
 
   const actionButtons: Record<StatusType, ActionButton[]> = {
-    completed: [
+    delivered: [
       {
         label: "Mua lại",
         icon: <RefreshCw size={30} strokeWidth={1.2} />,
@@ -55,7 +55,7 @@ const OrderActions = ({
         onClick: handleReview,
       },
     ],
-    pending: [
+    unpaid: [
       {
         label: "Hủy đơn",
         variant: "filled_outlined" as const,
@@ -63,7 +63,7 @@ const OrderActions = ({
         onClick: handleCancel,
       },
     ],
-    cancelled: [
+    canceled: [
       {
         label: "Mua lại",
         icon: <RefreshCw size={30} strokeWidth={1.2} />,
@@ -72,7 +72,7 @@ const OrderActions = ({
         onClick: handleRepurchase,
       },
     ],
-    shipping: [], // Không có action
+    delivering: [], // Không có action
   };
 
   const buttons = actionButtons[status];

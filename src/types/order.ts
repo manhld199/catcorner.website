@@ -30,6 +30,6 @@ export interface Order {
   total_products_cost: number;
   shipping_cost: number;
   final_cost: number;
-  order_status: "shipping" | "completed" | "pending" | "cancelled";
+  order_status: "unpaid" | "delivering" | "delivered" | "canceled";
   createdAt: string | null;
 }

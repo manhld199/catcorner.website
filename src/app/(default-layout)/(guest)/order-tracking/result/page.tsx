@@ -33,7 +33,7 @@ export default function OrderTrackingResult() {
           `${ORDER_URL}/track?order_id=${orderId}&phone_number=${phoneNumber}`
         );
         const data = await response.json();
-
+        console.log("order", data);
         if (!response.ok) {
           throw new Error(data.message || "Không tìm thấy đơn hàng");
         }
@@ -69,11 +69,10 @@ export default function OrderTrackingResult() {
         w-full md:w-[300px] 
         h-auto md:h-[450px]
         bg-white dark:bg-black
-        md:bg-transparent
         sticky top-4
         z-10
         transition-all duration-300">
-        <CardContent className="pt-6 space-y-6 h-auto">
+        <CardContent className="pt-6 space-y-6 h-auto bg-white">
           {/* Logo */}
           <div className="flex justify-center md:justify-start items-center">
             <Image

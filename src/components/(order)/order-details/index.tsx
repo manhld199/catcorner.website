@@ -193,7 +193,9 @@ export default function OrderDetails({
                   Tổng tiền hàng:{" "}
                 </span>
                 <span className="font-medium text-base dark:text-white">
-                  ₫{order.total_products_cost.toLocaleString("vi-VN")}
+                  {order.total_products_cost != null
+                    ? `₫${order.total_products_cost.toLocaleString("vi-VN")}`
+                    : "Không xác định"}{" "}
                 </span>
               </div>
               <div className="text-sm">

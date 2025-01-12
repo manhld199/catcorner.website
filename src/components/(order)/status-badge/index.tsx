@@ -1,23 +1,23 @@
-type StatusType = "shipping" | "completed" | "pending" | "cancelled";
+type StatusType = "unpaid" | "delivering" | "delivered" | "canceled";
 
 interface StatusBadgeProps {
   status: StatusType;
 }
 
 const statusConfig = {
-  shipping: {
+  delivering: {
     label: "Đang vận chuyển",
     className: "bg-blue-100 text-blue-400",
   },
-  completed: {
+  delivered: {
     label: "Thành công",
     className: "bg-green-100 text-green-400",
   },
-  pending: {
+  unpaid: {
     label: "Chờ xác nhận",
     className: "bg-yellow-100 text-yellow-400",
   },
-  cancelled: {
+  canceled: {
     label: "Đã hủy",
     className: "bg-red-100 text-red-400",
   },
