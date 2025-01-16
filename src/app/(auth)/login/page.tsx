@@ -110,7 +110,7 @@ export default function LoginPage() {
       <div className="md:bg-background-color mm:bg-white ml:bg-white dark:bg-gray-900">
         <div className="flex min-h-screen w-[80%] mx-auto bg-white dark:bg-gray-800">
           {/* Left side - Image */}
-          <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+          <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden min-h-[700px]">
             <div className="absolute inset-0 transform scale-125 lg:scale-100">
               <Image
                 src={`/imgs/auth/circle.png`}
@@ -131,8 +131,8 @@ export default function LoginPage() {
               </h1>
 
               <Label className="text-gray-500 dark:text-gray-400 font-light my-3 sm:my-5 sm:text-sm md:text-lg block">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore.
+                Chào mừng bạn đã quay lại với CatCorner. Hãy đăng nhập ngay để
+                nhận nhiều ưu đãi từ CatCorner nhé!
               </Label>
 
               <Form {...form}>

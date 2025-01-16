@@ -205,8 +205,8 @@ export default function RegisterPage() {
       <div className="md:bg-background-color mm:bg-white ml:bg-white dark:bg-gray-900">
         <div className="flex min-h-screen w-[80%] mx-auto bg-white dark:bg-gray-800">
           {/* Left side - Image */}
-          <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-            <div className="absolute inset-0 transform scale-125 lg:scale-100">
+          <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden ">
+            <div className="absolute inset-0 transform scale-125 lg:scale-100 ">
               <Image
                 src={`/imgs/auth/circle.png`}
                 alt="Abstract background"

@@ -479,7 +479,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col md:flex-row w-full md:w-[90%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 px-4 md:px-0">
       <UserSidebar />
-      <div className="w-full space-y-[20px]">
+      <div className="w-full space-y-[20px] bg-white">
         <Collapsible
           open={isOpen}
           onOpenChange={setIsOpen}
