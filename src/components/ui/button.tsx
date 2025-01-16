@@ -23,7 +23,8 @@ const buttonVariants = cva(
         custom_outlined:
           "rounded-[32px] bg-white text-pri-1 border border-pri-1 hover:opacity-80",
         none: "",
-        filled: "rounded-[8px] bg-pri-1 text-white hover:opacity-80",
+        filled:
+          "rounded-[8px] bg-pri-1 text-white hover:opacity-80 dark:bg-teal-600",
         filled_outlined:
           "rounded-[8px] bg-white text-pri-1 hover:opacity-80 border border-pri-1",
       },

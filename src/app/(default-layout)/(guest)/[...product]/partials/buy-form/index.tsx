@@ -5,6 +5,8 @@ import { Modal } from "@/components";
 import { CustomerProductVariant } from "../../components";
 import { CustomerQuantityInputGroup, CustomerStarRating } from "@/components";
 import { IBuyFormProps, ICartProduct } from "@/types/interfaces";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function CustomerProductBuyForm({
   pid,
@@ -26,6 +28,31 @@ export default function CustomerProductBuyForm({
       onQuantityChange(maxQuantity);
     }
   }, [selectedVariantIndex]);
+
+  // Hàm mua ngay
+  const handleBuyNow = () => {
+    const selectedVariant = variants[selectedVariantIndex];
+
+    const productInfo = {
+      product_id: pid,
+      variant_id: selectedVariant._id,
+      quantity: inputQuantity,
+      product_name: productName,
+      variant_name: selectedVariant.variant_name,
+      variant_price: selectedVariant.variant_price,
+      variant_discount_percent: selectedVariant.variant_discount_percent,
+      variant_img: selectedVariant.variant_img,
+      total_price:
+        inputQuantity *
+        selectedVariant.variant_price *
+        (1 - selectedVariant.variant_discount_percent / 100),
+    };
+
+    // Lưu vào localStorage
+    localStorage.setItem("buyNowProduct", JSON.stringify(productInfo));
+
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", productInfo);
+  };
 
   // Hàm thêm vào giỏ hàng
   const handleAddToCart = (): void => {
@@ -144,9 +171,14 @@ export default function CustomerProductBuyForm({
           onClick={handleAddToCart}>
           Thêm vào giỏ hàng
         </button>
-        <button className="bg-pri-1 dark:bg-teal-500 text-white w-48 py-3 rounded-lg hover:bg-teal-700 dark:hover:bg-teal-600">
-          Mua ngay
-        </button>
+        <Link href="/order-information">
+          <button
+            className="bg-pri-1 dark:bg-teal-500 text-white w-48 py-3 rounded-lg hover:bg-teal-700 dark:hover:bg-teal-600"
+            onClick={handleBuyNow} // Gọi hàm handleBuyNow khi bấm nút
+          >
+            Mua ngay
+          </button>
+        </Link>
       </div>
 
       {/* Modal thêm vào giỏ hàng */}
