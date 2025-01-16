@@ -2,8 +2,10 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const AUTH_URL = API_BASE_URL + "/auth";
 export const ORDER_URL = API_BASE_URL + "/orders";
+export const USER_URL = API_BASE_URL + "/user";
 export const PRODUCT_URL = API_BASE_URL + "/guest/product";
 export const PRODUCT_LIST_URL = API_BASE_URL + "/guest/productList";
+export const LOCATION_URL = API_BASE_URL + "/locations";
 
 export const ADMIN_USERS_URL = `${process.env.BACKEND_URL}/admin/users`;
 export const PUBLIC_ADMIN_USERS_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users`;

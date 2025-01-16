@@ -34,28 +34,33 @@ import { DIALOG_DATA } from "@/data/dialog";
 
 const cartData: ICartProduct[] = [
   {
-    product_id: "660d58878be4c0f5e0b5c37e",
-    variant_id: "67069a7d2d723e958da39590",
+    product_hashed_id:
+      "64o%2F6qCEkXe102b8pZqTJzRrvO1KAxaQplSOksZZGGNjvu3gIQK0tPtVKYnGkFEWit%2F0R19fQJuIFXlClJ%2BrDA%3D%3D",
+    variant_id: "6762d7ae27f4c8a669dfbed8",
     quantity: 100,
   },
   {
-    product_id: "660d58878be4c0f5e0b5c3ec",
-    variant_id: "67069a7d2d723e958da395a1",
+    product_hashed_id:
+      "64o%2F6qCEkXe102b8pZqTJzRrvO1KAxaQplSOksZZGGNjvu3gIQK0tPtVKYnGkFEWit%2F0R19fQJuIFXlClJ%2BrDA%3D%3D",
+    variant_id: "6762d7ae27f4c8a669dfbeda",
     quantity: 192,
   },
   {
-    product_id: "6617f0ede1d3208ee924ec1a",
-    variant_id: "67069a7d2d723e958da395d4",
+    product_hashed_id:
+      "brnJLyBRZDjlOcGvwDEYidaEV8S9ptMAtqsSQObdwsKXxAaSD7M5fv0byh%2Br28aPJsXCwDGNgPiHHxkJY9JPkQ%3D%3D",
+    variant_id: "6762d7ae27f4c8a669dfbeae",
     quantity: 28,
   },
   {
-    product_id: "660d58878be4c0f5e0b5c37e",
-    variant_id: "67069a7d2d723e958da39592",
+    product_hashed_id:
+      "yJ4%2BUB3Dr73qHkAuUaUxjnYnWY3yFDgS8VKVXtGM%2BstoiLkqeoG1qlCSnbcqGvqJx%2Bm03vuPx5DtexE5LJk2ng%3D%3D",
+    variant_id: "6762d7ae27f4c8a669dfbeca",
     quantity: 18,
   },
   {
-    product_id: "6617f0ede1d3208ee924ec72",
-    variant_id: "67069a7d2d723e958da395e4",
+    product_hashed_id:
+      "pkKDUDlgOvHljaWiBi8R%2FoJy04NvaMF0ZlWWzcOOmbEEUMDnlH9CdBhR3lLGt5nO20a%2BWeaGMHgiO%2BHfRCNm5Q%3D%3D",
+    variant_id: "6762d7ae27f4c8a669dfbedd",
     quantity: 57,
   },
 ];

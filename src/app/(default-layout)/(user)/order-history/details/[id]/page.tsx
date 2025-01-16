@@ -127,8 +127,8 @@ export default function OrderDetail() {
   }
 
   return (
-    <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] dark:bg-black">
-      <UserSidebar />
+    // <div className="flex w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] dark:bg-black">
+    <>
       {order && (
         <OrderDetails
           order={order}
@@ -137,6 +137,6 @@ export default function OrderDetail() {
           onReview={handleReview}
         />
       )}
-    </div>
+    </>
   );
 }
