@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Ticket } from "lucide-react";
 import { convertNumberToVND } from "@/utils/functions/convert";
 import Link from "next/link";
+import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
 
 const demoCoupons = [
   {
@@ -47,6 +48,9 @@ export default function OrderInformationPage() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [selectedWard, setSelectedWard] = useState<string>("");
   const [productInfo, setProductInfo] = useState<any>(null);
+  const [userName, setUserName] = useState<string>("");
+  const [userPhone, setUserPhone] = useState<string>("");
+  const [streetAddress, setStreetAddress] = useState<string>("");
 
   const shippingFee = 20000; // Fixed shipping fee
   const couponDiscount = 5000; // Example coupon discount
@@ -88,9 +92,110 @@ export default function OrderInformationPage() {
     setSelectedWard(selected?.Name || "");
   };
 
-  const handleOrder = () => {
-    alert("Đơn hàng của bạn đã được đặt thành công!");
+  const validateInputs = () => {
+    if (!userName.trim()) {
+      alert("Vui lòng nhập họ và tên.");
+      return false;
+    }
+
+    if (!userPhone.trim()) {
+      alert("Vui lòng nhập số điện thoại.");
+      return false;
+    }
+
+    if (!/^[0-9]{10}$/.test(userPhone.trim())) {
+      alert("Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+      return false;
+    }
+
+    if (
+      !selectedCity ||
+      !selectedDistrict ||
+      !selectedWard ||
+      !streetAddress.trim()
+    ) {
+      alert("Vui lòng điền đầy đủ địa chỉ nhận hàng.");
+      return false;
+    }
+
+    return true;
   };
+
+  const handleOrder = async () => {
+    if (!validateInputs()) return;
+
+    return alert("Đã nhấn đặt hàng!");
+  };
+
+  // const handleOrder = async () => {
+  //   try {
+  //     if (!productInfo) {
+  //       alert("Không có sản phẩm nào để đặt hàng!");
+  //       return;
+  //     }
+
+  //     if (!validateInputs()) return;
+
+  //     const orderProducts = [
+  //       {
+  //         product_hashed_id: productInfo.product_hashed_id,
+  //         variant_id: productInfo.variant_id,
+  //         quantity: productInfo.quantity,
+  //         unit_price: productInfo.variant_price,
+  //         discount_percent: productInfo.variant_discount_percent,
+  //       },
+  //     ];
+
+  //     const orderData = {
+  //       order_id: `DH${Date.now()}`,
+  //       order_products: orderProducts,
+  //       order_buyer: {
+  //         name: userName,
+  //         phone_number: userPhone,
+  //         address: {
+  //           province: selectedCity,
+  //           district: selectedDistrict,
+  //           ward: selectedWard,
+  //           street: streetAddress,
+  //         },
+  //       },
+  //       shipping_cost: shippingFee,
+  //       order_note: "",
+  //       payment_method: "onl",
+  //     };
+
+  //     // console.log(
+  //     //   "Order Products Data nèeeeeeeeeeeeeeeeeeee:",
+  //     //   JSON.stringify(orderData)
+  //     // );
+
+  //     const response = await fetch(`${PRODUCT_ORDER_URL}`, {
+  //       method: "POST",
+  //       body: JSON.stringify(orderData.order_products),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     });
+
+  //     if (response.ok) {
+  //       const responseData = await response.json();
+  //       alert("Đơn hàng của bạn đã được đặt thành công!");
+  //       console.log("Response Data:", responseData);
+  //     } else {
+  //       const errorData = await response.json();
+  //       alert(
+  //         `Đã xảy ra lỗi khi đặt hàng: ${
+  //           errorData.error || errorData.message || "Unknown error"
+  //         }`
+  //       );
+  //       console.error("Error:", errorData);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error placing order:", err);
+  //     alert("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.");
+  //   }
+  // };
 
   const calculateOriginalPrice = () => {
     if (!productInfo) return 0;
@@ -130,6 +235,8 @@ export default function OrderInformationPage() {
             <Input
               type="text"
               placeholder="Nhập họ và tên"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
               maxLength={50}
               className="border border-gray-300 rounded-md p-3 text-sm"
             />
@@ -139,7 +246,9 @@ export default function OrderInformationPage() {
             <Input
               type="text"
               placeholder="Nhập số điện thoại"
-              maxLength={50}
+              value={userPhone}
+              onChange={(e) => setUserPhone(e.target.value)}
+              maxLength={10}
               className="border border-gray-300 rounded-md p-3 text-sm"
             />
           </div>
@@ -195,18 +304,20 @@ export default function OrderInformationPage() {
               <Input
                 type="text"
                 placeholder="Nhập số nhà, đường..."
-                maxLength={50}
+                value={streetAddress}
+                onChange={(e) => setStreetAddress(e.target.value)}
+                maxLength={100}
                 className="w-full border border-gray-300 rounded-md p-3 text-sm mt-2"
               />
             </div>
-          </div>
-          <div className="flex flex-col md:col-span-2 gap-2">
-            <label className="text-sm font-medium">Ghi chú</label>
-            <Textarea
-              placeholder="Nhập ghi chú cho đơn hàng..."
-              maxLength={100}
-              rows={5}
-              className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
+            <div className="flex flex-col md:col-span-2 gap-2">
+              <label className="text-sm font-medium">Ghi chú</label>
+              <Textarea
+                placeholder="Nhập ghi chú cho đơn hàng..."
+                maxLength={100}
+                rows={5}
+                className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
+            </div>
           </div>
         </form>
         {/* Mã giảm giá */}
