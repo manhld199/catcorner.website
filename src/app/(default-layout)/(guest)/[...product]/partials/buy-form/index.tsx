@@ -7,6 +7,9 @@ import { CustomerQuantityInputGroup, CustomerStarRating } from "@/components";
 import { IBuyFormProps, ICartProduct } from "@/types/interfaces";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { putData } from "@/utils/functions/client";
+import { PUBLIC_CUSTOMER_CART_URL } from "@/utils/constants/urls";
+import { useSession } from "next-auth/react";
 
 export default function CustomerProductBuyForm({
   pid,
@@ -20,6 +23,8 @@ export default function CustomerProductBuyForm({
   avgRating,
   productSoldQuantity,
 }: IBuyFormProps) {
+  const { data: session } = useSession(); // Lấy thông tin session
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State quản lý modal
 
   useEffect(() => {
@@ -55,7 +60,7 @@ export default function CustomerProductBuyForm({
   };
 
   // Hàm thêm vào giỏ hàng
-  const handleAddToCart = (): void => {
+  const handleAddToCart = async (): Promise<void> => {
     try {
       // Lấy giỏ hàng hiện tại từ localStorage
       const existingCart = localStorage.getItem("cart");
@@ -88,6 +93,12 @@ export default function CustomerProductBuyForm({
 
       // Lưu giỏ hàng mới vào localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
+
+      if (session)
+        await putData(PUBLIC_CUSTOMER_CART_URL, {
+          userId: session.user.id,
+          cartProducts: [newCartItem],
+        });
 
       // Thông báo thành công
       setIsModalOpen(true);

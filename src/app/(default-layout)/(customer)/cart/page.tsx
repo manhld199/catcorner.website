@@ -63,7 +63,6 @@ export default function CartPage() {
         return;
       }
 
-      console.log("cartdata", cartProducts[0].quantity);
       const data = await putData(PUBLIC_CUSTOMER_CART_URL, {
         userId: session.user.id,
         cartProducts,
