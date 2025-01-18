@@ -31,10 +31,12 @@ export default function CustomerProductBuyForm({
 
   // Hàm mua ngay
   const handleBuyNow = () => {
+    localStorage.removeItem("buyNowProduct");
+
     const selectedVariant = variants[selectedVariantIndex];
 
     const productInfo = {
-      product_id: pid,
+      product_hashed_id: pid,
       variant_id: selectedVariant._id,
       quantity: inputQuantity,
       product_name: productName,
@@ -50,8 +52,6 @@ export default function CustomerProductBuyForm({
 
     // Lưu vào localStorage
     localStorage.setItem("buyNowProduct", JSON.stringify(productInfo));
-
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", productInfo);
   };
 
   // Hàm thêm vào giỏ hàng
@@ -64,7 +64,7 @@ export default function CustomerProductBuyForm({
       // Tạo sản phẩm mới để thêm vào giỏ hàng
       const selectedVariant = variants[selectedVariantIndex];
       const newCartItem: ICartProduct = {
-        product_id: pid,
+        product_hashed_id: pid,
         variant_id: selectedVariant._id,
         quantity: inputQuantity,
         product_name: productName,
@@ -74,7 +74,8 @@ export default function CustomerProductBuyForm({
       // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
       const existingItemIndex = cart.findIndex(
         (item: ICartProduct) =>
-          item.product_id === pid && item.variant_id === selectedVariant._id
+          item.product_hashed_id === pid &&
+          item.variant_id === selectedVariant._id
       );
 
       if (existingItemIndex !== -1) {

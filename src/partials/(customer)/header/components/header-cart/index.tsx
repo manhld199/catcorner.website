@@ -7,9 +7,8 @@ export default function CustomerHeaderCart() {
     <div className="relative group">
       {/* Cart */}
       <a
-        href="#"
-        className="relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center"
-      >
+        href="/cart"
+        className="relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center">
         <div className="relative flex">
           <ShoppingBag />
           <span className="absolute top-3 left-4 bg-orange-500 text-white text-[8px] font-medium w-4 h-4 flex items-center justify-center rounded-full">
@@ -80,9 +79,8 @@ export default function CustomerHeaderCart() {
           </ul>
           <div className="mt-4 flex justify-end px-4">
             <a
-              href="#"
-              className="text-sm text-white bg-teal-600 dark:bg-teal-700 px-4 py-2 rounded-md hover:bg-teal-700 dark:hover:bg-teal-500"
-            >
+              href="/cart"
+              className="text-sm text-white bg-teal-600 dark:bg-teal-700 px-4 py-2 rounded-md hover:bg-teal-700 dark:hover:bg-teal-500">
               Xem Giỏ Hàng
             </a>
           </div>

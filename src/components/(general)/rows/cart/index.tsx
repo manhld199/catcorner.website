@@ -112,6 +112,7 @@ export default function RowCart({
 
       return updatedCartProducts;
     });
+
     setSelectedCartProducts((prev: ICartProduct[]) => {
       const changeCartProductIndex = prev.findIndex(
         (item) =>
@@ -139,6 +140,7 @@ export default function RowCart({
 
       return updatedCartProducts;
     });
+
     setSelectedCartProducts((prev: ICartProduct[]) => {
       const changeCartProductIndex = prev.findIndex(
         (item) =>
@@ -202,6 +204,7 @@ export default function RowCart({
             )
         ),
       ];
+
       return undeletedCartProducts;
     };
 
