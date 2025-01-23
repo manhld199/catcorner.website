@@ -166,3 +166,18 @@ export interface IRelatedArticle {
   article_id_hashed: string;
   article_name: string;
 }
+
+export interface ICoupon {
+  coupon_name: string;
+  coupon_description: string;
+  coupon_type: "Free Ship" | "Order";
+  coupon_condition: number;
+  coupon_unit: "%" | "đ";
+  coupon_value: number;
+  coupon_max_value: number;
+  coupon_stock_quantity: number;
+  start_time: string; // ISO 8601 date string
+  end_time: string; // ISO 8601 date string
+  coupon_id_hashed: string;
+  isOwned?: boolean;
+}

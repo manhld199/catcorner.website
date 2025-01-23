@@ -10,7 +10,10 @@ export const normalizeVietnameseStr = (str: string) => {
 };
 
 // ex: 2001-08-19T17:00:00+07:00 -> 19/08/2001 - 17:00
-export const formatDateTimeStr = (dateTimeString: string) => {
+export const formatDateTimeStr = (
+  dateTimeString: string,
+  format: "dd/mm/yy" | "dd/mm/yy-hh:mm" = "dd/mm/yy-hh:mm"
+) => {
   // Tạo một đối tượng Date từ chuỗi đầu vào
   const date = new Date(dateTimeString);
 
@@ -21,6 +24,7 @@ export const formatDateTimeStr = (dateTimeString: string) => {
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
 
-  // Định dạng chuỗi theo yêu cầu
-  return `${day}/${month}/${year} - ${hours}:${minutes}`;
+  if (format == "dd/mm/yy") return `${day}/${month}/${year}`;
+  else if (format == "dd/mm/yy-hh:mm")
+    return `${day}/${month}/${year} - ${hours}:${minutes}`;
 };

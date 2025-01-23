@@ -39,6 +39,9 @@ export const PUBLIC_CUSTOMER_PRODUCT_LIST_URL = `${process.env.NEXT_PUBLIC_BACKE
 export const CUSTOMER_CART_URL = `${process.env.BACKEND_URL}/customer/cart`;
 export const PUBLIC_CUSTOMER_CART_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/cart`;
 
+export const CUSTOMER_COUPON_URL = `${process.env.BACKEND_URL}/customer/coupons`;
+export const PUBLIC_CUSTOMER_COUPON_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/coupons`;
+
 export const GUEST_CART_URL = `${process.env.BACKEND_URL}/guest/cart`;
 export const PUBLIC_GUEST_CART_URL = `${process.env.BACKEND_URL}/guest/cart`;
 
