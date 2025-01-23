@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import ProductCard from "@/components/(general)/product-card";
+import ProductCard from "@/components/(general)/cards/product-card";
 import { Product, IProductProps } from "@/types/product";
 import { PRODUCT_LIST_URL } from "@/utils/constants/urls";
 
