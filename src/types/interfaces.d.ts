@@ -166,3 +166,16 @@ export interface IRelatedArticle {
   article_id_hashed: string;
   article_name: string;
 }
+
+export interface IOrderProduct {
+  product_name: string;
+  product_slug: string;
+  product_variant: {
+    _id: string;
+    variant_name: string;
+    variant_price: number;
+    variant_discount_percent: number;
+    variant_img: string;
+  };
+  quantity: number;
+}

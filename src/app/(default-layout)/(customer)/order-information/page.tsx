@@ -18,6 +18,7 @@ import { ChevronRight, Ticket } from "lucide-react";
 import { convertNumberToVND } from "@/utils/functions/convert";
 import Link from "next/link";
 import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
+import { IOrderProduct } from "@/types/interfaces";
 
 const demoCoupons = [
   {
@@ -121,97 +122,70 @@ export default function OrderInformationPage() {
     return true;
   };
 
-  const handleOrder = async () => {
-    if (!validateInputs()) return;
+  useEffect(() => {
+    const fetchProductInfo = async () => {
+      const savedProducts = localStorage.getItem("buyNowProducts");
 
-    return alert("Đã nhấn đặt hàng!");
-  };
+      if (savedProducts) {
+        const parsedProducts = JSON.parse(savedProducts);
 
-  // const handleOrder = async () => {
-  //   try {
-  //     if (!productInfo) {
-  //       alert("Không có sản phẩm nào để đặt hàng!");
-  //       return;
-  //     }
+        try {
+          const response = await fetch(PRODUCT_ORDER_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(parsedProducts),
+          });
 
-  //     if (!validateInputs()) return;
+          if (!response.ok) {
+            throw new Error("Failed to fetch product data");
+          }
 
-  //     const orderProducts = [
-  //       {
-  //         product_hashed_id: productInfo.product_hashed_id,
-  //         variant_id: productInfo.variant_id,
-  //         quantity: productInfo.quantity,
-  //         unit_price: productInfo.variant_price,
-  //         discount_percent: productInfo.variant_discount_percent,
-  //       },
-  //     ];
+          const data = await response.json();
+          console.log("dataaaaaa", data);
+          console.log("Fetched products:", data.data.products);
+          setProductInfo(data.data.products); // Lưu thông tin sản phẩm để hiển thị
+        } catch (error) {
+          console.error("Error fetching product data:", error);
+        }
+      }
+    };
 
-  //     const orderData = {
-  //       order_id: `DH${Date.now()}`,
-  //       order_products: orderProducts,
-  //       order_buyer: {
-  //         name: userName,
-  //         phone_number: userPhone,
-  //         address: {
-  //           province: selectedCity,
-  //           district: selectedDistrict,
-  //           ward: selectedWard,
-  //           street: streetAddress,
-  //         },
-  //       },
-  //       shipping_cost: shippingFee,
-  //       order_note: "",
-  //       payment_method: "onl",
-  //     };
-
-  //     // console.log(
-  //     //   "Order Products Data nèeeeeeeeeeeeeeeeeeee:",
-  //     //   JSON.stringify(orderData)
-  //     // );
-
-  //     const response = await fetch(`${PRODUCT_ORDER_URL}`, {
-  //       method: "POST",
-  //       body: JSON.stringify(orderData.order_products),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //     });
-
-  //     if (response.ok) {
-  //       const responseData = await response.json();
-  //       alert("Đơn hàng của bạn đã được đặt thành công!");
-  //       console.log("Response Data:", responseData);
-  //     } else {
-  //       const errorData = await response.json();
-  //       alert(
-  //         `Đã xảy ra lỗi khi đặt hàng: ${
-  //           errorData.error || errorData.message || "Unknown error"
-  //         }`
-  //       );
-  //       console.error("Error:", errorData);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error placing order:", err);
-  //     alert("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.");
-  //   }
-  // };
+    fetchProductInfo();
+  }, []);
 
   const calculateOriginalPrice = () => {
-    if (!productInfo) return 0;
-    return productInfo.variant_price * productInfo.quantity;
+    if (!productInfo || productInfo.length === 0) return 0;
+
+    return productInfo.reduce(
+      (total: any, product: any) =>
+        total + product.product_variant.variant_price * product.quantity,
+      0
+    );
   };
 
   const calculateDiscount = () => {
-    if (!productInfo) return 0;
-    const originalPrice = calculateOriginalPrice();
-    return (originalPrice * productInfo.variant_discount_percent) / 100;
+    if (!productInfo || productInfo.length === 0) return 0;
+
+    return productInfo.reduce(
+      (total: any, product: any) =>
+        total +
+        (product.product_variant.variant_price *
+          product.quantity *
+          product.product_variant.variant_discount_percent) /
+          100,
+      0
+    );
   };
 
   const calculateTotalPrice = () => {
-    if (!productInfo) return 0;
+    if (!productInfo || productInfo.length === 0) return 0;
+
     const originalPrice = calculateOriginalPrice();
     const discount = calculateDiscount();
+
     return (
       originalPrice -
       discount +
@@ -219,6 +193,61 @@ export default function OrderInformationPage() {
       couponDiscount -
       freeShippingDiscount
     );
+  };
+
+  const handleOrder = async (): Promise<void> => {
+    if (!validateInputs()) return; // Validate user inputs
+
+    try {
+      if (!productInfo || productInfo.length === 0) {
+        alert("Không có sản phẩm nào để đặt hàng!");
+        return;
+      }
+
+      // Generate a unique order ID
+      const orderId = `DH${Date.now()}`;
+
+      // Prepare order products data
+      const orderProducts = productInfo.map((product: any) => ({
+        product_hashed_id: product.product_hashed_id,
+        variant_id: product.product_variant._id,
+        quantity: product.quantity,
+        unit_price: product.product_variant.variant_price,
+        discount_percent: product.product_variant.variant_discount_percent,
+      }));
+
+      // Define payment data structure
+      const newPaymentData = {
+        order_id: orderId,
+        // user_id: userInfo ? userInfo.user_id : undefined,
+        order_products: orderProducts,
+        order_buyer: {
+          name: userName,
+          phone_number: userPhone,
+          address: {
+            province: selectedCity,
+            district: selectedDistrict,
+            ward: selectedWard,
+            street: streetAddress,
+          },
+        },
+        order_note: "", // Add a note if necessary
+        shipping_cost: shippingFee,
+        payment_method: "onl", // Can be "cod" or another payment method
+        cancel_url: "/purchase-history?selectedTab=unpaid", // Cancel URL
+        return_url: `/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
+      };
+
+      // Save payment data to local storage
+      localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+      // console.log("dataaaaaaaaa neeeeee", newPaymentData);
+
+      // Redirect to the payment page
+      window.location.href = "/payment";
+    } catch (error) {
+      console.error("Error processing the order:", error);
+      alert("Đã xảy ra lỗi, vui lòng thử lại.");
+    }
   };
 
   return (
@@ -376,41 +405,49 @@ export default function OrderInformationPage() {
         <h3 className="font-bold mb-2 text-center">Sản phẩm đặt mua</h3>
         <hr className="mb-4 dark:border-white" />
         {productInfo ? (
-          <div className="flex items-center bg-pri-3 p-2 rounded-md dark:bg-pri-6">
-            <div className="w-24 h-24 overflow-hidden rounded-md">
-              <Image
-                src={productInfo.variant_img}
-                alt={productInfo.variant_name}
-                width={100}
-                height={100}
-                className="object-cover"
-              />
-            </div>
-            <div className="ml-4 flex-1">
-              <h4 className="font-bold text-sm dark:text-white">
-                {productInfo.product_name}
-              </h4>
-              <p className="text-xs text-gray-500 dark:text-white">
-                {productInfo.variant_name}
-              </p>
-              <div className="flex gap-2 mt-1">
-                {productInfo.variant_discount_percent > 0 && (
-                  <span className="text-sm text-gray-400 line-through">
-                    {convertNumberToVND(productInfo.variant_price)}
-                  </span>
-                )}
-                <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
-                  {convertNumberToVND(
-                    productInfo.variant_price *
-                      (1 - productInfo.variant_discount_percent / 100)
-                  )}
-                </span>
+          productInfo.map((product: IOrderProduct, index: number) => (
+            <div
+              key={index}
+              className="flex items-center bg-pri-3 p-2 rounded-md dark:bg-pri-6">
+              <div className="w-24 h-24 overflow-hidden rounded-md">
+                <Image
+                  src={product.product_variant.variant_img}
+                  alt={product.product_variant.variant_name}
+                  width={100}
+                  height={100}
+                  className="object-cover"
+                />
               </div>
+              <div className="ml-4 flex-1">
+                <h4 className="font-bold text-sm dark:text-white">
+                  {product.product_name}
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-white">
+                  {product.product_variant.variant_name}
+                </p>
+                <div className="flex gap-2 mt-1">
+                  {product.product_variant.variant_discount_percent > 0 && (
+                    <span className="text-sm text-gray-400 line-through">
+                      {convertNumberToVND(
+                        product.product_variant.variant_price
+                      )}
+                    </span>
+                  )}
+                  <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
+                    {convertNumberToVND(
+                      product.product_variant.variant_price *
+                        (1 -
+                          product.product_variant.variant_discount_percent /
+                            100)
+                    )}
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm text-gray-500 dark:text-white">
+                x{product.quantity}
+              </span>
             </div>
-            <span className="text-sm text-gray-500 dark:text-white">
-              x{productInfo.quantity}
-            </span>
-          </div>
+          ))
         ) : (
           <p className="text-gray-500">Không có sản phẩm nào được đặt.</p>
         )}
