@@ -4,6 +4,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Eraser } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 // import components
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,7 +23,7 @@ import {
 
 // import utils
 import { PUBLIC_CUSTOMER_CART_URL } from "@/utils/constants/urls";
-import { fetchDataClientWithBodyNoCache } from "@/utils/functions/client";
+import { putData, postData, getData } from "@/utils/functions/client";
 import { convertNumberToVND } from "@/utils/functions/convert";
 
 // import types
@@ -32,44 +33,14 @@ import { ICartProduct } from "@/types/interfaces";
 import { PAGE_DATA } from "@/data/customer";
 import { DIALOG_DATA } from "@/data/dialog";
 
-const cartData: ICartProduct[] = [
-  {
-    product_hashed_id:
-      "64o%2F6qCEkXe102b8pZqTJzRrvO1KAxaQplSOksZZGGNjvu3gIQK0tPtVKYnGkFEWit%2F0R19fQJuIFXlClJ%2BrDA%3D%3D",
-    variant_id: "6762d7ae27f4c8a669dfbed8",
-    quantity: 100,
-  },
-  {
-    product_hashed_id:
-      "64o%2F6qCEkXe102b8pZqTJzRrvO1KAxaQplSOksZZGGNjvu3gIQK0tPtVKYnGkFEWit%2F0R19fQJuIFXlClJ%2BrDA%3D%3D",
-    variant_id: "6762d7ae27f4c8a669dfbeda",
-    quantity: 192,
-  },
-  {
-    product_hashed_id:
-      "brnJLyBRZDjlOcGvwDEYidaEV8S9ptMAtqsSQObdwsKXxAaSD7M5fv0byh%2Br28aPJsXCwDGNgPiHHxkJY9JPkQ%3D%3D",
-    variant_id: "6762d7ae27f4c8a669dfbeae",
-    quantity: 28,
-  },
-  {
-    product_hashed_id:
-      "yJ4%2BUB3Dr73qHkAuUaUxjnYnWY3yFDgS8VKVXtGM%2BstoiLkqeoG1qlCSnbcqGvqJx%2Bm03vuPx5DtexE5LJk2ng%3D%3D",
-    variant_id: "6762d7ae27f4c8a669dfbeca",
-    quantity: 18,
-  },
-  {
-    product_hashed_id:
-      "pkKDUDlgOvHljaWiBi8R%2FoJy04NvaMF0ZlWWzcOOmbEEUMDnlH9CdBhR3lLGt5nO20a%2BWeaGMHgiO%2BHfRCNm5Q%3D%3D",
-    variant_id: "6762d7ae27f4c8a669dfbedd",
-    quantity: 57,
-  },
-];
-
 export default function CartPage() {
+  const { data: session } = useSession(); // Lấy thông tin session
+
   const [defaultCartProducts, setDefaultCartProducts] = useState<
     ICartProduct[]
   >([]);
   const [cartProducts, setCartProducts] = useState<ICartProduct[]>([]);
+  const [isFetched, setIsFetched] = useState<boolean>(false);
   const [originalTotalPrice, setOriginalTotalPrice] = useState<number>(0);
   const [discountedTotalPrice, setDiscountedTotalPrice] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -85,19 +56,100 @@ export default function CartPage() {
   const [sortTotalPriceState, setSortTotalPriceState] =
     useState<string>("none");
 
+  const handleCartChangePage = async () => {
+    try {
+      if (!session || !cartProducts) {
+        console.log("Session or cart not found");
+        return;
+      }
+
+      const data = await putData(PUBLIC_CUSTOMER_CART_URL, {
+        userId: session.user.id,
+        cartProducts,
+      });
+
+      return data.user_cart[0];
+    } catch (err) {
+      console.log("error: ", err);
+      return;
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchDataClientWithBodyNoCache(
-        PUBLIC_CUSTOMER_CART_URL,
-        cartData
+      // console.log("sessssssssss", session);
+      const localCartData = JSON.parse(localStorage.getItem("cart")) || [];
+      localStorage.removeItem("cart");
+
+      const cartData = await postData(
+        `${PUBLIC_CUSTOMER_CART_URL}/${session ? session.user.id : "undefined"}`,
+        localCartData
       );
+      const userCart = cartData.user_cart;
+
+      if (!userCart || userCart.length == 0) {
+        setCartProducts([]);
+        setDefaultCartProducts([]);
+        setIsFetched(true);
+        return;
+      }
+
+      // console.log("aaaaaaaaaa", PUBLIC_CUSTOMER_CART_URL, userCart);
+      const data = await postData(PUBLIC_CUSTOMER_CART_URL, userCart);
 
       setCartProducts(data.products);
       setDefaultCartProducts(data.products);
+      setIsFetched(true);
     };
 
     fetchData();
-  }, []);
+  }, [session]);
+
+  useEffect(() => {
+    if (session) {
+      let isProcessing = false;
+
+      const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+        if (isProcessing) return; // Ngừng xử lý nếu đã đang thực hiện
+
+        event.preventDefault(); // Ngăn việc chuyển trang/refresh
+        event.returnValue = ""; // Hiển thị cảnh báo xác nhận (tuỳ vào trình duyệt)
+
+        isProcessing = true;
+
+        try {
+          await handleCartChangePage(); // Xử lý thay đổi giỏ hàng
+        } catch (error) {
+          console.error("Error during handleCartChangePage:", error);
+        }
+
+        // Sau khi xử lý xong, cho phép chuyển trang
+        isProcessing = false;
+      };
+
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }
+  }, [session, cartProducts]);
+
+  useEffect(() => {
+    if (isFetched) {
+      const updatedLocalStorageCartProducts = cartProducts.map((item) => ({
+        product_hashed_id: item.product_hashed_id,
+        quantity: item.quantity,
+        variant_id: item.variant_id,
+      }));
+
+      localStorage.removeItem("cart");
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(updatedLocalStorageCartProducts)
+      );
+    }
+  }, [cartProducts]);
 
   useEffect(() => {
     setOriginalTotalPrice(
@@ -371,7 +423,9 @@ export default function CartPage() {
         </div>
 
         <Button variant="filled">
-          <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
+          <a href="#" className="w-full h-full pt-1">
+            <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
+          </a>
         </Button>
 
         <p className="text-center text-sm">

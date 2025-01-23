@@ -70,7 +70,7 @@ export default function ProductSlider() {
   }, []);
 
   const transformProduct = (product: any): IProductProps => {
-    console.log(product);
+    // console.log(product);
     const hasMultipleVariants = product.variant_names.length > 1;
 
     return {

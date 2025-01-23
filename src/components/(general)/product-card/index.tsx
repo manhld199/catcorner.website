@@ -12,7 +12,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  console.log("prooooooooooo", product);
+  // console.log("prooooooooooo", product);
   return (
     <Link
       href={`/${product.product_slug}?pid=${product.product_id_hashed}`}

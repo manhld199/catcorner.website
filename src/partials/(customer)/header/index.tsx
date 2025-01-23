@@ -31,7 +31,7 @@ export default function CustomerHeader() {
           </Suspense>
           {/* Cart-phone+tablet */}
           <a
-            href="#"
+            href="/cart"
             className="laptop:hidden relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center">
             <div className="relative flex">
               <ShoppingBag />

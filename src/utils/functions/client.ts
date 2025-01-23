@@ -77,10 +77,7 @@ export const handleDelete = async (
   }
 };
 
-export const fetchDataClientWithBodyNoCache = async (
-  url: string,
-  body: any
-) => {
+export const postData = async (url: string, body: any) => {
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -88,7 +85,6 @@ export const fetchDataClientWithBodyNoCache = async (
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-cache",
     });
 
     if (!res.ok) return notFound();
@@ -100,6 +96,52 @@ export const fetchDataClientWithBodyNoCache = async (
     return data;
   } catch (err) {
     console.log("Fetch data error: ", err);
+    return notFound();
+  }
+};
+
+export const getData = async (url: string) => {
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) return notFound();
+
+    const json = await res.json();
+
+    const data = json.data;
+
+    return data;
+  } catch (err) {
+    console.log("Fetch data error: ", err);
+    return notFound();
+  }
+};
+
+export const putData = async (url: string, body: any) => {
+  try {
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) return notFound();
+
+    const json = await res.json();
+
+    const data = json.data;
+
+    return data;
+  } catch (err) {
+    console.log("Put error: ", err);
+    // console.log("Fetch data error: ", err);
     return notFound();
   }
 };
