@@ -52,6 +52,7 @@ export default function OrderInformationPage() {
   const [userName, setUserName] = useState<string>("");
   const [userPhone, setUserPhone] = useState<string>("");
   const [streetAddress, setStreetAddress] = useState<string>("");
+  const [orderNote, setOrderNote] = useState<string>("");
 
   const shippingFee = 20000; // Fixed shipping fee
   const couponDiscount = 5000; // Example coupon discount
@@ -231,9 +232,9 @@ export default function OrderInformationPage() {
             street: streetAddress,
           },
         },
-        order_note: "", // Add a note if necessary
+        order_note: orderNote || "",
         shipping_cost: shippingFee,
-        payment_method: "onl", // Can be "cod" or another payment method
+        payment_method: "onl",
         cancel_url: "/purchase-history?selectedTab=unpaid", // Cancel URL
         return_url: `/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
       };
@@ -345,6 +346,8 @@ export default function OrderInformationPage() {
                 placeholder="Nhập ghi chú cho đơn hàng..."
                 maxLength={100}
                 rows={5}
+                value={orderNote}
+                onChange={(e) => setOrderNote(e.target.value)}
                 className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
             </div>
           </div>
