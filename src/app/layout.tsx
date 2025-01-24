@@ -4,6 +4,7 @@ import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "sonner";
 
 // import components
 import { BreadCrumb, ScrollUp } from "@/components";
@@ -41,6 +42,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange>
               {children}
+              <Toaster position="top-right" richColors />
               <SpeedInsights />
               <Analytics />
             </ThemeProvider>
