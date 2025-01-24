@@ -1,8 +1,63 @@
-import { CardCoupon } from "@/components";
+"use client";
+
+// import libs
 import Image from "next/image";
-import React from "react";
+
+// import components
+import { CardCoupon } from "@/components";
+
+// improt utils
+import { PUBLIC_CUSTOMER_COUPON_URL } from "@/utils/constants/urls";
+import { getData, postData } from "@/utils/functions/client";
+
+// import types
+import { ICoupon } from "@/types/interfaces";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+const handleSaveCoupon = async (
+  userId: string,
+  couponId: string
+): Promise<boolean> => {
+  try {
+    const res = await postData(`${PUBLIC_CUSTOMER_COUPON_URL}/${userId}`, {
+      coupon_id_hashed: couponId,
+    });
+
+    if (!res) return false;
+    return true;
+  } catch (err) {
+    console.log("Error in saving coupon: ", err);
+    return false;
+  }
+};
 
 export default function CouponsPage() {
+  const { data: session } = useSession();
+
+  const [freeshipCoupons, setFreeshipCoupons] = useState<ICoupon[]>([]);
+  const [orderCoupons, setOrderCoupons] = useState<ICoupon[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const coupons: ICoupon[] = await getData(
+        `${PUBLIC_CUSTOMER_COUPON_URL}${session ? `?userId=${session.user.id}` : ""}`
+      );
+
+      const freeshipCoupons = (coupons || []).filter(
+        (coupon) => coupon.coupon_type == "Free Ship"
+      );
+      setFreeshipCoupons(freeshipCoupons);
+
+      const orderCoupons = (coupons || []).filter(
+        (coupon) => coupon.coupon_type == "Order"
+      );
+      setOrderCoupons(orderCoupons);
+    };
+
+    fetchData();
+  }, [session]);
+
   return (
     <div className="bg-white flex flex-col">
       <div className="relative w-full aspect-[5/2]">
@@ -43,16 +98,21 @@ export default function CouponsPage() {
         <h2 className="text-pri-6 tablet:hidden phone_large:block">
           MIỄN PHÍ VẬN CHUYỂN
         </h2>
-        <div
-          className="desktop:w-2/3 laptop:4/5 mx-auto my-2 grid phone_large:grid-cols-1 tablet:grid-cols-2 phone_large:gap-2 tablet:gap-8"
-          id="catcorner">
-          <CardCoupon type="freeship" />
-          <CardCoupon type="freeship" />
-          <CardCoupon type="freeship" />
-          <CardCoupon type="freeship" />
-          <CardCoupon type="freeship" />
-          <CardCoupon type="freeship" />
-        </div>
+        {freeshipCoupons.length > 0 && (
+          <div
+            className="desktop:w-2/3 laptop:4/5 mx-auto my-2 grid phone_large:grid-cols-1 tablet:grid-cols-2 phone_large:gap-2 tablet:gap-8"
+            id="catcorner">
+            {freeshipCoupons.map((coupon, index) => (
+              <CardCoupon
+                key={`coupon ${index}`}
+                coupon={coupon}
+                userId={session ? session.user.id : ""}
+                handleSaveCoupon={handleSaveCoupon}
+                type="freeship"
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="w-full phone_large:p-4 tablet:p-6 bg-pri-5 flex flex-col phone_large:gap-2 tablet:gap-8 justify-center items-center">
@@ -62,16 +122,21 @@ export default function CouponsPage() {
         <h2 className="text-orange-400 tablet:hidden phone_large:block">
           GIẢM GIÁ CỰC SỐC
         </h2>
-        <div
-          className="desktop:w-2/3 laptop:4/5  mx-auto my-2 grid phone_large:grid-cols-1 tablet:grid-cols-2 phone_large:gap-4 tablet:gap-8"
-          id="order">
-          <CardCoupon type="order" />
-          <CardCoupon type="order" />
-          <CardCoupon type="order" />
-          <CardCoupon type="order" />
-          <CardCoupon type="order" />
-          <CardCoupon type="order" />
-        </div>
+        {orderCoupons.length > 0 && (
+          <div
+            className="desktop:w-2/3 laptop:4/5  mx-auto my-2 grid phone_large:grid-cols-1 tablet:grid-cols-2 phone_large:gap-4 tablet:gap-8"
+            id="order">
+            {orderCoupons.map((coupon, index) => (
+              <CardCoupon
+                key={`coupon ${index}`}
+                coupon={coupon}
+                userId={session ? session.user.id : ""}
+                handleSaveCoupon={handleSaveCoupon}
+                type="order"
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

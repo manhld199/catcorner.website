@@ -87,7 +87,7 @@ export const postData = async (url: string, body: any) => {
       },
     });
 
-    if (!res.ok) return notFound();
+    if (!res.ok) return false;
 
     const json = await res.json();
 
@@ -96,7 +96,7 @@ export const postData = async (url: string, body: any) => {
     return data;
   } catch (err) {
     console.log("Fetch data error: ", err);
-    return notFound();
+    return false;
   }
 };
 
