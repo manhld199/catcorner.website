@@ -1,5 +1,3 @@
-"use client";
-
 import UserSidebar from "@/partials/(user)/sidebar_nav";
 
 export default function DefaultLayout({

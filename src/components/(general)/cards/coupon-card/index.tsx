@@ -28,7 +28,7 @@ export default function CardCoupon({
 
   const [saveState, setSaveState] = useState<
     "not saved" | "saving" | "saved" | "failed"
-  >(coupon.isOwned ? "saved" : "not saved");
+  >(coupon.isOwned == true ? "saved" : "not saved");
 
   return (
     <div className="w-full h-fit aspect-[16/5] flex flex-row">
@@ -85,30 +85,32 @@ export default function CardCoupon({
             Có hiệu lực đến {formatDateTimeStr(coupon.end_time, "dd/mm/yy")}
           </p>
 
-          <button
-            className={`py-1 px-6 rounded-lg ${type == "freeship" ? "bg-pri-7" : "bg-orange-500"} text-sm text-white enabled:hover:shadow-md disabled:cursor-not-allowed`}
-            onClick={async () => {
-              if (!userId || userId == "") router.push("/login");
+          {handleSaveCoupon && (
+            <button
+              className={`py-1 px-6 rounded-lg ${type == "freeship" ? "bg-pri-7" : "bg-orange-500"} text-sm text-white enabled:hover:shadow-md disabled:cursor-not-allowed`}
+              onClick={async () => {
+                if (!userId || userId == "") router.push("/login");
 
-              setSaveState("saving");
-              const isSuccess = await handleSaveCoupon(
-                userId,
-                coupon.coupon_id_hashed
-              );
-              if (isSuccess) setSaveState("saved");
-              else setSaveState("failed");
-            }}
-            disabled={saveState == "saved"}>
-            {saveState == "not saved" ? (
-              "Lưu"
-            ) : saveState == "saving" ? (
-              <BeatLoader color="white" size={6} />
-            ) : saveState == "failed" ? (
-              <X />
-            ) : (
-              <Check />
-            )}
-          </button>
+                setSaveState("saving");
+                const isSuccess = await handleSaveCoupon(
+                  userId,
+                  coupon.coupon_id_hashed
+                );
+                if (isSuccess) setSaveState("saved");
+                else setSaveState("failed");
+              }}
+              disabled={saveState == "saved"}>
+              {saveState == "not saved" ? (
+                "Lưu"
+              ) : saveState == "saving" ? (
+                <BeatLoader color="white" size={6} />
+              ) : saveState == "failed" ? (
+                <X />
+              ) : (
+                <Check />
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
