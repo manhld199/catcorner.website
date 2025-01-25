@@ -129,11 +129,19 @@ export default function HistoryOrder() {
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
                     {activeTab == "freeship"
-                      ? freeshipCoupons.map((coupon) => (
-                          <CardCoupon coupon={coupon} type="freeship" />
+                      ? freeshipCoupons.map((coupon, index) => (
+                          <CardCoupon
+                            key={`freeship ${index}`}
+                            coupon={coupon}
+                            type="freeship"
+                          />
                         ))
-                      : orderCoupons.map((coupon) => (
-                          <CardCoupon coupon={coupon} type="order" />
+                      : orderCoupons.map((coupon, index) => (
+                          <CardCoupon
+                            key={`order ${index}`}
+                            coupon={coupon}
+                            type="order"
+                          />
                         ))}
                   </div>
                 )}
