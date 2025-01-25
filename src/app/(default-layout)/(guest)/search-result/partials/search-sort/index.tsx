@@ -11,12 +11,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useSearchParams, useRouter } from "next/navigation";
+
 export default function SearchSort() {
   const [sortValue, setSortValue] = React.useState("recent");
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const handleChange = (value: string) => {
     setSortValue(value);
-    console.log("Selected sort option:", value);
+
+    // Cập nhật query string
+    const currentParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      currentParams.set("sortBy", value);
+    } else {
+      currentParams.delete("sortBy");
+    }
+    router.push(`/search-result?${currentParams.toString()}`);
   };
 
   return (

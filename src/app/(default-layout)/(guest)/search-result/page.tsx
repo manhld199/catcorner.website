@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/pagination";
 import { API_BASE_URL } from "@/utils/constants/urls";
 
-export default function SearchPage() {
+export default function SearchResultPage() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<IProductProps[]>([]);
   const [pagination, setPagination] = useState({
@@ -29,28 +29,45 @@ export default function SearchPage() {
   const fetchSearchResults = async (page = 1) => {
     try {
       setIsLoading(true);
-      const queryParams: string[] = [];
+      const queryParams = new URLSearchParams();
+
+      // Lấy các tham số từ searchParams
       const searchKey = searchParams.get("searchKey");
       const category = searchParams.get("category");
       const discount = searchParams.get("discount");
-      const sortBy = searchParams.get("sort");
+      const sortBy = searchParams.get("sortBy");
       const minPrice = searchParams.get("minPrice");
       const maxPrice = searchParams.get("maxPrice");
       const rating = searchParams.get("rating");
 
-      if (searchKey) queryParams.push(`searchKey=${searchKey}`);
-      if (category) queryParams.push(`category=${category}`);
-      if (discount) queryParams.push(`discount=${discount}`);
-      if (sortBy) queryParams.push(`sortBy=${sortBy}`);
-      if (minPrice) queryParams.push(`minPrice=${minPrice}`);
-      if (maxPrice) queryParams.push(`maxPrice=${maxPrice}`);
-      if (rating) queryParams.push(`rating=${rating}`);
-      queryParams.push(`page=${page}`);
+      // Thêm các điều kiện vào queryParams
+      if (searchKey) queryParams.append("searchKey", searchKey);
+      if (category) {
+        const categories = category.split(",").map((cat) => cat.trim());
+        queryParams.append("category", categories.join(","));
+      }
+      if (discount) queryParams.append("discount", discount);
+      if (sortBy) queryParams.append("sortBy", sortBy);
+      if (minPrice) queryParams.append("minPrice", minPrice);
+      if (maxPrice) queryParams.append("maxPrice", maxPrice);
+      if (rating) {
+        const ratings = rating.split(",").map((r) => r.trim());
+        queryParams.append("rating", ratings.join(","));
+      }
 
-      const queryString = queryParams.join("&");
-      const response = await fetch(
-        `${API_BASE_URL}/guest/productList/search?${queryString}`
-      );
+      queryParams.append("page", page.toString());
+
+      const queryString = queryParams.toString();
+      const apiUrl = `${API_BASE_URL}/guest/productList/search?${queryString}`;
+
+      // console.log("API URL:", apiUrl);
+
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch search results");
+      }
+
       const data = await response.json();
 
       setProducts(data.data || []);
@@ -81,90 +98,88 @@ export default function SearchPage() {
         Kết quả tìm kiếm
       </h1>
 
-      {products.length === 0 && !isLoading ? (
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <Player
-            autoplay
-            loop
-            src="/lottie/search.json"
-            style={{ height: "250px", width: "250px" }}
-          />
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Uiss, không tìm thấy sản phẩm phù hợp. Hãy thử lại với từ khoá khác
-            bạn nhé!
-          </p>
-        </div>
-      ) : (
-        <div className="flex gap-4">
-          <CustomerSearchFilter />
+      {/* Phần lọc và sắp xếp luôn hiển thị */}
+      <div className="flex gap-4">
+        <CustomerSearchFilter />
 
-          <section className="flex-1">
-            <CustomerSearchSort />
+        <section className="flex-1">
+          <CustomerSearchSort />
 
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                <Player
-                  autoplay
-                  loop
-                  src="/lottie/search.json"
-                  style={{ height: "250px", width: "250px" }}
-                />
-                <p className="mt-4 text-gray-600 dark:text-gray-300">
-                  Đang tải sản phẩm...
-                </p>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+              <Player
+                autoplay
+                loop
+                src="/lottie/search.json"
+                style={{ height: "250px", width: "250px" }}
+              />
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
+                Đang tải sản phẩm...
+              </p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+              <Player
+                autoplay
+                loop
+                src="/lottie/search.json"
+                style={{ height: "250px", width: "250px" }}
+              />
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
+                Uiss, không tìm thấy sản phẩm phù hợp. Hãy thử lại nhé!
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {products.map((product) => (
+                  <CustomerProductCard
+                    key={product.product_id_hashed}
+                    product={product}
+                  />
+                ))}
               </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {products.map((product) => (
-                    <CustomerProductCard
-                      key={product.product_id_hashed}
-                      product={product}
-                    />
-                  ))}
-                </div>
 
-                {/* Pagination */}
-                <div className="mt-4 flex justify-center">
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={() =>
-                            handlePageChange(pagination.currentPage - 1)
-                          }
-                        />
-                      </PaginationItem>
-                      {Array.from(
-                        { length: pagination.totalPages },
-                        (_, index) => (
-                          <PaginationItem key={index}>
-                            <PaginationLink
-                              href="#"
-                              isActive={pagination.currentPage === index + 1}
-                              onClick={() => handlePageChange(index + 1)}>
-                              {index + 1}
-                            </PaginationLink>
-                          </PaginationItem>
-                        )
-                      )}
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={() =>
-                            handlePageChange(pagination.currentPage + 1)
-                          }
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              </>
-            )}
-          </section>
-        </div>
-      )}
+              {/* Pagination */}
+              <div className="mt-4 flex justify-center">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={() =>
+                          handlePageChange(pagination.currentPage - 1)
+                        }
+                      />
+                    </PaginationItem>
+                    {Array.from(
+                      { length: pagination.totalPages },
+                      (_, index) => (
+                        <PaginationItem key={index}>
+                          <PaginationLink
+                            href="#"
+                            isActive={pagination.currentPage === index + 1}
+                            onClick={() => handlePageChange(index + 1)}>
+                            {index + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )
+                    )}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={() =>
+                          handlePageChange(pagination.currentPage + 1)
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

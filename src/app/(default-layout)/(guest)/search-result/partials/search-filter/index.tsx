@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Star, X, ChevronDown, ChevronUp } from "lucide-react";
 import { GUEST_CATEGORIES_URL } from "@/utils/constants/urls";
+import { toast } from "sonner";
+import { useSearchParams, useRouter } from "next/navigation";
 
-const budgets = ["100-500K", "500K-1tr", "1tr-2tr", ">2tr"];
+const budgets = ["100k-500k", "500k-1tr", "1tr-2tr", "2tr-5tr"];
 const ratings = [5, 4, 3, 2, 1];
-const sales = ["New", "Hot sale", "None"];
+const sales = ["Hot sale"];
 
 const MAX_VISIBLE_ITEMS = 4;
 
@@ -45,6 +47,11 @@ export default function SearchFilter() {
   const [showMoreRatings, setShowMoreRatings] = useState(false);
   const [showMoreBudgets, setShowMoreBudgets] = useState(false);
   const [showMoreSales, setShowMoreSales] = useState(false);
+  const [selectedMinPrice, setSelectedMinPrice] = useState<number | null>(null);
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState<number | null>(null);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Fetch categories from API
   useEffect(() => {
@@ -69,12 +76,115 @@ export default function SearchFilter() {
   const getVisibleItems = <T,>(items: T[], showMore: boolean): T[] =>
     showMore ? items : items.slice(0, MAX_VISIBLE_ITEMS);
 
+  const validatePrices = (min: number | null, max: number | null) => {
+    if (min !== null && min < 0) {
+      toast.error("Giá trị Min không được âm!");
+      return false;
+    }
+    if (max !== null && max < 0) {
+      toast.error("Giá trị Max không được âm!");
+      return false;
+    }
+    if (min !== null && max !== null && min > max) {
+      toast.error("Giá trị Min không được lớn hơn Max!");
+      return false;
+    }
+    return true;
+  };
+
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (validatePrices(value, selectedMaxPrice)) {
+      setSelectedMinPrice(value);
+    }
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (validatePrices(selectedMinPrice, value)) {
+      setSelectedMaxPrice(value);
+    }
+  };
+
+  const toggleBudgetSelection = (budget: string) => {
+    toggleSelection(budget, selectedBudgets, setSelectedBudgets);
+  };
+
+  const applyFilters = () => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    // Lọc danh mục
+    if (selectedCategories.length > 0) {
+      currentParams.set("category", selectedCategories.join(","));
+    } else {
+      currentParams.delete("category");
+    }
+
+    // Lọc giá
+    let minPrice = selectedMinPrice;
+    let maxPrice = selectedMaxPrice;
+
+    if (selectedBudgets.length > 0) {
+      const budgetMin = Math.min(
+        ...selectedBudgets.map(parseBudgetRange).map((b) => b.min)
+      );
+      const budgetMax = Math.max(
+        ...selectedBudgets.map(parseBudgetRange).map((b) => b.max || Infinity)
+      );
+      minPrice = minPrice !== null ? Math.min(minPrice, budgetMin) : budgetMin;
+      maxPrice = maxPrice !== null ? Math.max(maxPrice, budgetMax) : budgetMax;
+    }
+
+    if (minPrice !== null) {
+      currentParams.set("minPrice", minPrice.toString());
+    } else {
+      currentParams.delete("minPrice");
+    }
+
+    if (maxPrice !== null) {
+      currentParams.set("maxPrice", maxPrice.toString());
+    } else {
+      currentParams.delete("maxPrice");
+    }
+
+    // Lọc đánh giá
+    if (selectedRatings.length > 0) {
+      currentParams.set("rating", selectedRatings.join(","));
+    } else {
+      currentParams.delete("rating");
+    }
+
+    // Lọc giảm giá
+    if (selectedSales.includes("Hot sale")) {
+      currentParams.set("discount", "true");
+    } else {
+      currentParams.delete("discount");
+    }
+
+    // Gắn query string vào URL
+    router.push(`/search-result?${currentParams.toString()}`);
+  };
+
+  const parseBudgetRange = (budget: string) => {
+    if (budget.includes(">")) {
+      const min = parseInt(budget.replace(/[^\d]/g, ""), 10) * 1000;
+      return { min, max: null };
+    } else {
+      const [min, max] = budget
+        .replace(/k/gi, "000")
+        .replace(/tr/gi, "000000")
+        .split("-")
+        .map((value) => parseInt(value, 10));
+      return { min: min || 0, max: max || null };
+    }
+  };
+
   return (
-    <aside className="w-[30%] p-4 border rounded-md h-fit">
+    <aside className="w-[30%] p-4 border rounded-lg h-fit">
       <h2 className="font-bold mb-4">Bộ lọc:</h2>
 
       {/* Categories */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h5 className="font-semibold mb-2">Danh mục:</h5>
         <div className="grid grid-cols-2 gap-2">
           {getVisibleItems(categories, showMoreCategories).map((category) => (
@@ -115,8 +225,10 @@ export default function SearchFilter() {
         )}
       </div>
 
+      <hr className="mb-4 dark:border-white" />
+
       {/* Ratings */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h5 className="font-semibold mb-2">Đánh giá:</h5>
         <div className="grid grid-cols-2 gap-2">
           {getVisibleItems(ratings, showMoreRatings).map((rating) => (
@@ -153,16 +265,38 @@ export default function SearchFilter() {
         )}
       </div>
 
+      <hr className="mb-4 dark:border-white" />
+
       {/* Budget */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h5 className="font-semibold mb-2">Giá:</h5>
+
+        {/* Min and Max Input */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <input
+            type="number"
+            placeholder="Min"
+            step="10000"
+            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-600"
+            value={selectedMinPrice || ""}
+            onChange={handleMinPriceChange}
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            step="10000"
+            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-600"
+            value={selectedMaxPrice || ""}
+            onChange={handleMaxPriceChange}
+          />
+        </div>
+
+        {/* Budget Buttons */}
         <div className="grid grid-cols-2 gap-2">
           {getVisibleItems(budgets, showMoreBudgets).map((budget) => (
             <button
               key={budget}
-              onClick={() =>
-                toggleSelection(budget, selectedBudgets, setSelectedBudgets)
-              }
+              onClick={() => toggleBudgetSelection(budget)}
               className={`px-3 py-2 rounded-md border text-center flex items-center justify-between ${
                 selectedBudgets.includes(budget)
                   ? "bg-pri-7 text-white"
@@ -177,6 +311,8 @@ export default function SearchFilter() {
             </button>
           ))}
         </div>
+
+        {/* Show More/Show Less */}
         {budgets.length > MAX_VISIBLE_ITEMS && (
           <button
             onClick={() => setShowMoreBudgets(!showMoreBudgets)}
@@ -191,8 +327,10 @@ export default function SearchFilter() {
         )}
       </div>
 
+      <hr className="mb-4 dark:border-white" />
+
       {/* Sale */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h5 className="font-semibold mb-2">Ưu đãi:</h5>
         <div className="grid grid-cols-2 gap-2">
           {getVisibleItems(sales, showMoreSales).map((sale) => (
@@ -241,7 +379,9 @@ export default function SearchFilter() {
           className="px-4 py-2 border rounded-md text-center dark:border-gray-600">
           Huỷ
         </button>
-        <button className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 text-center">
+        <button
+          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 text-center"
+          onClick={applyFilters}>
           Áp dụng
         </button>
       </div>
