@@ -50,3 +50,5 @@ export const GUEST_DETAIL_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/gue
 export const GUEST_ALL_PRODUCT_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/product`;
 
 export const PRODUCT_ORDER_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/productList/getOrderProducts`;
+
+export const GUEST_CATEGORIES_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/categories`;

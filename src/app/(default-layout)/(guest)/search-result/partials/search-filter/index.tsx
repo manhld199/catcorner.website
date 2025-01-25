@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { Plus, Star, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Plus, Star, X, ChevronDown, ChevronUp } from "lucide-react";
+import { GUEST_CATEGORIES_URL } from "@/utils/constants/urls";
 
-const categories = ["Food", "Toys", "Clothes", "Balo"];
 const budgets = ["100-500K", "500K-1tr", "1tr-2tr", ">2tr"];
 const ratings = [5, 4, 3, 2, 1];
 const sales = ["New", "Hot sale", "None"];
+
+const MAX_VISIBLE_ITEMS = 4;
 
 // Generic toggle function
 const toggleSelection = <T extends string | number>(
@@ -34,10 +36,38 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function SearchFilter() {
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBudgets, setSelectedBudgets] = useState<string[]>([]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedSales, setSelectedSales] = useState<string[]>([]);
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
+  const [showMoreRatings, setShowMoreRatings] = useState(false);
+  const [showMoreBudgets, setShowMoreBudgets] = useState(false);
+  const [showMoreSales, setShowMoreSales] = useState(false);
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(GUEST_CATEGORIES_URL);
+        const data = await response.json();
+        const categoryNames =
+          data?.data?.map(
+            (category: { category_name: string }) => category.category_name
+          ) || [];
+        setCategories(categoryNames);
+      } catch (error) {
+        console.error("Không thể lấy danh mục từ API:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Function to control the visibility of items
+  const getVisibleItems = <T,>(items: T[], showMore: boolean): T[] =>
+    showMore ? items : items.slice(0, MAX_VISIBLE_ITEMS);
 
   return (
     <aside className="w-[30%] p-4 border rounded-md h-fit">
@@ -47,7 +77,7 @@ export default function SearchFilter() {
       <div className="mb-6">
         <h5 className="font-semibold mb-2">Danh mục:</h5>
         <div className="grid grid-cols-2 gap-2">
-          {categories.map((category) => (
+          {getVisibleItems(categories, showMoreCategories).map((category) => (
             <button
               key={category}
               onClick={() =>
@@ -62,7 +92,7 @@ export default function SearchFilter() {
                   ? "bg-pri-7 text-white"
                   : "bg-white text-gray-700 border-gray-300"
               }`}>
-              {category}{" "}
+              <span className="truncate line-clamp-1">{category}</span>{" "}
               {selectedCategories.includes(category) ? (
                 <X className="w-4 h-4" />
               ) : (
@@ -71,13 +101,25 @@ export default function SearchFilter() {
             </button>
           ))}
         </div>
+        {categories.length > MAX_VISIBLE_ITEMS && (
+          <button
+            onClick={() => setShowMoreCategories(!showMoreCategories)}
+            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            {showMoreCategories ? "Thu gọn" : "Xem thêm"}
+            {showMoreCategories ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Ratings */}
       <div className="mb-6">
         <h5 className="font-semibold mb-2">Đánh giá:</h5>
         <div className="grid grid-cols-2 gap-2">
-          {ratings.map((rating) => (
+          {getVisibleItems(ratings, showMoreRatings).map((rating) => (
             <button
               key={rating}
               onClick={() =>
@@ -97,13 +139,25 @@ export default function SearchFilter() {
             </button>
           ))}
         </div>
+        {ratings.length > MAX_VISIBLE_ITEMS && (
+          <button
+            onClick={() => setShowMoreRatings(!showMoreRatings)}
+            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            {showMoreRatings ? "Thu gọn" : "Xem thêm"}
+            {showMoreRatings ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Budget */}
       <div className="mb-6">
         <h5 className="font-semibold mb-2">Giá:</h5>
         <div className="grid grid-cols-2 gap-2">
-          {budgets.map((budget) => (
+          {getVisibleItems(budgets, showMoreBudgets).map((budget) => (
             <button
               key={budget}
               onClick={() =>
@@ -123,13 +177,25 @@ export default function SearchFilter() {
             </button>
           ))}
         </div>
+        {budgets.length > MAX_VISIBLE_ITEMS && (
+          <button
+            onClick={() => setShowMoreBudgets(!showMoreBudgets)}
+            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            {showMoreBudgets ? "Thu gọn" : "Xem thêm"}
+            {showMoreBudgets ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Sale */}
       <div className="mb-6">
         <h5 className="font-semibold mb-2">Ưu đãi:</h5>
         <div className="grid grid-cols-2 gap-2">
-          {sales.map((sale) => (
+          {getVisibleItems(sales, showMoreSales).map((sale) => (
             <button
               key={sale}
               onClick={() =>
@@ -149,6 +215,18 @@ export default function SearchFilter() {
             </button>
           ))}
         </div>
+        {sales.length > MAX_VISIBLE_ITEMS && (
+          <button
+            onClick={() => setShowMoreSales(!showMoreSales)}
+            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            {showMoreSales ? "Thu gọn" : "Xem thêm"}
+            {showMoreSales ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Filter buttons */}
