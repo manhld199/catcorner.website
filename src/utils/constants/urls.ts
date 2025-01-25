@@ -48,3 +48,5 @@ export const PUBLIC_GUEST_CART_URL = `${process.env.BACKEND_URL}/guest/cart`;
 export const GUEST_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/article`;
 export const GUEST_DETAIL_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/article`;
 export const GUEST_ALL_PRODUCT_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/product`;
+
+export const PRODUCT_ORDER_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/productList/getOrderProducts`;

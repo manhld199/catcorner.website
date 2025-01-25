@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Ticket } from "lucide-react";
 import { convertNumberToVND } from "@/utils/functions/convert";
 import Link from "next/link";
+import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
+import { IOrderProduct } from "@/types/interfaces";
 
 const demoCoupons = [
   {
@@ -47,6 +49,10 @@ export default function OrderInformationPage() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [selectedWard, setSelectedWard] = useState<string>("");
   const [productInfo, setProductInfo] = useState<any>(null);
+  const [userName, setUserName] = useState<string>("");
+  const [userPhone, setUserPhone] = useState<string>("");
+  const [streetAddress, setStreetAddress] = useState<string>("");
+  const [orderNote, setOrderNote] = useState<string>("");
 
   const shippingFee = 20000; // Fixed shipping fee
   const couponDiscount = 5000; // Example coupon discount
@@ -88,25 +94,99 @@ export default function OrderInformationPage() {
     setSelectedWard(selected?.Name || "");
   };
 
-  const handleOrder = () => {
-    alert("Đơn hàng của bạn đã được đặt thành công!");
+  const validateInputs = () => {
+    if (!userName.trim()) {
+      alert("Vui lòng nhập họ và tên.");
+      return false;
+    }
+
+    if (!userPhone.trim()) {
+      alert("Vui lòng nhập số điện thoại.");
+      return false;
+    }
+
+    if (!/^[0-9]{10}$/.test(userPhone.trim())) {
+      alert("Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+      return false;
+    }
+
+    if (
+      !selectedCity ||
+      !selectedDistrict ||
+      !selectedWard ||
+      !streetAddress.trim()
+    ) {
+      alert("Vui lòng điền đầy đủ địa chỉ nhận hàng.");
+      return false;
+    }
+
+    return true;
   };
 
+  useEffect(() => {
+    const fetchProductInfo = async () => {
+      const savedProducts = localStorage.getItem("buyNowProducts");
+
+      if (savedProducts) {
+        const parsedProducts = JSON.parse(savedProducts);
+
+        try {
+          const response = await fetch(PRODUCT_ORDER_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(parsedProducts),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch product data");
+          }
+
+          const data = await response.json();
+          console.log("dataaaaaa", data);
+          console.log("Fetched products:", data.data.products);
+          setProductInfo(data.data.products); // Lưu thông tin sản phẩm để hiển thị
+        } catch (error) {
+          console.error("Error fetching product data:", error);
+        }
+      }
+    };
+
+    fetchProductInfo();
+  }, []);
+
   const calculateOriginalPrice = () => {
-    if (!productInfo) return 0;
-    return productInfo.variant_price * productInfo.quantity;
+    if (!productInfo || productInfo.length === 0) return 0;
+
+    return productInfo.reduce(
+      (total: any, product: any) =>
+        total + product.product_variant.variant_price * product.quantity,
+      0
+    );
   };
 
   const calculateDiscount = () => {
-    if (!productInfo) return 0;
-    const originalPrice = calculateOriginalPrice();
-    return (originalPrice * productInfo.variant_discount_percent) / 100;
+    if (!productInfo || productInfo.length === 0) return 0;
+
+    return productInfo.reduce(
+      (total: any, product: any) =>
+        total +
+        (product.product_variant.variant_price *
+          product.quantity *
+          product.product_variant.variant_discount_percent) /
+          100,
+      0
+    );
   };
 
   const calculateTotalPrice = () => {
-    if (!productInfo) return 0;
+    if (!productInfo || productInfo.length === 0) return 0;
+
     const originalPrice = calculateOriginalPrice();
     const discount = calculateDiscount();
+
     return (
       originalPrice -
       discount +
@@ -114,6 +194,61 @@ export default function OrderInformationPage() {
       couponDiscount -
       freeShippingDiscount
     );
+  };
+
+  const handleOrder = async (): Promise<void> => {
+    if (!validateInputs()) return; // Validate user inputs
+
+    try {
+      if (!productInfo || productInfo.length === 0) {
+        alert("Không có sản phẩm nào để đặt hàng!");
+        return;
+      }
+
+      // Generate a unique order ID
+      const orderId = `DH${Date.now()}`;
+
+      // Prepare order products data
+      const orderProducts = productInfo.map((product: any) => ({
+        product_hashed_id: product.product_hashed_id,
+        variant_id: product.product_variant._id,
+        quantity: product.quantity,
+        unit_price: product.product_variant.variant_price,
+        discount_percent: product.product_variant.variant_discount_percent,
+      }));
+
+      // Define payment data structure
+      const newPaymentData = {
+        order_id: orderId,
+        // user_id: userInfo ? userInfo.user_id : undefined,
+        order_products: orderProducts,
+        order_buyer: {
+          name: userName,
+          phone_number: userPhone,
+          address: {
+            province: selectedCity,
+            district: selectedDistrict,
+            ward: selectedWard,
+            street: streetAddress,
+          },
+        },
+        order_note: orderNote || "",
+        shipping_cost: shippingFee,
+        payment_method: "onl",
+        cancel_url: "/purchase-history?selectedTab=unpaid", // Cancel URL
+        return_url: `/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
+      };
+
+      // Save payment data to local storage
+      localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+      // console.log("dataaaaaaaaa neeeeee", newPaymentData);
+
+      // Redirect to the payment page
+      window.location.href = "/payment";
+    } catch (error) {
+      console.error("Error processing the order:", error);
+      alert("Đã xảy ra lỗi, vui lòng thử lại.");
+    }
   };
 
   return (
@@ -130,6 +265,8 @@ export default function OrderInformationPage() {
             <Input
               type="text"
               placeholder="Nhập họ và tên"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
               maxLength={50}
               className="border border-gray-300 rounded-md p-3 text-sm"
             />
@@ -139,7 +276,9 @@ export default function OrderInformationPage() {
             <Input
               type="text"
               placeholder="Nhập số điện thoại"
-              maxLength={50}
+              value={userPhone}
+              onChange={(e) => setUserPhone(e.target.value)}
+              maxLength={10}
               className="border border-gray-300 rounded-md p-3 text-sm"
             />
           </div>
@@ -195,18 +334,22 @@ export default function OrderInformationPage() {
               <Input
                 type="text"
                 placeholder="Nhập số nhà, đường..."
-                maxLength={50}
+                value={streetAddress}
+                onChange={(e) => setStreetAddress(e.target.value)}
+                maxLength={100}
                 className="w-full border border-gray-300 rounded-md p-3 text-sm mt-2"
               />
             </div>
-          </div>
-          <div className="flex flex-col md:col-span-2 gap-2">
-            <label className="text-sm font-medium">Ghi chú</label>
-            <Textarea
-              placeholder="Nhập ghi chú cho đơn hàng..."
-              maxLength={100}
-              rows={5}
-              className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
+            <div className="flex flex-col md:col-span-2 gap-2">
+              <label className="text-sm font-medium">Ghi chú</label>
+              <Textarea
+                placeholder="Nhập ghi chú cho đơn hàng..."
+                maxLength={100}
+                rows={5}
+                value={orderNote}
+                onChange={(e) => setOrderNote(e.target.value)}
+                className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
+            </div>
           </div>
         </form>
         {/* Mã giảm giá */}
@@ -265,41 +408,49 @@ export default function OrderInformationPage() {
         <h3 className="font-bold mb-2 text-center">Sản phẩm đặt mua</h3>
         <hr className="mb-4 dark:border-white" />
         {productInfo ? (
-          <div className="flex items-center bg-pri-3 p-2 rounded-md dark:bg-pri-6">
-            <div className="w-24 h-24 overflow-hidden rounded-md">
-              <Image
-                src={productInfo.variant_img}
-                alt={productInfo.variant_name}
-                width={100}
-                height={100}
-                className="object-cover"
-              />
-            </div>
-            <div className="ml-4 flex-1">
-              <h4 className="font-bold text-sm dark:text-white">
-                {productInfo.product_name}
-              </h4>
-              <p className="text-xs text-gray-500 dark:text-white">
-                {productInfo.variant_name}
-              </p>
-              <div className="flex gap-2 mt-1">
-                {productInfo.variant_discount_percent > 0 && (
-                  <span className="text-sm text-gray-400 line-through">
-                    {convertNumberToVND(productInfo.variant_price)}
-                  </span>
-                )}
-                <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
-                  {convertNumberToVND(
-                    productInfo.variant_price *
-                      (1 - productInfo.variant_discount_percent / 100)
-                  )}
-                </span>
+          productInfo.map((product: IOrderProduct, index: number) => (
+            <div
+              key={index}
+              className="flex items-center bg-pri-3 p-2 rounded-md dark:bg-pri-6">
+              <div className="w-24 h-24 overflow-hidden rounded-md">
+                <Image
+                  src={product.product_variant.variant_img}
+                  alt={product.product_variant.variant_name}
+                  width={100}
+                  height={100}
+                  className="object-cover"
+                />
               </div>
+              <div className="ml-4 flex-1">
+                <h4 className="font-bold text-sm dark:text-white">
+                  {product.product_name}
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-white">
+                  {product.product_variant.variant_name}
+                </p>
+                <div className="flex gap-2 mt-1">
+                  {product.product_variant.variant_discount_percent > 0 && (
+                    <span className="text-sm text-gray-400 line-through">
+                      {convertNumberToVND(
+                        product.product_variant.variant_price
+                      )}
+                    </span>
+                  )}
+                  <span className="text-sm font-bold text-teal-600 dark:text-teal-400">
+                    {convertNumberToVND(
+                      product.product_variant.variant_price *
+                        (1 -
+                          product.product_variant.variant_discount_percent /
+                            100)
+                    )}
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm text-gray-500 dark:text-white">
+                x{product.quantity}
+              </span>
             </div>
-            <span className="text-sm text-gray-500 dark:text-white">
-              x{productInfo.quantity}
-            </span>
-          </div>
+          ))
         ) : (
           <p className="text-gray-500">Không có sản phẩm nào được đặt.</p>
         )}
