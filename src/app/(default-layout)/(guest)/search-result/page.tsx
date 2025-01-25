@@ -56,7 +56,7 @@ export default function SearchPage() {
       if (searchKey) {
         const searchParamsObj = { searchKey };
         const productsData = await getSearchProduct(searchParamsObj);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", productsData);
+        // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", productsData);
         setProducts(productsData || []);
       }
 
@@ -67,11 +67,11 @@ export default function SearchPage() {
   }, [searchParams]);
 
   return (
-    <div className="container mx-auto my-28">
+    <div className="container mx-auto bg-white p-6 rounded-lg">
       <h1 className="font-bold text-center mb-8 dark:text-white">
-        Search Results
+        Kết quả tìm kiếm
       </h1>
-      <div className="flex gap-12">
+      <div className="flex gap-4">
         {/* Sidebar Filter */}
         <CustomerSearchFilter />
 
@@ -84,7 +84,7 @@ export default function SearchPage() {
           {isLoading ? (
             <p>Đang tải...</p>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {products.map((product) => (
                 <CustomerProductCard
                   key={product.product_id_hashed}

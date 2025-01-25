@@ -6,6 +6,7 @@ import { IProductProps } from "@/types/interfaces";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import { CustomerStarRating } from "@/components";
+import { convertNumberToVND } from "@/utils/functions/convert";
 
 interface ProductCardProps {
   product: IProductProps;
@@ -85,15 +86,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           product.lowest_price !== product.product_price ? (
             <>
               <span className="text-gray-400 dark:text-gray-300 line-through text-sm">
-                {product.product_price.toLocaleString()}đ
+                {convertNumberToVND(product.product_price)}
               </span>
               <span className="text-lg font-bold text-red-500 ml-auto">
-                {product.lowest_price.toLocaleString()}đ
+                {convertNumberToVND(product.lowest_price)}
               </span>
             </>
           ) : (
             <span className="text-lg font-bold text-red-500 ml-auto">
-              {product.product_price.toLocaleString()}đ
+              {convertNumberToVND(product.product_price)}
             </span>
           )}
         </div>

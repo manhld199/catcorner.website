@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 import {
   CustomerProductSlider,
   CustomerProductInformation,
@@ -22,6 +22,10 @@ export default function ProductDetailsPage() {
   const pid = searchParams.get("pid");
 
   useEffect(() => {
+    if (!pid) {
+      notFound(); // Điều hướng đến trang 404 nếu pid không tồn tại
+    }
+
     const fetchProductData = async () => {
       if (!pid) return;
 
@@ -32,13 +36,17 @@ export default function ProductDetailsPage() {
           )}`
         );
 
+        if (!res.ok) {
+          notFound(); // Điều hướng đến trang 404 nếu API trả về lỗi
+          return;
+        }
         const data = await res.json();
 
         if (data.success && data.data?.product) {
           setProductData(data.data.product);
           console.log("Fetched product data:", data.data.product);
         } else {
-          return;
+          notFound();
         }
       } catch (error) {
         console.error("Failed to fetch product data:", error);
@@ -51,14 +59,13 @@ export default function ProductDetailsPage() {
   }, [pid]);
 
   if (isLoading) return <p>Loading...</p>;
-  if (!productData) return <p>Product not found</p>;
 
   const handleVariantSelect = (index: number) => setSelectedVariantIndex(index);
   const handleQuantityChange = (newQuantity: number) =>
     setInputQuantity(newQuantity);
 
   return (
-    <div className="container mx-auto my-28">
+    <div className="container mx-auto bg-white p-6 rounded-lg">
       <section className="flex flex-col laptop:flex-row gap-12">
         <div className="laptop:w-1/2">
           <CustomerProductSlider SliderImgs={productData.product_imgs} />
