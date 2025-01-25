@@ -65,7 +65,7 @@ const config: Config = {
         "pri-6": "#315475",
         "pri-7": "#669E9E",
         "bg-1": "#f5f5f5",
-        "bg-dark-1": "#0A0A0A",
+        "bg-dark-1": "#1b1b1f",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

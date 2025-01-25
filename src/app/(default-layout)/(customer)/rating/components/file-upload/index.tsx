@@ -22,7 +22,7 @@ export default function FileUploader({
   const maxFiles = accept.includes("image") ? 5 : 2;
   const maxFileSize = accept.includes("image")
     ? 2 * 1024 * 1024
-    : 40 * 1024 * 1024; // 2MB cho ảnh, 30MB cho video
+    : 30 * 1024 * 1024; // 2MB cho ảnh, 30MB cho video
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;

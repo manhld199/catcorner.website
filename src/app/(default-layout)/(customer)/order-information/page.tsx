@@ -252,7 +252,7 @@ export default function OrderInformationPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <div className="container mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Thông tin người nhận hàng */}
       <section className="lg:col-span-3 bg-white rounded-lg p-6 shadow-md dark:bg-gray-800">
         <h3 className="font-bold mb-2 text-center">
@@ -422,11 +422,11 @@ export default function OrderInformationPage() {
                 />
               </div>
               <div className="ml-4 flex-1">
-                <h4 className="font-bold text-sm dark:text-white">
+                <h4 className="font-bold text-sm dark:text-white line-clamp-2 mr-6">
                   {product.product_name}
                 </h4>
                 <p className="text-xs text-gray-500 dark:text-white">
-                  {product.product_variant.variant_name}
+                  Phân loại hàng: {product.product_variant.variant_name}
                 </p>
                 <div className="flex gap-2 mt-1">
                   {product.product_variant.variant_discount_percent > 0 && (

@@ -1,3 +1,5 @@
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail } from "lucide-react";
 
 export default function ContactPage() {
@@ -13,12 +15,12 @@ export default function ContactPage() {
               <label htmlFor="name" className="block font-medium mb-1">
                 Họ và tên
               </label>
-              <input
+              <Input
                 type="text"
                 id="name"
                 placeholder="Nhập họ và tên"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full border border-gray-300 rounded-lg px-3"
               />
               <p className="text-sm text-gray-500 text-right">0/50</p>
             </div>
@@ -26,12 +28,12 @@ export default function ContactPage() {
               <label htmlFor="organization" className="block font-medium mb-1">
                 Tổ chức
               </label>
-              <input
+              <Input
                 type="text"
                 id="organization"
                 placeholder="Nhập tên tổ chức"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full border border-gray-300 rounded-lg px-3"
               />
               <p className="text-sm text-gray-500 text-right">0/50</p>
             </div>
@@ -43,12 +45,12 @@ export default function ContactPage() {
               <label htmlFor="phone" className="block font-medium mb-1">
                 Số điện thoại
               </label>
-              <input
+              <Input
                 type="text"
                 id="phone"
                 placeholder="Nhập số điện thoại"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full border border-gray-300 rounded-lg px-3"
               />
               <p className="text-sm text-gray-500 text-right">0/50</p>
             </div>
@@ -56,12 +58,12 @@ export default function ContactPage() {
               <label htmlFor="email" className="block font-medium mb-1">
                 Địa chỉ email
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 placeholder="Nhập địa chỉ email"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full border border-gray-300 rounded-lg px-3"
               />
               <p className="text-sm text-gray-500 text-right">0/50</p>
             </div>
@@ -72,14 +74,14 @@ export default function ContactPage() {
             <label htmlFor="subject" className="block font-medium mb-1">
               Tiêu đề
             </label>
-            <input
+            <Input
               type="text"
               id="subject"
               placeholder="Nhập tiêu đề"
               maxLength={100}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              className="w-full border border-gray-300 rounded-lg px-3"
             />
-            <p className="text-sm text-gray-500 text-right">0/100</p>
+            <p className="text-sm text-gry-500 text-right">0/100</p>
           </div>
 
           {/* Nội dung */}
@@ -87,7 +89,7 @@ export default function ContactPage() {
             <label htmlFor="message" className="block font-medium mb-1">
               Nội dung
             </label>
-            <textarea
+            <Textarea
               id="message"
               placeholder="Nhập nội dung..."
               maxLength={200}

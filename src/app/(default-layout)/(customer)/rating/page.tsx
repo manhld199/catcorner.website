@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { FileUploader } from "./components";
+import { useSession } from "next-auth/react";
+import { ORDER_URL } from "@/utils/constants/urls";
 
 interface IProduct {
   id: string;
@@ -57,6 +59,11 @@ const mockProducts: IProduct[] = [
 ];
 
 export default function RatingPage() {
+  const { data: session } = useSession();
+  //  sử dụng ORDER_URL/[:id] để lấy data về chi tiết đơn hàng
+
+  //   console.log("check authenticated: ", session.user);
+
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(
     mockProducts[0]
   );

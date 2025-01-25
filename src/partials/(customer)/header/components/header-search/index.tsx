@@ -7,6 +7,7 @@ import { IProductProps } from "@/types/interfaces";
 import Link from "next/link";
 import { CldImage } from "next-cloudinary";
 import { PUBLIC_CUSTOMER_PRODUCT_LIST_URL } from "@/utils/constants/urls";
+import { convertNumberToVND } from "@/utils/functions/convert";
 
 export default function CustomerHeaderSearch() {
   const router = useRouter();
@@ -97,16 +98,16 @@ export default function CustomerHeaderSearch() {
                 href={`/${product.product_slug}?pid=${product.product_id_hashed}`}>
                 <li className="p-4 flex hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-700 dark:text-white font-semibold">
+                    <p className="text-sm text-gray-700 dark:text-white font-semibold line-clamp-1 mr-4">
                       {product.product_name}
                     </p>
                     <div className="flex gap-3 items-center">
                       <p className="text-sm text-red-500 font-medium">
-                        {product.lowest_price}
+                        {convertNumberToVND(product.lowest_price)}
                       </p>
                       {product.product_price && (
                         <p className="text-xs text-gray-400 line-through">
-                          {product.product_price}
+                          {convertNumberToVND(product.product_price)}
                         </p>
                       )}
                     </div>
