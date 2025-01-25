@@ -36,27 +36,31 @@ export default function CustomerProductBuyForm({
 
   // Hàm mua ngay
   const handleBuyNow = () => {
-    localStorage.removeItem("buyNowProduct");
+    localStorage.removeItem("buyNowProducts");
+    // Lấy danh sách sản phẩm đã lưu trong localStorage
+    const existingProducts = localStorage.getItem("buyNowProducts");
+    const productsArray = existingProducts ? JSON.parse(existingProducts) : [];
 
+    // Lấy thông tin variant được chọn
     const selectedVariant = variants[selectedVariantIndex];
 
-    const productInfo = {
-      product_hashed_id: pid,
+    // Sản phẩm mới cần thêm
+    const newProduct = {
+      product_hashed_id: encodeURIComponent(pid),
       variant_id: selectedVariant._id,
       quantity: inputQuantity,
-      product_name: productName,
-      variant_name: selectedVariant.variant_name,
-      variant_price: selectedVariant.variant_price,
-      variant_discount_percent: selectedVariant.variant_discount_percent,
-      variant_img: selectedVariant.variant_img,
-      total_price:
-        inputQuantity *
-        selectedVariant.variant_price *
-        (1 - selectedVariant.variant_discount_percent / 100),
     };
 
-    // Lưu vào localStorage
-    localStorage.setItem("buyNowProduct", JSON.stringify(productInfo));
+    // Thêm sản phẩm mới vào mảng
+    const updatedProductsArray = [...productsArray, newProduct];
+
+    // Lưu mảng sản phẩm vào localStorage
+    localStorage.setItem(
+      "buyNowProducts",
+      JSON.stringify(updatedProductsArray)
+    );
+
+    console.log("Saved to localStorage:", updatedProductsArray);
   };
 
   // Hàm thêm vào giỏ hàng
@@ -69,7 +73,7 @@ export default function CustomerProductBuyForm({
       // Tạo sản phẩm mới để thêm vào giỏ hàng
       const selectedVariant = variants[selectedVariantIndex];
       const newCartItem: ICartProduct = {
-        product_hashed_id: pid,
+        product_hashed_id: encodeURIComponent(pid),
         variant_id: selectedVariant._id,
         quantity: inputQuantity,
         product_name: productName,
@@ -79,7 +83,7 @@ export default function CustomerProductBuyForm({
       // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
       const existingItemIndex = cart.findIndex(
         (item: ICartProduct) =>
-          item.product_hashed_id === pid &&
+          item.product_hashed_id === encodeURIComponent(pid) &&
           item.variant_id === selectedVariant._id
       );
 
