@@ -31,7 +31,8 @@ export default function CustomerHeaderUser() {
         <div className="relative group">
           <Link
             href="/login"
-            className="tablet:hidden laptop:flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300">
+            className="tablet:hidden laptop:flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300"
+            data-cy="login-button">
             <UserRound />
             <span className="ml-1 font-semibold laptop:block desktop:block ">
               Sign in
