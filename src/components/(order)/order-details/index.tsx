@@ -4,6 +4,7 @@ import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
 import OrderProductItem from "@/components/(order)/order-product-item";
 import { Clock, MapPin, Truck, Timer } from "lucide-react";
+import { extractOrderIdPrefix } from "@/utils/functions/format";
 
 interface OrderDetailsProps {
   order: Order;
@@ -19,7 +20,7 @@ export default function OrderDetails({
   onReview,
 }: OrderDetailsProps) {
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto w-[100%]">
       <h1 className="mb-6 text-2xl font-bold dark:text-white">
         Chi tiết đơn hàng
       </h1>
@@ -33,7 +34,7 @@ export default function OrderDetails({
                 Mã đơn hàng
               </div>
               <div className="font-medium text-base text-pri-1 dark:text-pri-6">
-                {order._id}
+                {extractOrderIdPrefix(order.order_id)}
               </div>
             </div>
             <StatusBadge status={order.order_status} />
@@ -129,7 +130,7 @@ export default function OrderDetails({
                   </div>
                   <div className="grid grid-cols-2 text-sm">
                     <span className="text-base text-neutral-400 dark:text-gray-400">
-                      Phương thức thanh toán:
+                      Phương thức thanh toán: {""}
                     </span>
                     <span className="font-medium text-base text-pri-1 dark:text-white">
                       Thanh toán khi nhận hàng
@@ -160,6 +161,9 @@ export default function OrderDetails({
                     </span>
                   </div>
                   <div className="relative group">
+                    <span className="text-base text-neutral-400 dark:text-gray-400 min-w-[100px]">
+                      Địa chỉ: {""}
+                    </span>
                     <span className="font-medium text-base text-pri-1 dark:text-white">
                       {`${order.order_buyer.address.street}, ${order.order_buyer.address.ward}, ${order.order_buyer.address.district}, ${order.order_buyer.address.province}`}
                     </span>
@@ -193,7 +197,9 @@ export default function OrderDetails({
                   Tổng tiền hàng:{" "}
                 </span>
                 <span className="font-medium text-base dark:text-white">
-                  ₫{order.total_products_cost.toLocaleString("vi-VN")}
+                  {order.final_cost != null
+                    ? `₫${(order.final_cost - order.shipping_cost).toLocaleString("vi-VN")}`
+                    : "Không có giá trị"}
                 </span>
               </div>
               <div className="text-sm">
@@ -202,6 +208,25 @@ export default function OrderDetails({
                 </span>
                 <span className="font-medium text-base dark:text-white">
                   ₫{order.shipping_cost.toLocaleString("vi-VN")}
+                </span>
+              </div>
+              {/* coupon  */}
+              <div className="text-sm">
+                <span className="text-neutral-500 dark:text-gray-400 text-base">
+                  Giảm giá phí vận chuyển:{" "}
+                </span>
+                <span className="font-medium text-base dark:text-white">
+                  {" "}
+                  -₫50.000
+                </span>
+              </div>
+              <div className="text-sm">
+                <span className="text-neutral-500 dark:text-gray-400 text-base">
+                  Voucher từ CatCorner:{" "}
+                </span>
+                <span className="font-medium text-base dark:text-white">
+                  {" "}
+                  -₫50.000
                 </span>
               </div>
               <div className="text-base mt-1">

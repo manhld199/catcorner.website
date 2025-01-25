@@ -24,3 +24,17 @@ export const formatDateTimeStr = (dateTimeString: string) => {
   // Định dạng chuỗi theo yêu cầu
   return `${day}/${month}/${year} - ${hours}:${minutes}`;
 };
+
+/**
+ * Lấy phần trước dấu "." trong order_id.
+ * @param orderId - Mã order cần xử lý.
+ * @returns Phần chuỗi trước dấu "." nếu tồn tại, hoặc toàn bộ orderId nếu không có dấu ".".
+ */
+export const extractOrderIdPrefix = (orderId: string) => {
+  if (!orderId || typeof orderId !== "string") {
+    throw new Error("Invalid order ID");
+  }
+
+  const dotIndex = orderId.indexOf(".");
+  return dotIndex !== -1 ? orderId.substring(0, dotIndex) : orderId;
+};

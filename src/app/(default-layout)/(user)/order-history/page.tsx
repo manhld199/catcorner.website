@@ -1,10 +1,8 @@
 "use client";
 import { MapPin, Search, ShoppingBag, Truck } from "lucide-react";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import UserSidebar from "@/partials/(user)/sidebar_nav";
 import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
 import { useSession } from "next-auth/react";
@@ -13,6 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderProductItem from "@/components/(order)/order-product-item";
 import { useDebounce } from "use-debounce";
+import { extractOrderIdPrefix } from "@/utils/functions/format";
 
 interface OrderProduct {
   product_id: string;
@@ -40,13 +39,13 @@ interface OrderBuyer {
 interface Order {
   _id: string;
   user_id: string;
+  order_id: string;
   order_products: OrderProduct[];
   order_buyer: OrderBuyer;
   order_note: string;
-  total_products_cost: number;
   shipping_cost: number;
   final_cost: number;
-  order_status: "shipping" | "completed" | "pending" | "cancelled";
+  order_status: "unpaid" | "delivering" | "delivered" | "canceled";
   createdAt: string | null;
 }
 
@@ -146,6 +145,7 @@ export default function HistoryOrder() {
       if (!responseData.success) {
         throw new Error("Failed to fetch orders");
       }
+      console.log("order data", responseData.data.orders);
       setOrders(responseData.data.orders);
       setIsLoading(false);
 
@@ -317,7 +317,9 @@ export default function HistoryOrder() {
                             <span className="flex gap-2 text-pri-1 dark:text-pri-6 text-2xl">
                               <ShoppingBag size={24} />
                               <span>Mã đơn hàng:</span>
-                              <span>{order._id}</span>
+                              <span>
+                                {extractOrderIdPrefix(order.order_id)}
+                              </span>
                             </span>
                             <StatusBadge status={order.order_status} />
                           </div>
