@@ -56,7 +56,7 @@ export default function SearchPage() {
       if (searchKey) {
         const searchParamsObj = { searchKey };
         const productsData = await getSearchProduct(searchParamsObj);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", productsData);
+        // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", productsData);
         setProducts(productsData || []);
       }
 
