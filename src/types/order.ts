@@ -24,12 +24,12 @@ export interface OrderBuyer {
 export interface Order {
   _id: string;
   user_id: string;
+  order_id: string;
   order_products: OrderProduct[];
   order_buyer: OrderBuyer;
   order_note: string;
-  total_products_cost: number;
   shipping_cost: number;
   final_cost: number;
-  order_status: "shipping" | "completed" | "pending" | "cancelled";
+  order_status: "unpaid" | "delivering" | "delivered" | "canceled";
   createdAt: string | null;
 }

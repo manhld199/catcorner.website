@@ -1,0 +1,11 @@
+{
+    "valid": {
+      "email": "mongthitrinhtkp@gmail.com",
+      "password": "Pass1234"
+    },
+    "invalid": {
+      "email": "invalid-email",
+      "password": "short"
+    }
+  }
+  

@@ -204,7 +204,8 @@ export default function LoginPage() {
                       !form.formState.isValid || isSubmitting || isRegistering
                     }
                     variant="custom"
-                    type="submit">
+                    type="submit"
+                    data-cy="login-button">
                     {isSubmitting ? (
                       <BeatLoader color="#ffffff" size={8} />
                     ) : isRegistering ? (

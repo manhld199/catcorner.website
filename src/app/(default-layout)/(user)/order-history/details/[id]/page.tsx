@@ -1,10 +1,10 @@
 "use client";
-import UserSidebar from "@/partials/(user)/sidebar_nav";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import OrderDetails from "@/components/(order)/order-details";
+import { extractOrderIdPrefix } from "@/utils/functions/format";
 
 interface OrderProduct {
   product_id: string;
@@ -31,14 +31,14 @@ interface OrderBuyer {
 
 interface Order {
   _id: string;
+  order_id: string;
   user_id: string;
   order_products: OrderProduct[];
   order_buyer: OrderBuyer;
   order_note: string;
-  total_products_cost: number;
   shipping_cost: number;
   final_cost: number;
-  order_status: "shipping" | "completed" | "pending" | "cancelled";
+  order_status: "unpaid" | "delivering" | "delivered" | "canceled";
   createdAt: string | null;
 }
 
