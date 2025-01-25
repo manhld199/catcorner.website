@@ -1,17 +1,25 @@
+"use client";
+
+// import libs
 import { Home, LogOut, NotepadText, User, Menu } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+
+// import components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+
+// import utils
 import { getLastName } from "@/utils/string-utils";
 
 export default function UserSidebar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -107,6 +115,21 @@ export default function UserSidebar() {
               `}>
               <NotepadText className="h-5 md:h-6 w-5 md:w-6" />
               Đơn hàng của tôi
+            </Button>
+          </Link>
+
+          <Link href="/my-coupons">
+            <Button
+              variant="ghost"
+              className={`w-full justify-start gap-3 text-sm md:text-base px-4 md:px-6 py-5 md:py-7
+                ${
+                  pathname.includes("/my-coupons")
+                    ? "bg-selected-nav text-pri-1 font-bold rounded-none dark:bg-gray-900 dark:text-white"
+                    : "dark:text-gray-300 dark:hover:bg-gray-700"
+                }
+              `}>
+              <NotepadText className="h-5 md:h-6 w-5 md:w-6" />
+              Kho ưu đãi
             </Button>
           </Link>
         </nav>
