@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { extractOrderIdPrefix } from "@/utils/functions/format";
 
 export default function OrderTrackingResult() {
   const searchParams = useSearchParams();
@@ -61,7 +62,7 @@ export default function OrderTrackingResult() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full md:w-[80%] container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative dark:bg-black">
+    <div className="flex flex-col md:flex-row w-full container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative dark:bg-black">
       {/* Sidebar */}
       <Card
         className="
@@ -69,7 +70,6 @@ export default function OrderTrackingResult() {
         w-full md:w-[300px] 
         h-auto md:h-[450px]
         bg-white dark:bg-black
-        md:bg-transparent
         sticky top-4
         z-10
         transition-all duration-300">
@@ -88,7 +88,10 @@ export default function OrderTrackingResult() {
             <div className="flex items-center gap-2 py-3">
               <ShoppingBag size={24} />
               <span className="text-sm">
-                Mã đơn hàng: <span className="font-bold">{order._id}</span>
+                Mã đơn hàng:{" "}
+                <span className="font-bold">
+                  {extractOrderIdPrefix(order.order_id)}
+                </span>
               </span>
             </div>
 
@@ -103,7 +106,7 @@ export default function OrderTrackingResult() {
             </div>
           </div>
         </CardContent>
-        <div className="flex justify-center pb-6">
+        <div className="flex justify-center pb-6 ">
           <Link href="/order-tracking" className="w-[70%]">
             <Button
               className="w-full bg-[#1d4443] hover:bg-[#1d4443]/90 text-white"
@@ -114,7 +117,7 @@ export default function OrderTrackingResult() {
         </div>
       </Card>
 
-      <div className="relative z-5">
+      <div className="relative z-5 w-[100%]">
         <OrderDetails
           order={order}
           onRepurchase={() => {}}
