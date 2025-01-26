@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/${product.product_slug}?pid=${product.product_id_hashed}`}
-      className="relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800">
+      className="relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] w-[279px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800">
       {/* Discount Badge */}
       {product.highest_discount ? (
         <div className="absolute top-4 left-4 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">

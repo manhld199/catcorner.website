@@ -129,7 +129,9 @@ export default function Home() {
         <div className="w-full relative mx-auto bg-pri-5">
           <BlogListing></BlogListing>
         </div>
-        <ContactSection />
+        <div className="bg-white">
+          <ContactSection />
+        </div>
       </div>
       <CustomerFooter />
       <ToastContainer />

@@ -59,7 +59,7 @@ export default function NewProducts() {
 
       <div className="grid grid-cols-4 gap-6 mb-6">
         {products.slice(0, 4).map((product) => (
-          <div key={product._id}>
+          <div className="bg-white rounded-lg" key={product._id}>
             {/* Sau này xóa any đi fix chỗ này */}
             <ProductCard product={transformProduct(product) as any} />
           </div>
@@ -68,7 +68,7 @@ export default function NewProducts() {
 
       <div className="grid grid-cols-4 gap-6 mb-8">
         {products.slice(4, 8).map((product) => (
-          <div key={product._id}>
+          <div className="bg-white rounded-lg" key={product._id}>
             {/* Sau này xóa any đi fix chỗ này */}
             <ProductCard product={transformProduct(product) as any} />
           </div>
