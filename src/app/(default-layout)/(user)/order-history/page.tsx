@@ -77,8 +77,8 @@ const calculateProductTotal = (product: OrderProduct) => {
   return discountedPrice * product.quantity;
 };
 
-// Thêm hàm kiểm tra searchTerm có phải là MongoDB ObjectId không
-const isValidObjectId = (str: string) => /^[0-9a-fA-F]{24}$/.test(str);
+// Thêm hàm kiểm tra searchTerm có phải là Order_Id (bắt đầu bằng DH)
+const isValidOrderId = (str: string) => /^DH/.test(str);
 
 export default function HistoryOrder() {
   const { data: session } = useSession();
@@ -89,10 +89,10 @@ export default function HistoryOrder() {
   const [debouncedValue] = useDebounce(searchTerm, 500);
   const [orderCounts, setOrderCounts] = useState({
     all: 0,
-    pending: 0,
-    shipping: 0,
-    completed: 0,
-    cancelled: 0,
+    unpaid: 0,
+    delivering: 0,
+    delivered: 0,
+    canceled: 0,
   });
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function HistoryOrder() {
       } else if (debouncedValue) {
         // Kiểm tra và gọi API phù hợp dựa vào định dạng searchTerm
         const cleanedSearch = debouncedValue.trim();
-        if (isValidObjectId(cleanedSearch)) {
+        if (isValidOrderId(cleanedSearch)) {
           url += `?order_id=${cleanedSearch}`;
         } else {
           url += `?product_name=${cleanedSearch}`;
@@ -151,10 +151,10 @@ export default function HistoryOrder() {
 
       const resetCounts = {
         all: 0,
-        pending: 0,
-        shipping: 0,
-        completed: 0,
-        cancelled: 0,
+        unpaid: 0,
+        delivering: 0,
+        delivered: 0,
+        canceled: 0,
       };
 
       setOrderCounts({
@@ -234,42 +234,42 @@ export default function HistoryOrder() {
                 )}
               </TabsTrigger>
               <TabsTrigger
-                value="pending"
+                value="unpaid"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                 Chờ xác nhận{" "}
-                {activeTab === "pending" && orderCounts.pending > 0 && (
+                {activeTab === "unpaid" && orderCounts.unpaid > 0 && (
                   <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
-                    {orderCounts.pending}
+                    {orderCounts.unpaid}
                   </span>
                 )}
               </TabsTrigger>
               <TabsTrigger
-                value="shipping"
+                value="delivering"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                 Vận chuyển{" "}
-                {activeTab === "shipping" && orderCounts.shipping > 0 && (
+                {activeTab === "delivering" && orderCounts.delivering > 0 && (
                   <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
-                    {orderCounts.shipping}
+                    {orderCounts.delivering}
                   </span>
                 )}
               </TabsTrigger>
               <TabsTrigger
-                value="completed"
+                value="delivered"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                 Thành công{" "}
-                {activeTab === "completed" && orderCounts.completed > 0 && (
+                {activeTab === "delivered" && orderCounts.delivered > 0 && (
                   <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
-                    {orderCounts.completed}
+                    {orderCounts.delivered}
                   </span>
                 )}
               </TabsTrigger>
               <TabsTrigger
-                value="cancelled"
+                value="canceled"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
                 Đã hủy{" "}
-                {activeTab === "cancelled" && orderCounts.cancelled > 0 && (
+                {activeTab === "canceled" && orderCounts.canceled > 0 && (
                   <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full px-2 text-sm text-primary-foreground bg-pri-1 dark:bg-white dark:text-gray-900">
-                    {orderCounts.cancelled}
+                    {orderCounts.canceled}
                   </span>
                 )}
               </TabsTrigger>
@@ -288,7 +288,7 @@ export default function HistoryOrder() {
                 </div>
               </div>
             )}
-            {["all", "pending", "shipping", "completed", "cancelled"].map(
+            {["all", "unpaid", "delivering", "delivered", "canceled"].map(
               (tabValue) => (
                 <TabsContent
                   key={tabValue}
