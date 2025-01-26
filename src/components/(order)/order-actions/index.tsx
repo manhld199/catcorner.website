@@ -80,16 +80,18 @@ const OrderActions = ({
 
   return (
     <div className="flex gap-4 justify-end">
-      {buttons.map((button, index) => (
-        <Button
-          key={index}
-          variant={button.variant}
-          className={button.className}
-          onClick={button.onClick}>
-          {button.icon}
-          {button.label}
-        </Button>
-      ))}
+      {buttons && buttons.length > 0
+        ? buttons.map((button, index) => (
+            <Button
+              key={index}
+              variant={button.variant}
+              className={button.className}
+              onClick={button.onClick}>
+              {button.icon}
+              {button.label}
+            </Button>
+          ))
+        : null}
     </div>
   );
 };

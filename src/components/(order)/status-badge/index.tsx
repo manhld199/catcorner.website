@@ -26,10 +26,12 @@ const statusConfig = {
 export default function StatusBadge({ status }: StatusBadgeProps) {
   const config = statusConfig[status];
 
-  return (
+  return config ? (
     <span
       className={`rounded-[32px] px-6 py-1 text-xs font-semibold ${config.className}`}>
       {config.label}
     </span>
+  ) : (
+    "Không xác định"
   );
 }
