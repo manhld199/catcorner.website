@@ -7,24 +7,28 @@ import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import { CustomerStarRating } from "@/components";
 import { convertNumberToVND } from "@/utils/functions/convert";
+import clsx from "clsx"; // Giúp xử lý việc gộp class
 
 interface ProductCardProps {
   product: IProductProps;
+  className?: string; // Thêm prop className để nhận class từ bên ngoài
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, className }: ProductCardProps) {
   // console.log("proooooooooooduct", product);
   return (
     <Link
       href={`/${product.product_slug}?pid=${product.product_id_hashed}`}
-      className="relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] w-[279px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800">
+      className={clsx(
+        "relative rounded-lg bg-white shadow-md dark:bg-gray-800 h-[440px] hover:cursor-pointer hover:shadow-lg dark:hover:shadow-gray-800",
+        className // Gộp class nhận từ bên ngoài
+      )}>
       {/* Discount Badge */}
       {product.highest_discount ? (
         <div className="absolute top-4 left-4 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
           -{product.highest_discount}%
         </div>
       ) : null}
-
       {/* Product Image */}
       <div className="flex justify-center">
         <CldImage
@@ -35,7 +39,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="h-[212px] w-full object-contain rounded-md"
         />
       </div>
-
       <div className="p-4">
         {/* Product Category */}
         <span className="text-xs text-gray-500 bg-gray-100 rounded-full px-4 py-1 inline-block mb-2 dark:text-black">

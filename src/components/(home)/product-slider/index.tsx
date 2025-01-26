@@ -123,7 +123,10 @@ export default function ProductSlider() {
             {products.map((product, index) => (
               <div key={index} className="flex-none w-1/3">
                 <div className="flex justify-center">
-                  <ProductCard product={transformProduct(product) as any} />
+                  <ProductCard
+                    product={transformProduct(product) as any}
+                    className="w-[320px]"
+                  />
                 </div>
               </div>
             ))}
