@@ -9,7 +9,7 @@ interface BlogCardProps {
   date: string;
   title: string;
   hashtags: string[];
-  isOdd: boolean;
+  isOdd?: boolean;
   className?: string; // Cho phép nhận className từ bên ngoài
 }
 
