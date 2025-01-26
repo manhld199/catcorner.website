@@ -116,7 +116,7 @@ export default function ProductSlider() {
           />
         </Button>
 
-        <div className="overflow-hidden px-8">
+        <div className="overflow-hidden px-4">
           <div
             className="flex transition-transform duration-300 ease-in-out pb-6"
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
