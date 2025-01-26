@@ -110,17 +110,23 @@ export default function ProductSlider() {
           size="icon"
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10"
           onClick={prevSlide}>
-          <ChevronLeft className="w-8 h-8" />
+          <ChevronLeft
+            style={{ height: "48px", width: "48px" }}
+            className="w-8 h-8"
+          />
         </Button>
 
-        <div className="overflow-hidden">
+        <div className="overflow-hidden px-4">
           <div
             className="flex transition-transform duration-300 ease-in-out pb-6"
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
             {products.map((product, index) => (
-              <div key={index} className="flex-none w-1/3 px-4">
+              <div key={index} className="flex-none w-1/3">
                 <div className="flex justify-center">
-                  <ProductCard product={transformProduct(product) as any} />
+                  <ProductCard
+                    product={transformProduct(product) as any}
+                    className="w-[320px]"
+                  />
                 </div>
               </div>
             ))}
@@ -132,7 +138,10 @@ export default function ProductSlider() {
           size="icon"
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10"
           onClick={nextSlide}>
-          <ChevronRight className="w-8 h-8" />
+          <ChevronRight
+            style={{ height: "48px", width: "48px" }}
+            className="w-8 h-8"
+          />
         </Button>
       </div>
     </div>

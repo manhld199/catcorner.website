@@ -89,7 +89,7 @@ export default function ClientFeedback() {
                     <Maximize2 className="h-4 w-4" />
                   </Button>
                   <Quote className="h-8 w-8 text-yellow-300 mb-4" />
-                  <p className="text-xl mb-6 text-gray-800">
+                  <p className="text-xl mb-6 text-gray-800 h-[80px]">
                     {testimonials[currentIndex].text}
                   </p>
                 </div>
