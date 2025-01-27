@@ -4,24 +4,25 @@ export default function Features() {
   const features = [
     {
       icon: ThumbsUp,
-      title: "Quality and safety",
+      title: "Chất lượng và an toàn",
       description:
-        "We provide you with only the highest quality food on the market",
+        "Chúng tôi cung cấp cho bạn những sản phẩm food chất lượng cao nhất trên thị trường",
       bgColor: "bg-blue-50",
       iconColor: "text-blue-400",
     },
     {
       icon: FirstAid,
-      title: "Healthy series",
+      title: "Dòng sản phẩm lành mạnh",
       description:
-        "We offer a variety of food options to meet your pet's special needs",
-      bgColor: "bg-red-50",
+        "Chúng tôi mang đến nhiều lựa chọn thức ăn để đáp ứng nhu cầu đặc biệt của thú cưng của bạn",
       iconColor: "text-red-400",
+      bgColor: "bg-red-50",
     },
     {
       icon: Sprout,
-      title: "Eco-friendly",
-      description: "Made with natural ingredients and eco-friendly packaging.",
+      title: "Thân thiện với môi trường",
+      description:
+        "Được làm từ nguyên liệu tự nhiên và bao bì thân thiện với môi trường",
       bgColor: "bg-green-50",
       iconColor: "text-green-400",
     },
@@ -31,7 +32,7 @@ export default function Features() {
     <section className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-center mb-16">
-          Main features of CatCorner
+          Điểm nổi bật của CatCorner
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -44,8 +45,8 @@ export default function Features() {
                   strokeWidth={1.5}
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+              <p className="text-black">{feature.description}</p>
             </div>
           ))}
         </div>

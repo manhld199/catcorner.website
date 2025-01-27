@@ -68,7 +68,7 @@ export default function BlogCardShort({
         <Button
           variant="link"
           className="flex items-center gap-1 text-teal-600 hover:text-teal-500 transition-colors text-sm font-medium p-0">
-          Read more
+          Đọc thêm
           <ArrowUpRight className="w-4 h-4" />
         </Button>
       </CardFooter>
