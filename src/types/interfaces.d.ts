@@ -176,8 +176,8 @@ export interface ICoupon {
   coupon_value: number;
   coupon_max_value: number;
   coupon_stock_quantity: number;
-  start_time: string; // ISO 8601 date string
-  end_time: string; // ISO 8601 date string
+  start_time: string;
+  end_time: string;
   coupon_id_hashed: string;
   isOwned?: boolean;
 }
@@ -193,4 +193,15 @@ export interface IOrderProduct {
     variant_img: string;
   };
   quantity: number;
+}
+
+export interface IRatingProduct {
+  id: string;
+  name: string;
+  variant: string;
+  price: number;
+  discountPrice: number;
+  quantity: number;
+  image: string;
+  discountAmount: number;
 }
