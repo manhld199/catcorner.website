@@ -1,8 +1,14 @@
 "use client";
 
+// import libs
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import axios from "axios";
+import { ChevronRight, Ticket } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+// import components
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -14,10 +20,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Ticket } from "lucide-react";
+
+// import utils
 import { convertNumberToVND } from "@/utils/functions/convert";
-import Link from "next/link";
 import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
+import { SHIPPING_COST } from "@/utils/constants/variables";
+
+// import types
 import { IOrderProduct } from "@/types/interfaces";
 
 const demoCoupons = [
@@ -27,7 +36,7 @@ const demoCoupons = [
     description: "Siêu ưu đãi, mua ngay giá cực hời.",
     discount: "20%",
     maxDiscount: "200.000đ",
-    type: "Giảm giá sản phẩm",
+    type: "Giảm giá đơn hàng",
     image: "/imgs/test.jpg",
   },
   {
@@ -42,6 +51,8 @@ const demoCoupons = [
 ];
 
 export default function OrderInformationPage() {
+  const { data: session } = useSession(); // Lấy thông tin session
+
   const [cities, setCities] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
   const [wards, setWards] = useState<any[]>([]);
@@ -54,9 +65,9 @@ export default function OrderInformationPage() {
   const [streetAddress, setStreetAddress] = useState<string>("");
   const [orderNote, setOrderNote] = useState<string>("");
 
-  const shippingFee = 20000; // Fixed shipping fee
-  const couponDiscount = 5000; // Example coupon discount
-  const freeShippingDiscount = 20000; // Example free shipping discount
+  const shippingFee = SHIPPING_COST; // Fixed shipping fee
+  const couponDiscount = 0; // Example coupon discount
+  const freeShippingDiscount = 0; // Example free shipping discount
 
   useEffect(() => {
     // Fetch administrative data
@@ -68,12 +79,6 @@ export default function OrderInformationPage() {
       .catch((error) =>
         console.error("Error fetching administrative data:", error)
       );
-
-    // Fetch product info from localStorage
-    const savedProduct = localStorage.getItem("buyNowProduct");
-    if (savedProduct) {
-      setProductInfo(JSON.parse(savedProduct));
-    }
   }, []);
 
   const handleCityChange = (value: string) => {
@@ -145,7 +150,7 @@ export default function OrderInformationPage() {
           }
 
           const data = await response.json();
-          console.log("dataaaaaa", data);
+          // console.log("dataaaaaa", data);
           console.log("Fetched products:", data.data.products);
           setProductInfo(data.data.products); // Lưu thông tin sản phẩm để hiển thị
         } catch (error) {
@@ -206,7 +211,11 @@ export default function OrderInformationPage() {
       }
 
       // Generate a unique order ID
-      const orderId = `DH${Date.now()}`;
+      const orderId = `DH${Date.now()}${
+        session
+          ? `.${session.user.id}`
+          : `.guest${userPhone}_${Math.round(Math.random() * 1000)}`
+      }`;
 
       // Prepare order products data
       const orderProducts = productInfo.map((product: any) => ({
@@ -220,7 +229,7 @@ export default function OrderInformationPage() {
       // Define payment data structure
       const newPaymentData = {
         order_id: orderId,
-        // user_id: userInfo ? userInfo.user_id : undefined,
+        user_id: session ? session.user.id : undefined,
         order_products: orderProducts,
         order_buyer: {
           name: userName,
@@ -235,8 +244,8 @@ export default function OrderInformationPage() {
         order_note: orderNote || "",
         shipping_cost: shippingFee,
         payment_method: "onl",
-        cancel_url: "/purchase-history?selectedTab=unpaid", // Cancel URL
-        return_url: `/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
+        cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/purchase-history?selectedTab=unpaid`, // Cancel URL
+        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
       };
 
       // Save payment data to local storage
@@ -352,11 +361,12 @@ export default function OrderInformationPage() {
             </div>
           </div>
         </form>
+
         {/* Mã giảm giá */}
         <div className="mt-6">
-          <h3 className="font-bold mb-2 text-center">Mã giảm giá</h3>
+          <h3 className="font-bold mb-2 text-center">Phiếu giảm giá</h3>
           <hr className="mb-4 dark:border-white" />
-          {["Giảm giá sản phẩm", "Miễn phí vận chuyển"].map((type) => (
+          {["Giảm giá đơn hàng", "Miễn phí vận chuyển"].map((type) => (
             <div key={type} className="mb-4">
               <h3 className="text-lg font-semibold mb-2">{type}</h3>
               <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 mb-3 gap-2">

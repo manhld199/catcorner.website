@@ -1,31 +1,45 @@
+"use client";
+// import libs
+import { Clock, MapPin, Truck, Timer } from "lucide-react";
+
+// import types
 import { Order } from "@/types/order";
+
+// import components
 import { Card, CardContent } from "@/components/ui/card";
 import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
 import OrderProductItem from "@/components/(order)/order-product-item";
-import { Clock, MapPin, Truck, Timer } from "lucide-react";
+
+// import utils
 import { extractOrderIdPrefix } from "@/utils/functions/format";
 
 interface OrderDetailsProps {
   order: Order;
-  onRepurchase: (orderId: string) => void;
-  onCancel: (orderId: string) => void;
-  onReview: (orderId: string) => void;
+  title?: string;
+  description?: string;
+  onRepurchase?: (orderId: string) => void;
+  onCancel?: (orderId: string) => void;
+  onReview?: (orderId: string) => void;
 }
 
 export default function OrderDetails({
   order,
+  title = "Chi tiết đơn hàng",
+  description,
   onRepurchase,
   onCancel,
   onReview,
 }: OrderDetailsProps) {
+  console.log("orrrrr", order);
   return (
     <div className="container mx-auto w-[100%]">
-      <h1 className="mb-6 text-2xl font-bold dark:text-white">
-        Chi tiết đơn hàng
-      </h1>
+      <h1 className="text-2xl mb-2 font-bold dark:text-white">{title}</h1>
+      {description && (
+        <p className="text-lg font-light text-gray-600">{description}</p>
+      )}
 
-      <Card className="mb-6 dark:bg-black dark:border-gray-700">
+      <Card className="my-6 dark:bg-black dark:border-gray-700">
         <CardContent className="p-6">
           {/* Order ID and Status */}
           <div className="mb-4 flex items-center justify-between">
