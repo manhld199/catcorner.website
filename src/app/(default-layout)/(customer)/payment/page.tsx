@@ -47,7 +47,7 @@ export default function PaymentPage() {
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(paymentData),
+              body: JSON.stringify({ ...paymentData, mobile: false }),
             }
           );
 
