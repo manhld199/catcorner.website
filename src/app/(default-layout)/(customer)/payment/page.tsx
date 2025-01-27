@@ -28,15 +28,20 @@ export default function PaymentPage() {
               headers: { "Content-Type": "application/json" },
             }
           );
+          const data = await response.json();
+          const { checkoutUrl, message } = data;
 
-          if (!response.ok) {
-            toast.error(
+          window.location.href = checkoutUrl;
+          if (checkoutUrl) {
+            console.log("checkoutUrl", checkoutUrl);
+            window.location.href = checkoutUrl;
+          } else {
+            console.log(
               "Không thể lấy liên kết thanh toán, vui lòng thử lại sau!"
             );
-            router.back();
-            return;
+            router.push("/");
           }
-        } else {
+        } else if (paymentData) {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/payos/create-payment-link`,
             {
@@ -57,7 +62,7 @@ export default function PaymentPage() {
               console.log(
                 "Không thể tạo liên kết thanh toán, vui lòng thử lại sau!"
               );
-              router.back();
+              router.push("/");
             }
           } else if (paymentData && paymentData.payment_method === "cod") {
             window.location.href = `/order-success?orderId=${encodeURIComponent(paymentData.order_id)}`;
