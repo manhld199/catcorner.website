@@ -7,15 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { FileUploader } from "./components";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { ORDER_RATING_URL } from "@/utils/constants/urls";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  ORDER_CONTENT_RATING_URL,
+  ORDER_RATING_URL,
+} from "@/utils/constants/urls";
 import { IRatingProduct } from "@/types/interfaces";
+import { convertNumberToVND } from "@/utils/functions/convert";
 
 export default function RatingPage() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const rawHashedOrderId = searchParams.get("pid");
   const hashedOrderId = encodeURIComponent(rawHashedOrderId || "");
+  const router = useRouter();
 
   const [products, setProducts] = useState<IRatingProduct[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<IRatingProduct | null>(
@@ -31,6 +36,14 @@ export default function RatingPage() {
   }>({});
   const [shippingCost, setShippingCost] = useState(0);
   const [finalCost, setFinalCost] = useState(0);
+  const [ratingContent, setRatingContent] = useState<{
+    [key: string]: {
+      stars: number;
+      comment: string;
+      images: string[]; // Dùng string[] vì API trả về URL của ảnh
+      videos: string[]; // Dùng string[] vì API trả về URL của video
+    };
+  }>({});
 
   // Tính giá gốc
   const originalCost = products.reduce(
@@ -151,21 +164,21 @@ export default function RatingPage() {
         // Append images and videos
         ratingData.images.forEach((image, index) => {
           formData.append("images", image);
-          console.log(
-            `Product ID: ${product.id}, Image ${index + 1}: ${image.name}`
-          );
+          // console.log(
+          //   `Product ID: ${product.id}, Image ${index + 1}: ${image.name}`
+          // );
         });
         ratingData.video.forEach((video, index) => {
           formData.append("videos", video);
-          console.log(
-            `Product ID: ${product.id}, Video ${index + 1}: ${video.name}`
-          );
+          // console.log(
+          //   `Product ID: ${product.id}, Video ${index + 1}: ${video.name}`
+          // );
         });
 
-        console.log(`EEEEEEEEEEEEEEEE product id: ${product.id}`);
-        for (const pair of formData.entries()) {
-          console.log(`${pair[0]}:`, pair[1]);
-        }
+        // console.log(`EEEEEEEEEEEEEEEE product id: ${product.id}`);
+        // for (const pair of formData.entries()) {
+        //   console.log(`${pair[0]}:`, pair[1]);
+        // }
 
         return {
           productId: product.id,
@@ -198,11 +211,59 @@ export default function RatingPage() {
 
       alert("Đánh giá đã được gửi thành công!");
       console.log("All ratings submitted:", responses);
+
+      // Chuyển hướng tới trang rating-detail
+      router.push(`/rating-detail?pid=${hashedOrderId}`);
     } catch (error) {
       console.error("Error submitting ratings:", error);
       alert("Có lỗi xảy ra khi gửi đánh giá.");
     }
   };
+
+  // Fetch order_rating from API
+  useEffect(() => {
+    const fetchRatings = async () => {
+      if (!hashedOrderId || !session?.user?.accessToken) return;
+
+      try {
+        const response = await fetch(
+          `${ORDER_CONTENT_RATING_URL}/${hashedOrderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session.user?.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch ratings");
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.ratings) {
+          const ratingsMap = data.ratings.reduce(
+            (acc: any, rating: any) => ({
+              ...acc,
+              [rating.product_id]: {
+                stars: rating.rating_point,
+                comment: rating.comment,
+                images: rating.images || [],
+                videos: rating.videos || [],
+              },
+            }),
+            {}
+          );
+          setRatingContent(ratingsMap); // Lưu vào `ratingContent`
+        }
+      } catch (error) {
+        console.error("Error fetching ratings:", error);
+      }
+    };
+
+    fetchRatings();
+  }, [hashedOrderId, session]);
 
   return (
     <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -246,19 +307,21 @@ export default function RatingPage() {
         <div className="border-t mt-4 pt-4">
           <p className="flex justify-between">
             <span>Giá gốc</span>
-            <span>{originalCost.toLocaleString()}đ</span>
+            <span>{convertNumberToVND(originalCost)}</span>
           </p>
           <p className="flex justify-between">
             <span>Giảm giá</span>
-            <span>-{totalDiscount.toLocaleString()}đ</span>
+            <span>-{convertNumberToVND(totalDiscount)}</span>
           </p>
           <p className="flex justify-between">
             <span>Phí ship</span>
-            <span>{shippingCost.toLocaleString()}đ</span>
+            <span>{convertNumberToVND(shippingCost)}</span>
           </p>
           <p className="flex justify-between font-bold text-lg">
             <span>Tổng tiền</span>
-            <span className="text-teal-600">{finalCost.toLocaleString()}đ</span>
+            <span className="text-teal-600">
+              {convertNumberToVND(finalCost)}
+            </span>
           </p>
         </div>
       </section>
@@ -325,8 +388,18 @@ export default function RatingPage() {
       <Button
         className="col-span-1 lg:col-span-4 text-white font-bold mt-4"
         variant="filled"
-        onClick={handleSubmitAllRatings}>
-        Gửi đánh giá ({products.length})
+        onClick={() => {
+          if (Object.keys(ratingContent).length > 0) {
+            // Nếu đã có đánh giá, chuyển sang trang "rating-detail"
+            router.push(`/rating-detail?pid=${hashedOrderId}`);
+          } else {
+            // Nếu chưa có đánh giá, gửi đánh giá mới
+            handleSubmitAllRatings();
+          }
+        }}>
+        {Object.keys(ratingContent).length > 0
+          ? "Xem đánh giá"
+          : `Gửi đánh giá (${products.length})`}
       </Button>
     </div>
   );

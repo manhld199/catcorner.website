@@ -53,3 +53,4 @@ export const PRODUCT_ORDER_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/p
 
 export const GUEST_CATEGORIES_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/categories`;
 export const ORDER_RATING_URL = `${ORDER_URL}/rating`;
+export const ORDER_CONTENT_RATING_URL = `${ORDER_URL}/rating/getContent`;
