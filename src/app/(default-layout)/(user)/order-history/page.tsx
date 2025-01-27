@@ -397,6 +397,7 @@ export default function HistoryOrder() {
                               onRepurchase={handleRepurchase}
                               onCancel={handleCancel}
                               onReview={handleReview}
+                              orderIdHashed={order.order_id_hashed}
                             />
                           </div>
                         </CardContent>

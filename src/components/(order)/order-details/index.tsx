@@ -75,6 +75,7 @@ export default function OrderDetails({
                     onRepurchase={onRepurchase}
                     onCancel={onCancel}
                     onReview={onReview}
+                    orderIdHashed={order.order_id_hashed}
                   />
                 </div>
               </Card>
