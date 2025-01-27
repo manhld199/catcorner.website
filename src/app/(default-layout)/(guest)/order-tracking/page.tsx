@@ -103,7 +103,7 @@ export default function OrderTracking() {
   };
 
   return (
-    <div className="px-0 py-6 min-h-screen w-full md:w-[80%] mx-auto mt-10 flex items-center justify-center h-[769px] pb-0">
+    <div className="px-0 min-h-screen w-full md:w-[80%] lg:w-[100%] mx-auto flex items-center justify-center h-[769px] pb-0 bg-white">
       <div className="w-full h-full">
         <div className="p-0 w-full h-full">
           <div className="grid gap-8 grid-cols-1 md:grid-cols-2 w-full h-full">

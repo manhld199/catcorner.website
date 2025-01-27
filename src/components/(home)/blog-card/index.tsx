@@ -49,7 +49,7 @@ export default function BlogCard({
         <Button
           variant="link"
           className="p-0 h-auto font-medium text-black hover:no-underline flex items-center gap-2">
-          Read more
+          Đọc thêm
           <ArrowUpRight className="w-4 h-4" />
         </Button>
       </CardFooter>

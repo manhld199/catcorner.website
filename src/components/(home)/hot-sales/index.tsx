@@ -75,7 +75,7 @@ export default function HotSales() {
       <div className="flex justify-center">
         <Link href="/products">
           <Button variant="link" className="text-base text-pri-1 font-bold">
-            All Products
+            Tất cả sản phẩm
             <ArrowUpRight />
           </Button>
         </Link>
