@@ -10,6 +10,7 @@ import { convertNumberToVND } from "@/utils/functions/convert";
 
 interface ProductCardProps {
   product: IProductProps;
+  className?: string;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
