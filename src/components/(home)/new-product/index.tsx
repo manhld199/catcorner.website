@@ -51,7 +51,7 @@ export default function NewProducts() {
   return (
     <div className="container w-[80%] mx-auto py-8">
       <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
-        New Products
+        Sản phẩm mới
       </h2>
 
       <div className="grid grid-cols-4 gap-6 mb-6">
@@ -75,7 +75,7 @@ export default function NewProducts() {
       <div className="flex justify-center">
         <Link href="/products">
           <Button variant="link" className="text-base text-pri-1 font-bold">
-            All Products
+            Tất cả sản phẩm
             <ArrowUpRight />
           </Button>
         </Link>

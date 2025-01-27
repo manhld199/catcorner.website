@@ -17,17 +17,25 @@ import Image from "next/image";
 const testimonials = [
   {
     id: 1,
-    text: "Our cat was extremely picky about her food, and we tried a lot of different foods. But this cat food has become her favorite! She eats it with great pleasure and always...",
+    text: "Mèo của tôi rất kén ăn, nhưng loại thức ăn này đã trở thành món yêu thích của cô ấy. Cô ấy ăn rất ngon miệng!",
     author: "Thùy Trinh",
-    details: "Lucky the cat, 5 years old",
+    details: "Mèo Lucky, 5 tuổi",
     rating: 5,
     avatar: "/imgs/home/avt.jpg",
   },
   {
     id: 2,
-    text: "The quality of this product exceeded my expectations. Highly recommended for all pet owners!",
-    author: "James",
-    details: "Whiskers, 3 years old",
+    text: "Chất lượng của sản phẩm này vượt quá mong đợi của tôi. Rất khuyến khích cho tất cả các chủ nuôi thú cưng!",
+    author: "Hải Yến",
+    details: "Whiskers, 3 tuổi",
+    rating: 5,
+    avatar: "/imgs/home/avt.jpg",
+  },
+  {
+    id: 3,
+    text: "Mèo của tôi đã không thích ăn trong một thời gian dài, nhưng từ khi thử loại thức ăn này, cô ấy ăn rất ngon miệng. Tôi thật sự hài lòng và sẽ mua lại!",
+    author: "Đức Mạnh",
+    details: "Mèo Simba, 4 tuổi",
     rating: 5,
     avatar: "/imgs/home/avt.jpg",
   },
@@ -50,10 +58,12 @@ export default function ClientFeedback() {
     <div className="max-w-6xl mx-auto px-4 py-16">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-6 w-[75%]">
-          <h2 className="text-4xl font-bold tracking-tight">Client feedback</h2>
+          <h2 className="text-4xl font-bold tracking-tight">
+            Phản hồi từ khách hàng
+          </h2>
           <p className="text-xl text-muted-foreground">
-            More than 2000 honest reviews. We do not edit or process customer
-            reviews.
+            Hơn 2000 đánh giá chân thực. Chúng tôi không chỉnh sửa hoặc can
+            thiệp vào đánh giá của khách hàng.
           </p>
           <div className="flex -space-x-2">
             {[...Array(4)].map((_, i) => (
@@ -72,7 +82,7 @@ export default function ClientFeedback() {
           <div className="flex items-center gap-2">
             <div className="text-yellow-400">★</div>
             <span className="text-xl font-semibold">4.8</span>
-            <span className="text-muted-foreground">(2000+ reviews)</span>
+            <span className="text-muted-foreground">(2000+ đánh giá)</span>
           </div>
         </div>
 
@@ -136,6 +146,7 @@ export default function ClientFeedback() {
               onClick={prevTestimonial}
               aria-label="Previous review">
               <ChevronLeft
+                style={{ height: "24px", width: "24px" }}
                 className={`h-8 w-8 font-bold ${currentIndex > 0 ? "text-white" : "text-gray-500"}`}
               />
             </Button>
@@ -147,6 +158,7 @@ export default function ClientFeedback() {
               onClick={nextTestimonial}
               aria-label="Next review">
               <ChevronRight
+                style={{ height: "24px", width: "24px" }}
                 className={`h-8 w-8 font-bold ${currentIndex < testimonials.length - 1 ? "text-white" : "text-gray-500"}`}
               />
             </Button>
