@@ -70,7 +70,7 @@ export default function PaymentPage() {
         }
       } catch (error) {
         console.log("Có lỗi xảy ra, vui lòng thử lại sau!", error);
-        router.back();
+        console.error(error);
       }
     };
 
