@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Flame, Home, LayoutDashboard, Menu, Percent } from "lucide-react";
 import { ToogleThemeModeMobile } from "@/components";
+import Link from "next/link";
 
 export default function CustomerHeaderMenu() {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -36,36 +37,36 @@ export default function CustomerHeaderMenu() {
         </h2>
         <ul className="space-y-8">
           <li>
-            <a
-              href="#"
+            <Link
+              href="/"
               className="flex items-center space-x-4 text-pri-1 dark:text-white">
               <Home className="w-6 h-6 text-pri-1 dark:text-white" />
               <span className="font-semibold">Home</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="#"
               className="flex items-center space-x-4 text-pri-1 dark:text-white">
               <Percent className="w-6 h-6 text-pri-1 dark:text-white" />
               <span className="font-semibold">Hot Sale</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="#"
               className="flex items-center space-x-4 text-pri-1 dark:text-white">
               <Flame className="w-6 h-6 text-pri-1 dark:text-white" />
               <span className="font-semibold">Hot Products</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="#"
               className="flex items-center space-x-4 text-pri-1 dark:text-white">
               <LayoutDashboard className="w-6 h-6 text-pri-1 dark:text-white" />
               <span className="font-semibold">Categories</span>
-            </a>
+            </Link>
           </li>
           <li>
             <div className="flex items-center space-x-4 text-pri-1 dark:text-white">

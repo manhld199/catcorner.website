@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Product, IProductProps } from "@/types/product";
-import { PRODUCT_URL } from "@/utils/constants/urls";
+import { PRODUCT_LIST_URL } from "@/utils/constants/urls";
 
 export default function HotSales() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -14,12 +14,10 @@ export default function HotSales() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          `${PRODUCT_URL}?sort=rating&page=1&limit=8`
-        );
+        const response = await fetch(`${PRODUCT_LIST_URL}/getTopRatedProducts`);
         const data = await response.json();
         if (data.success) {
-          setProducts(data.data.products);
+          setProducts(data.data);
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -29,24 +27,23 @@ export default function HotSales() {
     fetchProducts();
   }, []);
 
-  const transformProduct = (product: Product): IProductProps => {
-    const hasMultipleVariants = product.product_variants.length > 1;
+  const transformProduct = (product: any): IProductProps => {
+    // console.log(product);
+    const hasMultipleVariants = product.variant_names.length > 1;
 
     return {
-      product_id_hashed: product._id,
+      product_id_hashed: product.product_id_hashed,
       product_slug: product.product_slug,
-      product_img: product.product_imgs,
+      product_img: product.product_img,
       product_name: product.product_name,
-      category_name: product.category.name,
-      product_avg_rating: product.product_avg_rating,
+      category_name: product.category_name,
+      product_avg_rating: product.product_avg_rating.rating_point,
       product_sold_quantity: product.product_sold_quantity,
       variant_name: hasMultipleVariants
-        ? product.product_variants.map((v) => v.variant_name)
+        ? product.variant_names.map((v: any) => v || "")
         : [],
-      product_price: product.product_variants[0]?.variant_price || 0,
-      lowest_price: Math.min(
-        ...product.product_variants.map((v) => v.discounted_price)
-      ),
+      product_price: product.lowest_price,
+      lowest_price: product.lowest_price * product.highest_discount,
       highest_discount: product.highest_discount,
     };
   };

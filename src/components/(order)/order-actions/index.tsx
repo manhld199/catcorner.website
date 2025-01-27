@@ -1,11 +1,13 @@
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type StatusType = "unpaid" | "delivering" | "delivered" | "canceled";
 
 interface OrderActionsProps {
   status: StatusType;
   orderId: string;
+  orderIdHashed: string;
   onRepurchase?: (orderId: string) => void;
   onCancel?: (orderId: string) => void;
   onReview?: (orderId: string) => void;
@@ -22,10 +24,13 @@ interface ActionButton {
 const OrderActions = ({
   status,
   orderId,
+  orderIdHashed,
   onRepurchase,
   onCancel,
   onReview,
 }: OrderActionsProps) => {
+  const router = useRouter();
+
   const handleRepurchase = () => {
     onRepurchase?.(orderId);
   };
@@ -37,6 +42,7 @@ const OrderActions = ({
   const handleReview = () => {
     onReview?.(orderId);
     // xử lý đánh giá ở đây
+    router.push(`/rating?pid=${orderIdHashed}`);
   };
 
   const actionButtons: Record<StatusType, ActionButton[]> = {

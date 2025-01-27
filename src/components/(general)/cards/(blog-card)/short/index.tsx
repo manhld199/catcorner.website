@@ -9,6 +9,8 @@ interface BlogCardProps {
   date: string;
   title: string;
   hashtags: string[];
+  isOdd?: boolean;
+  className?: string; // Cho phép nhận className từ bên ngoài
 }
 
 export default function BlogCardShort({
@@ -16,9 +18,15 @@ export default function BlogCardShort({
   date,
   title,
   hashtags = ["hashtag", "hashtag"],
+  isOdd,
+  className = "", // Giá trị mặc định nếu không truyền
 }: BlogCardProps) {
   return (
-    <Card className="flex flex-col h-full overflow-hidden rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+    <Card
+      className={`flex flex-col h-full overflow-hidden rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 ${
+        isOdd ? "mt-16" : ""
+      } ${className}`} // Hợp nhất className truyền từ ngoài với các class mặc định
+    >
       {/* Image */}
       <div className="relative aspect-[1.5] w-full">
         <Image
