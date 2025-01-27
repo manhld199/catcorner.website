@@ -48,6 +48,14 @@ const breadcrumbMap: Record<string, { label: string; href?: string }[]> = {
     { label: "Đơn hàng của tôi", href: "/order-history" },
     { label: "Đánh giá đơn hàng" },
   ],
+  "/payment": [
+    { label: "Trang chủ", href: "/" },
+    { label: "Thanh toán an toàn" },
+  ],
+  "/order-success": [
+    { label: "Trang chủ", href: "/" },
+    { label: "Đặt hàng thành công" },
+  ],
   "/about-us": [{ label: "Trang chủ", href: "/" }, { label: "Về chúng tôi" }],
   "/blogs": [{ label: "Trang chủ", href: "/" }, { label: "Bài viết" }],
 

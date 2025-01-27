@@ -32,6 +32,7 @@ import { ICartProduct } from "@/types/interfaces";
 // import data
 import { PAGE_DATA } from "@/data/customer";
 import { DIALOG_DATA } from "@/data/dialog";
+import Image from "next/image";
 
 export default function CartPage() {
   const { data: session } = useSession(); // Lấy thông tin session
@@ -349,7 +350,7 @@ export default function CartPage() {
           </Dialog>
         )}
 
-        <section className="ml:mx-4 md:mx-0 bg-white dark:bg-black flex flex-col ml:border-2 md:border-none rounded-2xl">
+        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-black flex flex-col ml:border-2 md:border-none rounded-2xl">
           <div className="ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
             <Checkbox
               checked={isSelectedAll}
@@ -399,7 +400,20 @@ export default function CartPage() {
               </Fragment>
             ))
           ) : (
-            <>khoong cs data</>
+            <div className="my-4 flex flex-col gap-2 items-center">
+              <div className="w-1/2 mx-auto aspect-square rounded-full bg-gray-100 dark:bg-gray-600 flex justify-center items-center">
+                <div className="relative w-2/3 aspect-square">
+                  <Image
+                    src="/imgs/noti/cat-1.png"
+                    alt="Giỏ hàng trống"
+                    fill={true}
+                  />
+                </div>
+              </div>
+              <p className="font-semibold">
+                Hiện không có sản phẩm trong Giỏ Hàng
+              </p>
+            </div>
           )}
         </section>
       </div>
