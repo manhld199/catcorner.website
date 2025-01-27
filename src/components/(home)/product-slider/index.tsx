@@ -56,7 +56,7 @@ export default function ProductSlider() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${PRODUCT_LIST_URL}/getTopRatedProducts`);
+        const response = await fetch(`${PRODUCT_LIST_URL}/getDiscountProducts`);
         const data = await response.json();
         if (data.success) {
           setProducts(data.data);
@@ -101,7 +101,7 @@ export default function ProductSlider() {
   return (
     <div className="container w-[80%] mx-auto py-8">
       <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
-        CatCorner&apos;s Today
+        Hôm nay tại CatCorner
       </h2>
 
       <div className="relative px-12">

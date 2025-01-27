@@ -77,14 +77,16 @@ export default function BlogListing() {
     <div className="container mx-auto w-[80%] p-6">
       <div className="flex justify-between items-center mb-12">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Explore more topics...</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Khám phá thêm các chủ đề...
+          </h1>
           <p className="text-muted-foreground">
-            Read the care recommendations for your cat
+            Đọc các lời khuyên chăm sóc cho mèo của bạn
           </p>
         </div>
         <Link href="/blogs">
           <Button className="bg-[#1B4242] hover:bg-[#1B4242]/90 text-white">
-            Explore more
+            Khám phá thêm
           </Button>
         </Link>
       </div>
