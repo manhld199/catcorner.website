@@ -225,9 +225,9 @@ export default function CartPage() {
   };
 
   const handleSort = (key: string, sortState: string) => {
-    console.log("deffffffff", defaultCartProducts);
-    console.log("name state", sortNameState);
-    console.log("sort state", sortState);
+    // console.log("deffffffff", defaultCartProducts);
+    // console.log("name state", sortNameState);
+    // console.log("sort state", sortState);
 
     let sortedData = [
       ...defaultCartProducts.filter(
@@ -306,6 +306,33 @@ export default function CartPage() {
     console.log("sorted", sortedData);
 
     setCartProducts(sortedData);
+  };
+
+  const handleBuy = async () => {
+    localStorage.removeItem("buyNowProducts");
+    // Lấy danh sách sản phẩm đã lưu trong localStorage
+    const existingProducts = localStorage.getItem("buyNowProducts");
+    const productsArray = existingProducts ? JSON.parse(existingProducts) : [];
+
+    // Xử lý dữ liệu đặt hàng
+    const orderProducts = selectedCartProducts.map((product) => ({
+      product_hashed_id: product.product_hashed_id,
+      variant_id: product.variant_id,
+      quantity: product.quantity,
+    }));
+
+    // Thêm sản phẩm mới vào mảng
+    const updatedProductsArray = [...productsArray, ...orderProducts];
+
+    // Lưu mảng sản phẩm vào localStorage
+    localStorage.setItem(
+      "buyNowProducts",
+      JSON.stringify(updatedProductsArray)
+    );
+
+    location.href = "/order-information";
+
+    // console.log("Saved to localStorage:", updatedProductsArray);
   };
 
   return (
@@ -436,7 +463,7 @@ export default function CartPage() {
           <h4 className="text-pri-6">{convertNumberToVND(totalPrice)}</h4>
         </div>
 
-        <Button variant="filled">
+        <Button variant="filled" onClick={handleBuy}>
           <a href="#" className="w-full h-full pt-1">
             <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
           </a>

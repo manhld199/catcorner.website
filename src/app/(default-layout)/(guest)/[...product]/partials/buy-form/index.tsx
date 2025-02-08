@@ -60,7 +60,7 @@ export default function CustomerProductBuyForm({
       JSON.stringify(updatedProductsArray)
     );
 
-    console.log("Saved to localStorage:", updatedProductsArray);
+    // console.log("Saved to localStorage:", updatedProductsArray);
   };
 
   // Hàm thêm vào giỏ hàng
