@@ -6,7 +6,7 @@ import { GUEST_CATEGORIES_URL } from "@/utils/constants/urls";
 import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";
 
-const budgets = ["100k-500k", "500k-1tr", "1tr-2tr", "2tr-5tr"];
+const budgets = ["0k-100k", "100k-500k", "500k-1tr", "1tr-2tr"];
 const ratings = [5, 4, 3, 2, 1];
 const sales = ["Hot sale"];
 

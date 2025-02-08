@@ -35,7 +35,7 @@ export default function CustomerHeaderUser() {
             data-cy="login-button">
             <UserRound />
             <span className="ml-1 font-semibold laptop:block desktop:block ">
-              Sign in
+              Đăng nhập
             </span>
           </Link>
 
@@ -48,7 +48,7 @@ export default function CustomerHeaderUser() {
                   href="/register"
                   className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                   <UserRoundPlus />
-                  <span className="font-medium">Sign up</span>
+                  <span className="font-medium">Đăng ký</span>
                 </Link>
               </li>
             </ul>
@@ -85,10 +85,10 @@ export default function CustomerHeaderUser() {
           <ul className="py-3 space-y-2">
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
               <Link
-                href="/profile"
+                href="/my-profile"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <SquareUserRound />
-                <span className="font-medium">My Account</span>
+                <span className="font-medium">Tài khoản của bạn</span>
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
@@ -96,7 +96,23 @@ export default function CustomerHeaderUser() {
                 href="/order-history"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <ScrollText />
-                <span className="font-medium">Orders</span>
+                <span className="font-medium">Quản lý đơn hàng</span>
+              </Link>
+            </li>
+            <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
+              <Link
+                href="/address"
+                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
+                <ScrollText />
+                <span className="font-medium">Địa chỉ giao hàng</span>
+              </Link>
+            </li>
+            <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
+              <Link
+                href="/my-coupons"
+                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
+                <ScrollText />
+                <span className="font-medium">Kho ưu đãi</span>
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
@@ -104,7 +120,7 @@ export default function CustomerHeaderUser() {
                 onClick={handleSignOut}
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <LogOut />
-                <span className="font-medium">Sign out</span>
+                <span className="font-medium">Thoát</span>
               </button>
             </li>
           </ul>
