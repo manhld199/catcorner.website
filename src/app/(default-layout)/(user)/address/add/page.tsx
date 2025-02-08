@@ -189,8 +189,7 @@ export default function AddAddressPage() {
 
       const data = await response.json();
       if (response.ok) {
-        toast.success("Địa chỉ đã được thêm thành công!");
-        // Xử lý khi thêm địa chỉ thành công (ví dụ: reset form, chuyển trang, v.v.)
+        router.push("/address?success=true");
       } else {
         toast.error(data.message || "Có lỗi xảy ra khi thêm địa chỉ.");
       }

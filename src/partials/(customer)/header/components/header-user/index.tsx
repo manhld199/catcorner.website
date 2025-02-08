@@ -88,7 +88,7 @@ export default function CustomerHeaderUser() {
                 href="/my-profile"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <SquareUserRound />
-                <span className="font-medium">Tài khoản của bạn</span>
+                <span className="font-medium">Tài khoản</span>
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
@@ -96,7 +96,7 @@ export default function CustomerHeaderUser() {
                 href="/order-history"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <ScrollText />
-                <span className="font-medium">Quản lý đơn hàng</span>
+                <span className="font-medium">Đơn hàng</span>
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
@@ -104,7 +104,7 @@ export default function CustomerHeaderUser() {
                 href="/address"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <ScrollText />
-                <span className="font-medium">Địa chỉ giao hàng</span>
+                <span className="font-medium">Sổ địa chỉ</span>
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
