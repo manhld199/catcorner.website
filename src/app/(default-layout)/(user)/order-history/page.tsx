@@ -3,16 +3,17 @@ import { MapPin, Search, ShoppingBag, Truck } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import StatusBadge from "@/components/(order)/status-badge";
-import OrderActions from "@/components/(order)/order-actions";
 import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OrderProductItem from "@/components/(order)/order-product-item";
 import { useDebounce } from "use-debounce";
 import { extractOrderIdPrefix } from "@/utils/functions/format";
 
+import OrderProductItem from "@/components/(order)/order-product-item";
+import StatusBadge from "@/components/(order)/status-badge";
+import OrderActions from "@/components/(order)/order-actions";
 interface OrderProduct {
   product_id: string;
   variant_id: string;
@@ -83,6 +84,8 @@ const isValidOrderId = (str: string) => /^DH/.test(str);
 
 export default function HistoryOrder() {
   const { data: session } = useSession();
+  const router = useRouter();
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
@@ -97,9 +100,7 @@ export default function HistoryOrder() {
   });
 
   useEffect(() => {
-    if (session?.user?.accessToken) {
-      fetchOrders();
-    }
+    fetchOrders();
   }, [session, activeTab, activeTab === "all" ? debouncedValue : null]);
 
   const fetchOrders = async () => {
@@ -210,7 +211,6 @@ export default function HistoryOrder() {
     console.log("Review order:", orderId);
     // Implement review logic
   };
-
   return (
     <>
       {/* <div className="flex container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative z-0 dark:bg-black"> */}
@@ -295,11 +295,7 @@ export default function HistoryOrder() {
                   key={tabValue}
                   value={tabValue}
                   className="space-y-4 relative z-0">
-                  {!session?.user?.accessToken ? (
-                    <div className="text-center py-4">
-                      Vui lòng đăng nhập để xem đơn hàng
-                    </div>
-                  ) : isLoading ? (
+                  {isLoading ? (
                     <div className="text-center py-4">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pri-1 dark:border-pri-6 mx-auto"></div>
                       <p className="mt-2 dark:text-gray-300">Đang tải...</p>

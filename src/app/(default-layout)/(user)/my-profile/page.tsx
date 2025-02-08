@@ -146,13 +146,10 @@ export default function ProfilePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     const fetchUserProfile = async () => {
-      if (!session?.user?.accessToken) return;
-
       try {
         const data = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`
         );
-        console.log("Profile data:", data); // Log để debug
 
         if (data.success && data.data?.user) {
           const profile = data.data.user;

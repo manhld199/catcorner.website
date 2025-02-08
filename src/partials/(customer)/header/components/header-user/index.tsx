@@ -85,7 +85,7 @@ export default function CustomerHeaderUser() {
           <ul className="py-3 space-y-2">
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer font-medium text-pri hover:text-teal-600">
               <Link
-                href="/profile"
+                href="/my-profile"
                 className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <SquareUserRound />
                 <span className="font-medium">Tài khoản của bạn</span>

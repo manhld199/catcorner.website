@@ -11,30 +11,30 @@ const breadcrumbMap: Record<string, { label: string; href?: string }[]> = {
     { label: "Chi tiết sản phẩm" },
   ],
   "/cart": [{ label: "Trang chủ", href: "/" }, { label: "Giỏ hàng" }],
-  "/profile": [
+  "/my-profile": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Thông tin tài khoản" },
   ],
   "/address": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Địa chỉ nhận hàng" },
   ],
   "/order-history": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Đơn hàng của tôi" },
   ],
   "/order-history/details/[slug]": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Đơn hàng của tôi", href: "/order-history" },
     { label: "Chi tiết đơn hàng" },
   ],
   "/my-coupons": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Kho ưu đãi" },
   ],
   "/order-information": [
@@ -43,13 +43,13 @@ const breadcrumbMap: Record<string, { label: string; href?: string }[]> = {
   ],
   "/rating": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Đơn hàng của tôi", href: "/order-history" },
     { label: "Đánh giá đơn hàng" },
   ],
   "/rating-detail": [
     { label: "Trang chủ", href: "/" },
-    { label: "Trang cá nhân", href: "/profile" },
+    { label: "Trang cá nhân", href: "/my-profile" },
     { label: "Đơn hàng của tôi", href: "/order-history" },
     { label: "Xem đánh giá đơn hàng" },
   ],

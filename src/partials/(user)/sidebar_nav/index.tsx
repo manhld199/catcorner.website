@@ -61,7 +61,7 @@ export default function UserSidebar() {
             <h5 className="font-semibold dark:text-white">
               Chào {getLastName(session?.user?.name)}
             </h5>
-            <Link href="/profile">
+            <Link href="/my-profile">
               <Button
                 variant="link"
                 className="h-auto p-0 text-sm text-muted-foreground dark:text-gray-400">
@@ -73,12 +73,12 @@ export default function UserSidebar() {
 
         {/* Navigation Items */}
         <nav className="flex flex-col gap-2 md:gap-3">
-          <Link href="/profile">
+          <Link href="/my-profile">
             <Button
               variant="ghost"
               className={`w-full justify-start gap-3 text-sm md:text-base px-4 md:px-6 py-5 md:py-7
                 ${
-                  pathname === "/profile"
+                  pathname === "/my-profile"
                     ? "bg-selected-nav text-pri-1 font-bold rounded-none dark:bg-gray-900 dark:text-white"
                     : "dark:text-gray-300 dark:hover:bg-gray-700"
                 }

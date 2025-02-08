@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertCircle } from "lucide-react";
 
-import { useState, useCallback, CSSProperties, useEffect } from "react";
+import { useState, CSSProperties, useEffect } from "react";
 
 import BeatLoader from "react-spinners/BeatLoader";
 import { PasswordInput } from "@/components/(general)/inputs/input-password/page";
@@ -30,6 +30,7 @@ import { AUTH_URL } from "@/utils/constants/urls";
 import AuthHeader from "@/partials/(auth)/header";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { useRedirectAfterLogin } from "@/utils/functions/redirectAfterLogin";
 
 const override: CSSProperties = {
   display: "block",
@@ -47,7 +48,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
-
+  const { redirectAfterLogin } = useRedirectAfterLogin();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,7 +60,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      router.replace("/");
+      redirectAfterLogin();
     }
   }, [status, session, router]);
 
