@@ -30,5 +30,46 @@ describe("Login", () => {
 
     // Verify the redirection to the home page
     cy.url().should("eq", `${Cypress.config().baseUrl}/`); // Đảm bảo URL chính xác là `/`
+
+    // click vào sản phẩm đầu tiên
+    cy.get('[data-cy="product-item-0"]').click();
+
+    // Click vào nút "Thêm vào giỏ hàng"
+    cy.get('[data-cy="buy-now-button"]').click();
+
+    // // Click vào nút giỏ hàng
+    // cy.get('[data-cy="cart-button"]').click();
+
+    // // Kiểm tra xem đã vào trang giỏ hàng chưa
+    // cy.url().should("include", "/cart");
+
+    // cy.get('[data-cy="order-button"]').click();
+
+    // Kiểm tra xem đã vào trang xác nhận đặt hàng chưa
+    cy.url().should("include", "/order-information");
+
+    cy.get('input[name="userName"]').type("Nguyễn Văn A");
+
+    cy.get('input[name="userPhone"]').type("0987654321");
+
+    cy.get('select[name="city"]').select("Tỉnh Lào Cai", { force: true });
+
+    cy.get('select[name="district"]').select("Huyện Bát Xát", { force: true });
+
+    cy.get('select[name="ward"]').select("Xã A Lù", { force: true });
+
+    cy.get('input[name="streetAddress"]').type("123 Đường ABC");
+    cy.get('textarea[name="orderNote"]').type("Ghi chú cho đơn hàng.");
+
+    cy.get('[data-cy="order-button"]').click();
+
+    cy.intercept("POST", "/payment-api", {
+      statusCode: 200,
+      body: { status: "success" },
+    }).as("paymentSuccess");
+
+    // Sau khi quét mã QR hoặc thực hiện thao tác, kiểm tra kết quả.
+    cy.wait("@paymentSuccess");
+    cy.get(".payment-status").should("contain", "Payment Successful");
   });
 });

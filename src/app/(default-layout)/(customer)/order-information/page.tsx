@@ -278,6 +278,7 @@ export default function OrderInformationPage() {
               onChange={(e) => setUserName(e.target.value)}
               maxLength={50}
               className="border border-gray-300 rounded-md p-3 text-sm"
+              name="userName"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -289,12 +290,13 @@ export default function OrderInformationPage() {
               onChange={(e) => setUserPhone(e.target.value)}
               maxLength={10}
               className="border border-gray-300 rounded-md p-3 text-sm"
+              name="userPhone"
             />
           </div>
           <div className="flex flex-col md:col-span-2 gap-2">
             <label className="text-sm font-medium">Địa chỉ</label>
             <div className="grid grid-cols-2 gap-2">
-              <Select onValueChange={handleCityChange}>
+              <Select onValueChange={handleCityChange} name="city">
                 <SelectTrigger className="border border-gray-300 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn tỉnh/thành phố" />
                 </SelectTrigger>
@@ -310,7 +312,8 @@ export default function OrderInformationPage() {
               </Select>
               <Select
                 onValueChange={handleDistrictChange}
-                disabled={!districts.length}>
+                disabled={!districts.length}
+                name="district">
                 <SelectTrigger className="border border-gray-300 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn quận/huyện" />
                 </SelectTrigger>
@@ -326,7 +329,10 @@ export default function OrderInformationPage() {
               </Select>
             </div>
             <div className="mt-2">
-              <Select onValueChange={handleWardChange} disabled={!wards.length}>
+              <Select
+                onValueChange={handleWardChange}
+                disabled={!wards.length}
+                name="ward">
                 <SelectTrigger className="w-full border border-gray-300 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn phường/xã" />
                 </SelectTrigger>
@@ -341,6 +347,7 @@ export default function OrderInformationPage() {
                 </SelectContent>
               </Select>
               <Input
+                name="streetAddress"
                 type="text"
                 placeholder="Nhập số nhà, đường..."
                 value={streetAddress}
@@ -352,6 +359,7 @@ export default function OrderInformationPage() {
             <div className="flex flex-col md:col-span-2 gap-2">
               <label className="text-sm font-medium">Ghi chú</label>
               <Textarea
+                name="orderNote"
                 placeholder="Nhập ghi chú cho đơn hàng..."
                 maxLength={100}
                 rows={5}
@@ -502,6 +510,7 @@ export default function OrderInformationPage() {
           </div>
           <Button
             className="mt-4 w-full py-3 font-bold"
+            data-cy="order-button"
             onClick={handleOrder}
             variant="filled">
             Đặt hàng

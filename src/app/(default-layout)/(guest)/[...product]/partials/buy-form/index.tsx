@@ -184,14 +184,15 @@ export default function CustomerProductBuyForm({
       <div className="flex gap-4">
         <button
           className="border border-pri-1 text-pri-1 dark:border-teal-500 dark:text-teal-500 w-48 py-3 rounded-lg hover:bg-teal-700 hover:text-white dark:hover:bg-teal-600"
-          onClick={handleAddToCart}>
+          onClick={handleAddToCart}
+          data-cy="add-to-cart-button">
           Thêm vào giỏ hàng
         </button>
         <Link href="/order-information">
           <button
             className="bg-pri-1 dark:bg-teal-500 text-white w-48 py-3 rounded-lg hover:bg-teal-700 dark:hover:bg-teal-600"
             onClick={handleBuyNow} // Gọi hàm handleBuyNow khi bấm nút
-          >
+            data-cy="buy-now-button">
             Mua ngay
           </button>
         </Link>

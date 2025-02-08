@@ -8,7 +8,8 @@ export default function CustomerHeaderCart() {
       {/* Cart */}
       <a
         href="/cart"
-        className="relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center">
+        className="relative flex text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 items-center"
+        data-cy="cart-button">
         <div className="relative flex">
           <ShoppingBag />
           <span className="absolute top-3 left-4 bg-orange-500 text-white text-[8px] font-medium w-4 h-4 flex items-center justify-center rounded-full">

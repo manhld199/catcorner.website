@@ -121,7 +121,10 @@ export default function ProductSlider() {
             className="flex transition-transform duration-300 ease-in-out pb-6"
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
             {products.map((product, index) => (
-              <div key={index} className="flex-none w-1/3">
+              <div
+                key={index}
+                className="flex-none w-1/3"
+                data-cy={`product-item-${index}`}>
                 <div className="flex justify-center">
                   <ProductCard
                     product={transformProduct(product) as any}
