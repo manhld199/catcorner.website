@@ -106,27 +106,18 @@ export default function RowCart({
 
   const handleChangeVariant = (value: string) => {
     setCartProducts((prev: ICartProduct[]) => {
-      const updatedCartProducts = prev.map((item, index) =>
-        index == cartIndex ? { ...item, variant_id: value } : item
+      return prev.map((item, index) =>
+        index === cartIndex ? { ...item, variant_id: value } : item
       );
-
-      return updatedCartProducts;
     });
 
     setSelectedCartProducts((prev: ICartProduct[]) => {
-      const changeCartProductIndex = prev.findIndex(
-        (item) =>
-          item.product_id == cartProducts[cartIndex].product_id &&
-          item.variant_id == cartProducts[cartIndex].variant_id
+      return prev.map((item) =>
+        item.product_id === cartProducts[cartIndex].product_id &&
+        item.variant_id === cartProducts[cartIndex].variant_id
+          ? { ...item, variant_id: value }
+          : item
       );
-
-      if (changeCartProductIndex == -1) return prev;
-
-      const updatedCartProducts = prev.map((item, index) =>
-        index == changeCartProductIndex ? { ...item, variant_id: value } : item
-      );
-
-      return updatedCartProducts;
     });
   };
 
