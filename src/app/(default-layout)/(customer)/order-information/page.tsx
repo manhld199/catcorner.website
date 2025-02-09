@@ -244,7 +244,7 @@ export default function OrderInformationPage() {
         order_note: orderNote || "",
         shipping_cost: shippingFee,
         payment_method: "onl",
-        cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/purchase-history?selectedTab=unpaid`, // Cancel URL
+        cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-history?selectedTab=unpaid`, // Cancel URL
         return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-success?orderId=${encodeURIComponent(orderId)}`, // Success redirect
       };
 

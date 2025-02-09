@@ -20,7 +20,11 @@ export default function PaymentPage() {
         const paymentData = JSON.parse(storedData);
         localStorage.removeItem(PAYMENT_PRODUCTS);
 
-        if (paymentData && paymentData.re_payment) {
+        if (
+          paymentData &&
+          paymentData.re_payment &&
+          paymentData.order_status == "unpaid"
+        ) {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/payos/get-payment-link/${paymentData.order_id}`,
             {

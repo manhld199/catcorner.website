@@ -1,14 +1,15 @@
-import { RefreshCw } from "lucide-react";
+import { DollarSign, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+
+// import types
+import { Order } from "@/types/order";
 
 type StatusType = "unpaid" | "delivering" | "delivered" | "canceled";
 
 interface OrderActionsProps {
-  status: StatusType;
-  orderId: string;
-  orderIdHashed: string;
-  onRepurchase?: (orderId: string) => void;
+  order: Order;
+  onRepurchase?: (order: Order) => void;
   onCancel?: (orderId: string) => void;
   onReview?: (orderId: string) => void;
 }
@@ -22,9 +23,7 @@ interface ActionButton {
 }
 
 const OrderActions = ({
-  status,
-  orderId,
-  orderIdHashed,
+  order,
   onRepurchase,
   onCancel,
   onReview,
@@ -32,17 +31,17 @@ const OrderActions = ({
   const router = useRouter();
 
   const handleRepurchase = () => {
-    onRepurchase?.(orderId);
+    onRepurchase?.(order);
   };
 
   const handleCancel = () => {
-    onCancel?.(orderId);
+    onCancel?.(order._id);
   };
 
   const handleReview = () => {
-    onReview?.(orderId);
+    onReview?.(order._id);
     // xử lý đánh giá ở đây
-    router.push(`/rating?pid=${orderIdHashed}`);
+    router.push(`/rating?pid=${order.order_id_hashed}`);
   };
 
   const actionButtons: Record<StatusType, ActionButton[]> = {
@@ -64,6 +63,13 @@ const OrderActions = ({
     ],
     unpaid: [
       {
+        label: "Thanh toán",
+        icon: <DollarSign size={30} strokeWidth={1.2} />,
+        variant: "filled" as const,
+        className: "bg-pri-7 tex-base font-medium px-10",
+        onClick: handleRepurchase,
+      },
+      {
         label: "Hủy đơn",
         variant: "filled_outlined" as const,
         className: "tex-base font-medium px-14 text-red-600 border-red-600",
@@ -82,7 +88,7 @@ const OrderActions = ({
     delivering: [], // Không có action
   };
 
-  const buttons = actionButtons[status];
+  const buttons = actionButtons[order.order_status];
 
   return (
     <div className="flex gap-4 justify-end">

@@ -216,27 +216,35 @@ export default function RowCart({
 
       <div className="grid ml:grid-cols-[60px_1fr] md:grid-cols-[72px_1fr] lg:grid-cols-[100px_1fr] md:gap-1 lg:gap-2 items-center">
         {variant && variant.variant_img.startsWith("SEO") ? (
-          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}
+            className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <CldImage
               src={variant.variant_img}
               alt={variant.variant_name}
               fill={true}
             />
-          </div>
+          </a>
         ) : (
-          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}
+            className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <Image
               src={variant.variant_img}
               alt={variant.variant_name}
               fill={true}
             />
-          </div>
+          </a>
         )}
 
         <div className="w-full flex flex-col md:gap-1 lg:gap-2">
-          <h6 className={`line-clamp-2 ${isSelected ? "dark:text-black" : ""}`}>
-            {cartProducts[cartIndex].product_name}
-          </h6>
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}>
+            <h6
+              className={`line-clamp-2 ${isSelected ? "dark:text-black" : ""}`}>
+              {cartProducts[cartIndex].product_name}
+            </h6>
+          </a>
           <Select
             onValueChange={handleChangeVariant}
             value={cartProducts[cartIndex].variant_id}>

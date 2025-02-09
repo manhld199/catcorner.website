@@ -21,7 +21,7 @@ export default async function AdminGroupsPage() {
 
   return (
     <main className="w-full py-2 flex flex-col items gap-4">
-      <section className="flex flex-row justify-between">
+      <section className="w-full flex flex-row justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2">
             <h1 className="ml-8 text-3xl font-bold text-gray-900 dark:text-gray-200 text-wrap">

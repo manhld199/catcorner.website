@@ -5,8 +5,10 @@ import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import OrderDetails from "@/components/(order)/order-details";
 import { extractOrderIdPrefix } from "@/utils/functions/format";
+import { putData } from "@/utils/functions/client";
 
 interface OrderProduct {
+  product_hashed_id?: string;
   product_id: string;
   variant_id: string;
   quantity: number;
@@ -96,12 +98,75 @@ export default function OrderDetail() {
     }
   };
 
-  const handleRepurchase = (orderId: string) => {
-    console.log("Repurchase order:", orderId);
+  const handleRepurchase = async (order: Order) => {
+    try {
+      if (order.order_status == "unpaid") {
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          re_payment: true,
+          order_status: order.order_status,
+        };
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        window.location.href = "/payment";
+      } else if (order.order_status == "canceled") {
+        const orderProducts = order.order_products.map((product: any) => ({
+          product_hashed_id: product.product_hashed_id,
+          variant_id: product.variant_id,
+          quantity: product.quantity,
+          unit_price: product.unit_price,
+          discount_percent: product.discount_percent,
+        }));
+
+        // Define payment data structure
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          user_id: session ? session.user.id : undefined,
+          order_products: orderProducts,
+          order_buyer: {
+            name: order.order_buyer.name,
+            phone_number: order.order_buyer.phone_number,
+            address: order.order_buyer.address,
+          },
+          order_note: order.order_note || "",
+          shipping_cost: order.shipping_cost,
+          payment_method: "onl",
+          cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-history?selectedTab=unpaid`, // Cancel URL
+          return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-success?orderId=${encodeURIComponent(order.order_id)}`, // Success redirect
+          re_payment: true,
+        };
+
+        // Save payment data to local storage
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        // console.log("dataaaaaaaaa neeeeee", newPaymentData);
+
+        // Redirect to the payment page
+        window.location.href = "/payment";
+      }
+    } catch (err) {
+      console.log("Error in repurchasing order: ", err);
+    }
   };
 
-  const handleCancel = (orderId: string) => {
-    console.log("Cancel order:", orderId);
+  const handleCancel = async (orderId: string) => {
+    try {
+      const data = await putData(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/cancel/${orderId}`,
+        {}
+      );
+      // console.log("data: ", data);
+      if (!data.success) {
+        toast.error("Không thể hủy đơn hàng");
+        throw new Error("Failed to cancel order");
+      }
+
+      toast.success("Hủy đơn hàng thành công");
+      location.reload();
+    } catch (err) {
+      console.log("Error in canceling order: ", err);
+    }
+    // console.log("Cancel order:", orderId);
   };
 
   const handleReview = (orderId: string) => {

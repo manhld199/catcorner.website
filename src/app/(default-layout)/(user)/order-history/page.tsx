@@ -14,6 +14,8 @@ import { extractOrderIdPrefix } from "@/utils/functions/format";
 import OrderProductItem from "@/components/(order)/order-product-item";
 import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
+import { putData } from "@/utils/functions/client";
+
 interface OrderProduct {
   product_id: string;
   variant_id: string;
@@ -83,6 +85,8 @@ const calculateProductTotal = (product: OrderProduct) => {
 const isValidOrderId = (str: string) => /^DH/.test(str);
 
 export default function HistoryOrder() {
+  const searchParams = useSearchParams();
+
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -98,6 +102,33 @@ export default function HistoryOrder() {
     delivered: 0,
     canceled: 0,
   });
+
+  useEffect(() => {
+    const cancelData = async (orderCode: string) => {
+      try {
+        const data = await putData(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/cancel/DH${orderCode}`,
+          {}
+        );
+        // console.log("data: ", data);
+        if (!data.success) {
+          toast.error("Không thể hủy đơn hàng");
+          throw new Error("Failed to cancel order");
+        }
+
+        toast.success("Hủy đơn hàng thành công");
+      } catch (err) {
+        console.log("Error in canceling order: ", err);
+      }
+    };
+
+    const isCancelled = searchParams.get("cancel");
+    // console.log("cancel", isCancelled);
+    if (isCancelled) {
+      const orderCode = searchParams.get("orderCode");
+      cancelData(orderCode);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchOrders();
@@ -135,7 +166,7 @@ export default function HistoryOrder() {
         },
       });
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+        const errorData = await response.json().catch(() => {});
         console.error("Error response:", {
           status: response.status,
           statusText: response.statusText,
@@ -147,7 +178,7 @@ export default function HistoryOrder() {
       if (!responseData.success) {
         throw new Error("Failed to fetch orders");
       }
-      console.log("order data", responseData.data.orders);
+      // console.log("order data", responseData.data.orders);
       setOrders(responseData.data.orders);
       setIsLoading(false);
 
@@ -176,9 +207,55 @@ export default function HistoryOrder() {
     }
   };
 
-  const handleRepurchase = (orderId: string) => {
-    console.log("Repurchase order:", orderId);
-    // Implement repurchase logic
+  const handleRepurchase = async (order: Order) => {
+    try {
+      if (order.order_status == "unpaid") {
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          re_payment: true,
+          order_status: order.order_status,
+        };
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        window.location.href = "/payment";
+      } else if (order.order_status == "canceled") {
+        const orderProducts = order.order_products.map((product: any) => ({
+          product_hashed_id: product.product_hashed_id,
+          variant_id: product.variant_id,
+          quantity: product.quantity,
+          unit_price: product.unit_price,
+          discount_percent: product.discount_percent,
+        }));
+
+        // Define payment data structure
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          user_id: session ? session.user.id : undefined,
+          order_products: orderProducts,
+          order_buyer: {
+            name: order.order_buyer.name,
+            phone_number: order.order_buyer.phone_number,
+            address: order.order_buyer.address,
+          },
+          order_note: order.order_note || "",
+          shipping_cost: order.shipping_cost,
+          payment_method: "onl",
+          cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-history?selectedTab=unpaid`, // Cancel URL
+          return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-success?orderId=${encodeURIComponent(order.order_id)}`, // Success redirect
+          re_payment: true,
+        };
+
+        // Save payment data to local storage
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        // console.log("dataaaaaaaaa neeeeee", newPaymentData);
+
+        // Redirect to the payment page
+        window.location.href = "/payment";
+      }
+    } catch (err) {
+      console.log("Error in repurchasing order: ", err);
+    }
   };
 
   const handleCancel = async (orderId: string) => {
@@ -186,7 +263,7 @@ export default function HistoryOrder() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/cancel/${orderId}`,
         {
           method: "PUT",
           headers: {
@@ -389,12 +466,10 @@ export default function HistoryOrder() {
 
                           <div className="flex gap-4 justify-end mt-9">
                             <OrderActions
-                              status={order.order_status}
-                              orderId={order._id}
+                              order={order}
                               onRepurchase={handleRepurchase}
                               onCancel={handleCancel}
                               onReview={handleReview}
-                              orderIdHashed={order.order_id_hashed}
                             />
                           </div>
                         </CardContent>

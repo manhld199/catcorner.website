@@ -50,7 +50,7 @@ const sidebarData = [
   {
     title: "Bảng điều khiển",
     icon: LayoutDashboard,
-    url: "/admin/dashboard",
+    url: "/admin/",
   },
   {
     title: "Sản phẩm",

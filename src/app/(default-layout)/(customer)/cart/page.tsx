@@ -464,9 +464,7 @@ export default function CartPage() {
         </div>
 
         <Button variant="filled" onClick={handleBuy}>
-          <a href="#" className="w-full h-full pt-1">
-            <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
-          </a>
+          <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
         </Button>
 
         <p className="text-center text-sm">

@@ -18,7 +18,7 @@ interface OrderDetailsProps {
   order: Order;
   title?: string;
   description?: string;
-  onRepurchase?: (orderId: string) => void;
+  onRepurchase?: (order: Order) => void;
   onCancel?: (orderId: string) => void;
   onReview?: (orderId: string) => void;
 }
@@ -31,7 +31,7 @@ export default function OrderDetails({
   onCancel,
   onReview,
 }: OrderDetailsProps) {
-  console.log("orrrrr", order);
+  // console.log("orrrrr", order);
   return (
     <div className="container mx-auto w-[100%]">
       <h1 className="text-2xl mb-2 font-bold dark:text-white">{title}</h1>
@@ -84,12 +84,10 @@ export default function OrderDetails({
                     Cậu đợi 1 lát nhé, shop sẽ xác nhận ngay thôi !
                   </p>
                   <OrderActions
-                    status={order.order_status}
-                    orderId={order._id}
+                    order={order}
                     onRepurchase={onRepurchase}
                     onCancel={onCancel}
                     onReview={onReview}
-                    orderIdHashed={order.order_id_hashed}
                   />
                 </div>
               </Card>
@@ -232,7 +230,7 @@ export default function OrderDetails({
                 </span>
                 <span className="font-medium text-base dark:text-white">
                   {" "}
-                  -₫50.000
+                  -0đ
                 </span>
               </div>
               <div className="text-sm">
@@ -241,7 +239,7 @@ export default function OrderDetails({
                 </span>
                 <span className="font-medium text-base dark:text-white">
                   {" "}
-                  -₫50.000
+                  -0đ
                 </span>
               </div>
               <div className="text-base mt-1">
