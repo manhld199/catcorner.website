@@ -169,74 +169,52 @@ export default function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarData.map((item) => {
-                if (Array.isArray(item.items))
-                  return (
-                    <Collapsible
-                      defaultOpen={false}
-                      key={item.title}
-                      className="group/collapsible">
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger className="w-full">
-                          <SidebarMenuButton>
-                            <item.icon />
-                            {item.title}
-                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarGroupContent />
-                        </CollapsibleContent>
+                return (
+                  <Collapsible
+                    defaultOpen={false}
+                    key={item.title}
+                    className="group/collapsible">
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger className="w-full">
+                        <SidebarMenuButton>
+                          <item.icon />
+                          {item.title}
+                          <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarGroupContent />
+                      </CollapsibleContent>
 
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items.map((subItem: any) => (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton
-                                  className={`px-0  ${
-                                    pathname === subItem.url
-                                      ? "bg-teal-500 text-white hover:bg-teal-500 hover:text-white"
-                                      : ""
-                                  }`}>
-                                  <Link
-                                    href={subItem.url}
-                                    className="w-full h-fit px-2 flex flex-row gap-2 items-start justify-between">
-                                    <div className="flex flex-row gap-2">
-                                      <subItem.icon className="w-4 h-4" />
-                                      <span className="line-clamp-1 ">
-                                        {subItem.title}
-                                      </span>
-                                    </div>
-                                    <ChevronRight className="w-4 h-4" />
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                  );
-                else
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        className={`px-0  ${
-                          pathname === item.url
-                            ? "bg-teal-500 text-white hover:bg-teal-500 hover:text-white"
-                            : ""
-                        }`}>
-                        <Link
-                          href={item.url}
-                          className="w-full h-fit px-2 flex flex-row gap-2 items-start justify-between">
-                          <div className="flex flex-row gap-2">
-                            <item.icon className="w-4 h-4" />
-                            <span className="line-clamp-1 ">{item.title}</span>
-                          </div>
-                          <ChevronRight className="w-4 h-4" />
-                        </Link>
-                      </SidebarMenuButton>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.items.map((subItem: any) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                className={`px-0  ${
+                                  pathname === subItem.url
+                                    ? "bg-teal-500 text-white hover:bg-teal-500 hover:text-white"
+                                    : ""
+                                }`}>
+                                <Link
+                                  href={subItem.url}
+                                  className="w-full h-fit px-2 flex flex-row gap-2 items-start justify-between">
+                                  <div className="flex flex-row gap-2">
+                                    <subItem.icon className="w-4 h-4" />
+                                    <span className="line-clamp-1 ">
+                                      {subItem.title}
+                                    </span>
+                                  </div>
+                                  <ChevronRight className="w-4 h-4" />
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
                     </SidebarMenuItem>
-                  );
+                  </Collapsible>
+                );
               })}
 
               <Collapsible defaultOpen className="group/collapsible">
