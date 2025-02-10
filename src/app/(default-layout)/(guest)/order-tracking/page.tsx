@@ -103,7 +103,7 @@ export default function OrderTracking() {
   };
 
   return (
-    <div className="px-0 min-h-screen w-full md:w-[80%] lg:w-[100%] mx-auto flex items-center justify-center h-[769px] pb-0 bg-white">
+    <div className="px-0 min-h-screen w-full md:w-[80%] lg:w-[100%] mx-auto flex items-center justify-center h-[769px] pb-0 bg-white dark:bg-gray-800">
       <div className="w-full h-full">
         <div className="p-0 w-full h-full">
           <div className="grid gap-8 grid-cols-1 md:grid-cols-2 w-full h-full">
@@ -150,7 +150,7 @@ export default function OrderTracking() {
                             <Input
                               {...field}
                               placeholder="Nhập mã đơn hàng của bạn"
-                              className={`w-full bg-white dark:bg-gray-700 dark:text-white text-sm sm:text-base ${
+                              className={`w-full bg-white dark:bg-gray-800 dark:bg-gray-700 dark:text-white text-sm sm:text-base ${
                                 field.value && !form.formState.errors.orderId
                                   ? "border-green-500"
                                   : form.formState.errors.orderId
@@ -182,7 +182,7 @@ export default function OrderTracking() {
                               {...field}
                               type="tel"
                               placeholder="Nhập số điện thoại nhận hàng"
-                              className={`w-full bg-white dark:bg-gray-700 dark:text-white text-sm sm:text-base ${
+                              className={`w-full bg-white dark:bg-gray-800 dark:bg-gray-700 dark:text-white text-sm sm:text-base ${
                                 field.value && !form.formState.errors.phone
                                   ? "border-green-500"
                                   : form.formState.errors.phone

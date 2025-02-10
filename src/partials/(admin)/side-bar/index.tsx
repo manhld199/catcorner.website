@@ -14,6 +14,7 @@ import {
   Plus,
   ChevronRight,
   LayoutDashboard,
+  FolderKanban,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,9 +49,9 @@ import { ADMIN_SIDE_BAR } from "@/data/components";
 
 const sidebarData = [
   {
-    title: "Bảng điều khiển",
-    icon: LayoutDashboard,
-    url: "/admin/",
+    title: "Trung tâm quản lý",
+    icon: FolderKanban,
+    items: [{ title: "Bảng điều khiển", icon: LayoutDashboard, url: "/admin" }],
   },
   {
     title: "Sản phẩm",

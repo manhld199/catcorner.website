@@ -263,7 +263,7 @@ export default function OrderInformationPage() {
   return (
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Thông tin người nhận hàng */}
-      <section className="lg:col-span-3 bg-white rounded-lg p-6 shadow-md dark:bg-gray-800">
+      <section className="lg:col-span-3 rounded-lg p-6 shadow-md dark:bg-gray-800">
         <h3 className="font-bold mb-2 text-center">
           Thông tin người nhận hàng
         </h3>
@@ -277,7 +277,7 @@ export default function OrderInformationPage() {
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               maxLength={50}
-              className="border border-gray-300 rounded-md p-3 text-sm"
+              className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -288,14 +288,14 @@ export default function OrderInformationPage() {
               value={userPhone}
               onChange={(e) => setUserPhone(e.target.value)}
               maxLength={10}
-              className="border border-gray-300 rounded-md p-3 text-sm"
+              className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm"
             />
           </div>
           <div className="flex flex-col md:col-span-2 gap-2">
             <label className="text-sm font-medium">Địa chỉ</label>
             <div className="grid grid-cols-2 gap-2">
               <Select onValueChange={handleCityChange}>
-                <SelectTrigger className="border border-gray-300 rounded-md p-3 text-sm">
+                <SelectTrigger className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn tỉnh/thành phố" />
                 </SelectTrigger>
                 <SelectContent>
@@ -311,7 +311,7 @@ export default function OrderInformationPage() {
               <Select
                 onValueChange={handleDistrictChange}
                 disabled={!districts.length}>
-                <SelectTrigger className="border border-gray-300 rounded-md p-3 text-sm">
+                <SelectTrigger className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn quận/huyện" />
                 </SelectTrigger>
                 <SelectContent>
@@ -327,7 +327,7 @@ export default function OrderInformationPage() {
             </div>
             <div className="mt-2">
               <Select onValueChange={handleWardChange} disabled={!wards.length}>
-                <SelectTrigger className="w-full border border-gray-300 rounded-md p-3 text-sm">
+                <SelectTrigger className="w-full border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn phường/xã" />
                 </SelectTrigger>
                 <SelectContent>
@@ -346,7 +346,7 @@ export default function OrderInformationPage() {
                 value={streetAddress}
                 onChange={(e) => setStreetAddress(e.target.value)}
                 maxLength={100}
-                className="w-full border border-gray-300 rounded-md p-3 text-sm mt-2"
+                className="w-full border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm mt-2"
               />
             </div>
             <div className="flex flex-col md:col-span-2 gap-2">
@@ -357,7 +357,7 @@ export default function OrderInformationPage() {
                 rows={5}
                 value={orderNote}
                 onChange={(e) => setOrderNote(e.target.value)}
-                className="border border-gray-300 rounded-md p-3 text-sm"></Textarea>
+                className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm"></Textarea>
             </div>
           </div>
         </form>
@@ -369,7 +369,7 @@ export default function OrderInformationPage() {
           {["Giảm giá đơn hàng", "Miễn phí vận chuyển"].map((type) => (
             <div key={type} className="mb-4">
               <h3 className="text-lg font-semibold mb-2">{type}</h3>
-              <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 mb-3 gap-2">
+              <div className="flex items-center border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-lg px-3 py-2 mb-3 gap-2">
                 <Ticket className="text-gray-600 dark:text-white" />
                 <span className="text-sm text-gray-600 dark:text-white">
                   Chọn mã giảm giá
@@ -381,7 +381,7 @@ export default function OrderInformationPage() {
                 .map((coupon) => (
                   <div
                     key={coupon.id}
-                    className="flex items-stretch border border-gray-300 rounded-lg overflow-hidden">
+                    className="flex items-stretch border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-lg overflow-hidden">
                     {/* Image Section */}
                     <div className="w-24 flex-shrink-0">
                       <img

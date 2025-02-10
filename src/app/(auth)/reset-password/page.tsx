@@ -119,7 +119,7 @@ export default function ResetPassword() {
     <>
       <AuthHeader currentPage="login" />
       <div className="w-[500px] h-[630px] mx-auto flex justify-center items-center">
-        <Card className="w-full dark:bg-gray-900">
+        <Card className="w-full dark:bg-gray-800">
           <CardHeader>
             <CardTitle className="text-3xl font-bold">
               Đặt lại mật khẩu

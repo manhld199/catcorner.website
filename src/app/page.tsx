@@ -126,10 +126,10 @@ export default function Home() {
           />
         </div>
         <HotSales />
-        <div className="w-full relative mx-auto bg-pri-5">
-          <BlogListing></BlogListing>
+        <div className="w-full relative mx-auto bg-pri-5 dark:bg-teal-700">
+          <BlogListing />
         </div>
-        <div className="bg-white">
+        <div className="bg-white dark:bg-gray-800">
           <ContactSection />
         </div>
       </div>

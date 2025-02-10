@@ -1,6 +1,6 @@
 export default function AboutUsPage() {
   return (
-    <div className="container mx-auto bg-white p-8 rounded-lg">
+    <div className="container mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold">CATCORNER</h1>
@@ -15,38 +15,38 @@ export default function AboutUsPage() {
 
       {/* Feature Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-        <div className="bg-white border rounded-lg p-6 text-center">
+        <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
           <img
             src="/imgs/test.jpg"
             alt="Chất lượng"
             className="mx-auto mb-4 w-12 h-12"
           />
           <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Số lượng sản phẩm và dịch vụ tốt nhất với đa dạng, phong phú sẽ đáp
             ứng tất cả nhu cầu mua sắm của bạn.
           </p>
         </div>
-        <div className="bg-white border rounded-lg p-6 text-center">
+        <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
           <img
             src="/imgs/test.jpg"
             alt="Chăm sóc khách hàng"
             className="mx-auto mb-4 w-12 h-12"
           />
           <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Tất cả khách hàng mua sắm tại ForCat có tổng hóa đơn mua sắm tích
             lũy từ 1000 điểm sẽ được một phần quà giá trị tương đương.
           </p>
         </div>
-        <div className="bg-white border rounded-lg p-6 text-center">
+        <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
           <img
             src="/imgs/test.jpg"
             alt="Vận chuyển miễn phí"
             className="mx-auto mb-4 w-12 h-12"
           />
           <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Miễn phí vận chuyển nội thành TP Hồ Chí Minh cho các đơn hàng từ
             399.000đ trở lên.
           </p>
@@ -139,74 +139,74 @@ export default function AboutUsPage() {
           mang lại những giá trị lâu dài cho doanh nghiệp.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Chất lượng"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Số lượng sản phẩm và dịch vụ tốt nhất với đa dạng, phong phú sẽ
               đáp ứng tất cả nhu cầu mua sắm của bạn.
             </p>
           </div>
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Chăm sóc khách hàng"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Tất cả khách hàng mua sắm tại ForCat có tổng hóa đơn mua sắm tích
               lũy từ 1000 điểm sẽ được một phần quà giá trị tương đương.
             </p>
           </div>
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Vận chuyển miễn phí"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Miễn phí vận chuyển nội thành TP Hồ Chí Minh cho các đơn hàng từ
               399.000đ trở lên.
             </p>
           </div>
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Vận chuyển miễn phí"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Miễn phí vận chuyển nội thành TP Hồ Chí Minh cho các đơn hàng từ
               399.000đ trở lên.
             </p>
           </div>
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Vận chuyển miễn phí"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Miễn phí vận chuyển nội thành TP Hồ Chí Minh cho các đơn hàng từ
               399.000đ trở lên.
             </p>
           </div>
-          <div className="bg-white border rounded-lg p-6 text-center">
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 text-center">
             <img
               src="/imgs/test.jpg"
               alt="Vận chuyển miễn phí"
               className="mx-auto mb-4 w-12 h-12"
             />
             <p className="font-bold text-lg">Chất lượng thật - Giá trị thật</p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Miễn phí vận chuyển nội thành TP Hồ Chí Minh cho các đơn hàng từ
               399.000đ trở lên.
             </p>

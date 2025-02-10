@@ -62,7 +62,7 @@ export default function OrderTrackingResult() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full container mx-auto gap-[20px] mt-20 pt-[1.25rem] pb-[3.75rem] relative dark:bg-black">
+    <div className="flex flex-col md:flex-row w-full container mx-auto gap-[20px] pb-[3.75rem] relative">
       {/* Sidebar */}
       <Card
         className="
@@ -70,7 +70,6 @@ export default function OrderTrackingResult() {
         w-full md:w-[300px] 
         h-auto md:h-[450px]
         bg-white dark:bg-black
-        sticky top-4
         z-10
         transition-all duration-300">
         <CardContent className="pt-6 space-y-6 h-auto">

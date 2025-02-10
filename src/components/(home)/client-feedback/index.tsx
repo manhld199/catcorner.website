@@ -58,10 +58,10 @@ export default function ClientFeedback() {
     <div className="max-w-6xl mx-auto px-4 py-16">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-6 w-[75%]">
-          <h2 className="text-4xl font-bold tracking-tight">
+          <h2 className="text-4xl font-bold tracking-tight text-black">
             Phản hồi từ khách hàng
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-muted-foreground dark:text-gray-600">
             Hơn 2000 đánh giá chân thực. Chúng tôi không chỉnh sửa hoặc can
             thiệp vào đánh giá của khách hàng.
           </p>
@@ -81,13 +81,15 @@ export default function ClientFeedback() {
           </div>
           <div className="flex items-center gap-2">
             <div className="text-yellow-400">★</div>
-            <span className="text-xl font-semibold">4.8</span>
-            <span className="text-muted-foreground">(2000+ đánh giá)</span>
+            <span className="text-xl font-semibold text-black">4.8</span>
+            <span className="text-muted-foreground dark:text-gray-600">
+              (2000+ đánh giá)
+            </span>
           </div>
         </div>
 
         <div className="relative">
-          <Card className="relative bg-background h-[290px]">
+          <Card className="relative bg-background h-[290px] dark:bg-pri-6 border-none">
             <CardContent className="p-9 h-full">
               <div className="flex flex-col justify-between h-full">
                 <div>
@@ -99,7 +101,7 @@ export default function ClientFeedback() {
                     <Maximize2 className="h-4 w-4" />
                   </Button>
                   <Quote className="h-8 w-8 text-yellow-300 mb-4" />
-                  <p className="text-xl mb-6 text-gray-800 h-[80px]">
+                  <p className="text-xl mb-6 text-gray-800 dark:text-gray-200 h-[80px]">
                     {testimonials[currentIndex].text}
                   </p>
                 </div>
@@ -118,7 +120,7 @@ export default function ClientFeedback() {
                       <h4 className="font-semibold">
                         {testimonials[currentIndex].author}
                       </h4>
-                      <p className="text-base text-muted-foreground">
+                      <p className="text-base text-muted-foreground dark:text-gray-300">
                         {testimonials[currentIndex].details}
                       </p>
                     </div>

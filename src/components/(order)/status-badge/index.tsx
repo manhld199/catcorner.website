@@ -15,7 +15,7 @@ const statusConfig = {
   },
   unpaid: {
     label: "Chờ xác nhận",
-    className: "bg-yellow-100 text-yellow-400",
+    className: "bg-yellow-100 text-orange-500",
   },
   canceled: {
     label: "Đã hủy",

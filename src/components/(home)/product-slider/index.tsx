@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import ProductCard from "@/components/(general)/cards/product-card";
+import { CardProduct } from "@/components";
 import { Product, IProductProps } from "@/types/product";
 import { PRODUCT_LIST_URL } from "@/utils/constants/urls";
 
@@ -100,7 +100,7 @@ export default function ProductSlider() {
 
   return (
     <div className="container w-[80%] mx-auto py-8">
-      <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
+      <h2 className="text-3xl font-bold text-center text-[#1B4242] dark:text-pri-2 mb-8">
         Hôm nay tại CatCorner
       </h2>
 
@@ -123,7 +123,7 @@ export default function ProductSlider() {
             {products.map((product, index) => (
               <div key={index} className="flex-none w-1/3">
                 <div className="flex justify-center">
-                  <ProductCard
+                  <CardProduct
                     product={transformProduct(product) as any}
                     className="w-[320px]"
                   />

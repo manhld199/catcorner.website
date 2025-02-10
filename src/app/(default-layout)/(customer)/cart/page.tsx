@@ -377,8 +377,8 @@ export default function CartPage() {
           </Dialog>
         )}
 
-        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-black flex flex-col ml:border-2 md:border-none rounded-2xl">
-          <div className="ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
+        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-gray-800 flex flex-col ml:border-2 md:border-none rounded-2xl overflow-hidden">
+          <div className="dark:bg-pri-6 ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
             <Checkbox
               checked={isSelectedAll}
               onCheckedChange={handleChangeCheckAll}
@@ -445,22 +445,30 @@ export default function CartPage() {
         </section>
       </div>
 
-      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white dark:bg-black w-full h-fit flex flex-col gap-3 rounded-2xl">
+      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white dark:bg-gray-800 w-full h-fit flex flex-col gap-3 rounded-2xl">
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-price"]}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-price"]}
+          </p>
           <p>{convertNumberToVND(originalTotalPrice)}</p>
         </div>
 
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-discount"]}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-discount"]}
+          </p>
           <p>{convertNumberToVND(discountedTotalPrice)}</p>
         </div>
 
         <div className="border-[1px]"></div>
 
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-total-price"]}</p>
-          <h4 className="text-pri-6">{convertNumberToVND(totalPrice)}</h4>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-total-price"]}
+          </p>
+          <h4 className="text-pri-6 dark:text-teal-300">
+            {convertNumberToVND(totalPrice)}
+          </h4>
         </div>
 
         <Button variant="filled" onClick={handleBuy}>
@@ -471,13 +479,13 @@ export default function CartPage() {
           <span className="text-center">{PAGE_DATA["cart-term-1"]}</span>
           <Link
             href="/term-of-service"
-            className="ml-1 text-blue-500 underline">
+            className="ml-1 text-blue-500 dark:text-blue-400 underline">
             {PAGE_DATA["cart-term-2"]}
           </Link>
           <span className="ml-1">{PAGE_DATA["cart-term-3"]}</span>
           <Link
             href="/security-policies"
-            className="ml-1 text-blue-500 underline">
+            className="ml-1 text-blue-500 dark:text-blue-400 underline">
             {PAGE_DATA["cart-term-4"]}
           </Link>
           <span className="ml-1">{PAGE_DATA["cart-term-5"]}</span>

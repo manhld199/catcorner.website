@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function ContactSection() {
   return (
     <div className="container mx-auto px-4 py-12 w-[80%]">
-      <h2 className="text-3xl font-bold text-center mb-8">
+      <h2 className="text-3xl font-bold text-center mb-8 dark:text-pri-2">
         Có câu hỏi nào không? Đừng ngần ngại liên hệ với chúng tôi!
       </h2>
 
@@ -15,7 +15,7 @@ export default function ContactSection() {
         {/* Messages Section */}
         <div>
           <h3 className="text-xl font-semibold mb-8">Tin nhắn</h3>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-8 dark:text-gray-300">
             Chỉ cần nhấn vào nút dưới đây hoặc quét mã QR để trò chuyện với
             chúng tôi qua messenger, thật đơn giản và nhanh chóng!
           </p>
@@ -59,7 +59,7 @@ export default function ContactSection() {
                 <Phone className="w-4 h-4 text-neutral-950" />
                 <Link
                   href="tel:0795-849-949"
-                  className="block text-muted-foreground hover:text-foreground">
+                  className="block text-muted-foreground hover:text-foreground dark:text-gray-300">
                   0795-849-949
                 </Link>
               </div>
@@ -67,7 +67,7 @@ export default function ContactSection() {
                 <Phone className="w-4 h-4 text-neutral-950" />
                 <Link
                   href="tel:0865-359-075"
-                  className="block text-muted-foreground hover:text-foreground">
+                  className="block text-muted-foreground hover:text-foreground dark:text-gray-300">
                   0865-359-075
                 </Link>
               </div>
@@ -82,7 +82,7 @@ export default function ContactSection() {
                   <Input
                     type="email"
                     placeholder="Nhập địa chỉ Email của bạn"
-                    className="flex-1 w-[230px]"
+                    className="flex-1 w-[230px] dark:text-gray-300 dark:bg-black"
                   />
                   <Button variant="filled">Đăng ký ngay</Button>
                 </div>
@@ -96,7 +96,7 @@ export default function ContactSection() {
           <h3 className="text-xl font-semibold mb-4">
             Kết nối với chúng tôi trên mạng xã hội
           </h3>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-8 dark:text-gray-300">
             Chúng tôi luôn sẵn sàng trả lời mọi thắc mắc trong vòng 5 phút và tổ
             chức các cuộc thi thú vị với những phần quà hấp dẫn mỗi tháng!
           </p>

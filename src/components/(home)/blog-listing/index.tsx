@@ -4,43 +4,7 @@ import React, { useEffect, useState } from "react";
 import { GUEST_BLOG_URL } from "@/utils/constants/urls";
 import Link from "next/link";
 import { BlogCardShort } from "@/components";
-const articles = [
-  {
-    id: 1,
-    image: "/imgs/home/image-arti.png",
-    date: "Tên tác giả - 13/05/2024",
-    title: "Tên bài viết",
-    hashtags: ["hashtag", "hashtag"],
-  },
-  {
-    id: 2,
-    image: "/imgs/home/image-arti.png",
-    date: "Tên tác giả - 13/05/2024",
-    title: "Tên bài viết",
-    hashtags: ["hashtag", "hashtag"],
-  },
-  {
-    id: 3,
-    image: "/imgs/home/image-arti.png",
-    date: "Tên tác giả - 13/05/2024",
-    title: "Tên bài viết",
-    hashtags: ["hashtag", "hashtag"],
-  },
-  {
-    id: 4,
-    image: "/imgs/home/image-arti.png",
-    date: "Tên tác giả - 13/05/2024",
-    title: "Tên bài viết",
-    hashtags: ["hashtag", "hashtag"],
-  },
-  {
-    id: 5,
-    image: "/imgs/home/image-arti.png",
-    date: "Tên tác giả - 13/05/2024",
-    title: "Tên bài viết",
-    hashtags: ["hashtag", "hashtag"],
-  },
-];
+
 export default function BlogListing() {
   const [featuredBlogs, setFeaturedBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +44,7 @@ export default function BlogListing() {
           <h1 className="text-3xl font-bold mb-2">
             Khám phá thêm các chủ đề...
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground dark:text-gray-200">
             Đọc các lời khuyên chăm sóc cho mèo của bạn
           </p>
         </div>
@@ -92,16 +56,6 @@ export default function BlogListing() {
       </div>
 
       <div className="flex overflow-x-auto space-x-3 pb-8">
-        {/* {articles.map((article, index) => (
-          <BlogCard
-            key={article.id}
-            image={article.image}
-            date={article.date}
-            title={article.title}
-            hashtags={article.hashtags}
-            isOdd={index % 2 !== 0}
-          />
-        ))} */}
         {featuredBlogs.map((blog, index) => (
           <Link
             key={index}

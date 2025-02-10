@@ -140,7 +140,7 @@ export default function VerifyOTP() {
     <>
       <AuthHeader currentPage="login" />
       <div className="w-[500px] h-[630px] mx-auto flex justify-center items-center">
-        <Card className="dark:bg-gray-900">
+        <Card className="dark:bg-gray-800">
           <CardHeader>
             <CardTitle className="text-3xl font-bold">
               Đặt lại mật khẩu
@@ -157,7 +157,9 @@ export default function VerifyOTP() {
                 </h4>
                 <div className="text-sm text-muted-foreground mb-3">
                   Nhập mã xác thực vừa được gửi đến email{" "}
-                  {email.replace(/(.{2})(.*)(@.*)/, "$1***$3")}
+                  <span className="dark:text-teal-300">
+                    {email.replace(/(.{2})(.*)(@.*)/, "$1***$3")}
+                  </span>
                 </div>
 
                 <div className="flex gap-2 items-center justify-center">
@@ -190,7 +192,7 @@ export default function VerifyOTP() {
                   <Button
                     type="button"
                     variant="link"
-                    className="text-pri-6 underline font-medium pl-0">
+                    className="text-pri-6 dark:text-blue-400 underline font-medium pl-0">
                     Resend
                   </Button>
                 </div>

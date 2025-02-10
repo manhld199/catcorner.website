@@ -1,6 +1,6 @@
 export default function ReturnPolicyPage() {
   return (
-    <div className="container mx-auto bg-white ml:p-8 rounded-lg p-2">
+    <div className="container mx-auto bg-white dark:bg-gray-800 ml:p-8 rounded-lg p-2">
       {/* Header */}
       <h1 className="text-center font-bold mb-6">Chính sách đổi trả</h1>
 

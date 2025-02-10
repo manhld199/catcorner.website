@@ -140,7 +140,7 @@ export default function AdminDashboard() {
       </section>
 
       <section className="grid phone_large:grid-cols-2 laptop:grid-cols-4 gap-4">
-        <div className="w-full bg-white dark:bg-zinc-900 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
+        <div className="w-full bg-white dark:bg-zinc-950 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
           <div className="w-1/4 h-full flex justify-center items-center bg-yellow-300 dark:bg-yellow-500 rounded-lg">
             <HandCoins className="w-10 h-10" />
           </div>
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="w-full bg-white dark:bg-zinc-900 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
+        <div className="w-full bg-white dark:bg-zinc-950 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
           <div className="w-1/4 h-full flex justify-center items-center bg-blue-300 dark:bg-blue-500 rounded-lg">
             <UserRoundPlus className="w-10 h-10" />
           </div>
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="w-full bg-white dark:bg-zinc-900 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
+        <div className="w-full bg-white dark:bg-zinc-950 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
           <div className="w-1/4 h-full flex justify-center items-center bg-red-300 dark:bg-red-500 rounded-lg">
             <ShoppingCart className="w-10 h-10" />
           </div>
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="w-full bg-white dark:bg-zinc-900 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
+        <div className="w-full bg-white dark:bg-zinc-950 p-3 flex flex-row gap-3 rounded-xl border-[1px]">
           <div className="w-1/4 h-full flex justify-center items-center bg-green-300 dark:bg-green-500 rounded-lg">
             <Star className="w-10 h-10" />
           </div>

@@ -93,7 +93,7 @@ export default function CustomerQuantityInputGroup({
         {/* Input số lượng */}
         <input
           ref={inputRef}
-          className="w-12 h-8 text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-600 no-arrows"
+          className="w-12 h-8 text-sm text-center border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-600 no-arrows"
           type="number"
           onChange={handleValueChange}
           onClick={handleClick}

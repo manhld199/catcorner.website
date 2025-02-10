@@ -59,7 +59,7 @@ export default function CouponsPage() {
   }, [session]);
 
   return (
-    <div className="bg-white flex flex-col">
+    <div className="flex flex-col">
       <div className="relative w-full aspect-[5/2]">
         <Image
           src={"/imgs/coupons/banner.png"}
@@ -91,7 +91,7 @@ export default function CouponsPage() {
         </a>
       </div>
 
-      <div className="w-full phone_large:p-4 tablet:p-6 bg-pri-3 flex flex-col phone_large:gap-4 tablet:gap-8 gap-8 justify-center items-center">
+      <div className="w-full phone_large:p-4 tablet:p-6 bg-pri-3 dark:bg-emerald-200 flex flex-col phone_large:gap-4 tablet:gap-8 gap-8 justify-center items-center">
         <h2 className="text-pri-6 tablet:block phone_large:hidden">
           SIÊU ƯU ĐÃI MIỄN PHÍ VẬN CHUYỂN
         </h2>
@@ -115,8 +115,8 @@ export default function CouponsPage() {
         )}
       </div>
 
-      <div className="w-full phone_large:p-4 tablet:p-6 bg-pri-5 flex flex-col phone_large:gap-2 tablet:gap-8 justify-center items-center">
-        <h2 className="text-orange-400 tablet:block phone_large:hidden">
+      <div className="w-full phone_large:p-4 tablet:p-6 bg-pri-5 dark:bg-orange-200 flex flex-col phone_large:gap-2 tablet:gap-8 justify-center items-center">
+        <h2 className="text-orange-400 dark:text-orange-600 tablet:block phone_large:hidden">
           SIÊU ƯU ĐÃI GIẢM GIÁ CỰC SỐC
         </h2>
         <h2 className="text-orange-400 tablet:hidden phone_large:block">

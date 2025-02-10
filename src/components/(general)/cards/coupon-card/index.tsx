@@ -70,7 +70,7 @@ export default function CardCoupon({
           </p>
         </div>
       )}
-      <div className="bg-[url(/imgs/coupons/coupon-body.png)] w-[72%] bg-cover h-full -ml-[3px] -mt-[1px] py-3 px-4 flex flex-col justify-between">
+      <div className="bg-[url(/imgs/coupons/coupon-body.png)] dark:bg-[url(/imgs/coupons/coupon-body-dark.png)] w-[72%] bg-cover h-full -ml-[3px] -mt-[1px] py-3 px-4 flex flex-col justify-between">
         <div className="flex flex-col gap-1">
           <h6 className="font-bold">
             Giảm tối đa {convertNumberToVND(coupon.coupon_max_value)}
@@ -81,7 +81,7 @@ export default function CardCoupon({
         </div>
 
         <div className="flex flex-row justify-between items-end">
-          <p className="text-sm text-gray-600 italic">
+          <p className="text-sm text-gray-600 dark:text-gray-400 italic">
             Có hiệu lực đến {formatDateTimeStr(coupon.end_time, "dd/mm/yy")}
           </p>
 

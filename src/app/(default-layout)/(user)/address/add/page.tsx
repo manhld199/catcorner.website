@@ -269,57 +269,63 @@ export default function AddAddressPage() {
                   </FormItem>
                 )}
               />
-              <Select
-                options={provinces}
-                styles={customStyles}
-                value={selectedProvince}
-                onChange={(option) => setSelectedProvince(option)}
-                placeholder="Chọn tỉnh/thành phố"
-                isSearchable
-              />
-              <Select
-                options={districts}
-                styles={customStyles}
-                value={selectedDistrict}
-                onChange={(option) => setSelectedDistrict(option)}
-                placeholder="Chọn quận/huyện"
-                isSearchable
-                isDisabled={!selectedProvince}
-              />
-              <Select
-                options={wards}
-                styles={customStyles}
-                value={selectedWard}
-                onChange={(option) => setSelectedWard(option)}
-                placeholder="Chọn phường/xã"
-                isSearchable
-                isDisabled={!selectedDistrict}
-              />
-              <FormField
-                control={form.control}
-                name="detail_address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-600 dark:text-gray-300 text-base">
-                      Địa chỉ cụ thể
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Số nhà, tên đường, phường/xã"
-                        className={`bg-white dark:bg-gray-700 dark:text-white ${
-                          field.value && !form.formState.errors.detail_address
-                            ? "border-green-500"
-                            : form.formState.errors.detail_address
-                              ? "border-red-500"
-                              : "dark:border-gray-600"
-                        }`}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+
+              <div className="space-y-2">
+                <FormLabel className="text-gray-600 dark:text-gray-300 text-base">
+                  Địa chỉ cụ thể
+                </FormLabel>
+                <div className="grid grid-cols-2 gap-2">
+                  <Select
+                    options={provinces}
+                    styles={customStyles}
+                    value={selectedProvince}
+                    onChange={(option) => setSelectedProvince(option)}
+                    placeholder="Chọn tỉnh/thành phố"
+                    isSearchable
+                  />
+                  <Select
+                    options={districts}
+                    styles={customStyles}
+                    value={selectedDistrict}
+                    onChange={(option) => setSelectedDistrict(option)}
+                    placeholder="Chọn quận/huyện"
+                    isSearchable
+                    isDisabled={!selectedProvince}
+                  />
+                  <Select
+                    options={wards}
+                    styles={customStyles}
+                    value={selectedWard}
+                    onChange={(option) => setSelectedWard(option)}
+                    placeholder="Chọn phường/xã"
+                    isSearchable
+                    isDisabled={!selectedDistrict}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="detail_address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Số nhà, tên đường, phường/xã"
+                            className={`bg-white dark:bg-gray-700 dark:text-white ${
+                              field.value &&
+                              !form.formState.errors.detail_address
+                                ? "border-green-500"
+                                : form.formState.errors.detail_address
+                                  ? "border-red-500"
+                                  : "dark:border-gray-600"
+                            }`}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-500" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
 
               <FormField
                 control={form.control}

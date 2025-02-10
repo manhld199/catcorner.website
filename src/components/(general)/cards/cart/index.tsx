@@ -276,7 +276,7 @@ export default function RowCart({
           </Select>
           <div className="flex flex-row gap-1">
             {variant.variant_discount_percent > 0 && (
-              <p className="text-slate-600 line-through">
+              <p className="text-slate-600 dark:text-slate-400 line-through">
                 {convertNumberToVND(variant.variant_price)}
               </p>
             )}
@@ -336,7 +336,7 @@ export default function RowCart({
         </Dialog>
 
         {variant.variant_discount_percent > 0 && (
-          <p className="text-center text-slate-600 line-through">
+          <p className="text-center text-slate-600 dark:text-slate-400 line-through">
             {convertNumberToVND(quantity * variant.variant_price)}
           </p>
         )}

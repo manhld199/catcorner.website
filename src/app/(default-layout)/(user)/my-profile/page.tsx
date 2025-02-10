@@ -479,7 +479,7 @@ export default function ProfilePage() {
         <Collapsible
           open={isOpen}
           onOpenChange={setIsOpen}
-          className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
+          className="border-none shadow-lg rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
           <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
             <h2 className="font-bold text-center">Thông tin tài khoản</h2>
             <ChevronDown
@@ -783,7 +783,7 @@ export default function ProfilePage() {
           </CollapsibleContent>
         </Collapsible>
         {/* Collapsible đổi mật khẩu */}
-        <Collapsible className="border border-border-color rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
+        <Collapsible className="border-none shadow-lg rounded-[8px] w-full dark:border-gray-700 dark:bg-black bg-white">
           <CollapsibleTrigger className="flex items-center justify-between w-full p-2 pl-5 hover:bg-muted/50 dark:hover:bg-gray-700 rounded-[8px] dark:hover:rounded-[8px] dark:text-white">
             <h2 className="font-bold text-center">Thay đổi mật khẩu</h2>
             <ChevronDown className="text-pri-1 dark:text-gray-300 w-7 h-7 transition-transform" />

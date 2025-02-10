@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import ProductCard from "@/components/(general)/cards/product-card";
+import { CardProduct } from "@/components";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -50,31 +50,27 @@ export default function NewProducts() {
 
   return (
     <div className="container w-[80%] mx-auto py-8">
-      <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
+      <h2 className="text-3xl font-bold text-center text-[#1B4242] dark:text-pri-2 mb-8">
         Sản phẩm mới
       </h2>
 
       <div className="grid grid-cols-4 gap-6 mb-6">
         {products.slice(0, 4).map((product) => (
-          <div className="bg-white rounded-lg" key={product._id}>
-            {/* Sau này xóa any đi fix chỗ này */}
-            <ProductCard product={transformProduct(product) as any} />
-          </div>
+          <CardProduct product={transformProduct(product) as any} />
         ))}
       </div>
 
       <div className="grid grid-cols-4 gap-6 mb-8">
         {products.slice(4, 8).map((product) => (
-          <div className="bg-white rounded-lg" key={product._id}>
-            {/* Sau này xóa any đi fix chỗ này */}
-            <ProductCard product={transformProduct(product) as any} />
-          </div>
+          <CardProduct product={transformProduct(product) as any} />
         ))}
       </div>
 
       <div className="flex justify-center">
         <Link href="/products">
-          <Button variant="link" className="text-base text-pri-1 font-bold">
+          <Button
+            variant="link"
+            className="text-base text-pri-1 dark:text-gray-200 font-bold">
             Tất cả sản phẩm
             <ArrowUpRight />
           </Button>

@@ -300,7 +300,7 @@ export default function HistoryOrder() {
             defaultValue="all"
             className="mb-6"
             onValueChange={(value) => setActiveTab(value)}>
-            <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-900">
+            <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-800">
               <TabsTrigger
                 value="all"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
@@ -360,7 +360,7 @@ export default function HistoryOrder() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Nhập mã đơn hàng hoặc tên sản phẩm để tìm kiếm"
-                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-900 rounded-full border border-neutral-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
+                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 bg-white dark:bg-gray-900 rounded-full border border-neutral-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
                   />
                   <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
@@ -385,10 +385,10 @@ export default function HistoryOrder() {
                     orders.map((order) => (
                       <Card
                         key={order._id}
-                        className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:bg-black dark:border-gray-700">
+                        className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:bg-gray-800 dark:border-gray-700">
                         <CardContent className="p-6">
                           <div className="flex items-center justify-between mb-4">
-                            <span className="flex gap-2 text-pri-1 dark:text-pri-6 text-2xl">
+                            <span className="flex gap-2 text-pri-1 dark:text-pri-2 text-2xl">
                               <ShoppingBag size={24} />
                               <span>Mã đơn hàng:</span>
                               <span>
@@ -404,7 +404,7 @@ export default function HistoryOrder() {
                                   size={16}
                                   className="dark:text-gray-300"
                                 />
-                                <span className="text-sm text-pri-1 dark:text-pri-6">
+                                <span className="text-sm text-pri-1 dark:text-gray-200">
                                   Thủ Đức, Tp Hồ Chí Minh
                                 </span>
                               </div>
@@ -415,7 +415,7 @@ export default function HistoryOrder() {
 
                                   <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)] dark:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#4b5563_2px,#4b5563_8px)]" />
                                 </div>
-                                <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px] dark:text-gray-300">
+                                <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px] dark:text-gray-200">
                                   Giao hàng dự kiến: 28/09/25
                                 </div>
                                 <div className="flex items-center flex-1">
@@ -429,7 +429,7 @@ export default function HistoryOrder() {
                                   size={16}
                                   className="dark:text-gray-300"
                                 />
-                                <span className="text-sm text-pri-1 dark:text-pri-6">
+                                <span className="text-sm text-pri-1 dark:text-gray-200">
                                   {order.order_buyer.address.district},{" "}
                                   {order.order_buyer.address.province}
                                 </span>
@@ -437,7 +437,7 @@ export default function HistoryOrder() {
                             </div>
                           </div>
 
-                          <div className="text-right text-pri-1 dark:text-white underline font-bold pb-4 hover:opacity-80 dark:hover:text-pri-6 transition-colors">
+                          <div className="text-right text-pri-1 dark:text-white underline font-bold pb-4 dark:hover:text-pri-2 transition-colors">
                             <Link href={`order-history/details/${order._id}`}>
                               Xem chi tiết
                             </Link>
@@ -456,10 +456,10 @@ export default function HistoryOrder() {
                           </div>
 
                           <div className="mt-1 pt-1 text-right">
-                            <span className="font-medium dark:text-gray-300">
+                            <span className="font-medium dark:text-gray-200">
                               Thành tiền:{" "}
                             </span>
-                            <span className="text-lg font-semibold text-pri-7 dark:text-pri-6">
+                            <span className="text-lg font-semibold text-pri-7 dark:text-pri-2">
                               ₫{order.final_cost.toLocaleString("vi-VN")}
                             </span>
                           </div>
