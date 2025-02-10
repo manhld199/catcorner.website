@@ -55,14 +55,20 @@ export default function HotSales() {
       </h2>
 
       <div className="grid grid-cols-4 gap-6 mb-6">
-        {products.slice(0, 4).map((product) => (
-          <ProductCard product={transformProduct(product) as any} />
+        {products.slice(0, 4).map((product, index) => (
+          <ProductCard
+            key={`hot sale ${index}`}
+            product={transformProduct(product) as any}
+          />
         ))}
       </div>
 
       <div className="grid grid-cols-4 gap-6 mb-8">
-        {products.slice(4, 8).map((product) => (
-          <ProductCard product={transformProduct(product) as any} />
+        {products.slice(4, 8).map((product, index) => (
+          <ProductCard
+            key={`hot sale 2 ${index}`}
+            product={transformProduct(product) as any}
+          />
         ))}
       </div>
 
