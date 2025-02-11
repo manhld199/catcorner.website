@@ -5,7 +5,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: "http://localhost:3000",
+    baseUrl: "https://catcorner-website.vercel.app",
     viewportWidth: 1280,
     viewportHeight: 720,
     experimentalStudio: true,
