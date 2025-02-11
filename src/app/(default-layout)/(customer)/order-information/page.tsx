@@ -396,6 +396,7 @@ export default function OrderInformationPage() {
             <div className="w-full flex gap-2">
               {addresses.map((address, index) => (
                 <button
+                  key={`saved location ${index}`}
                   title={`${address.detail_address}, ${address.ward.name}, ${address.district.name}, ${address.province.name}`}
                   type="button"
                   className="p-2 text-sm w-[30%] border-2 rounded-lg bg-transparent dark:bg-pri-7 border-pri-1/40 hover:bg-pri-2 hover:text-gray-600 dark:border-pri-7 dark:hover:text-black"

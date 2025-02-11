@@ -108,7 +108,7 @@ export default function DefaultLayout({
     <>
       <CustomerHeader />
       {breadcrumbs.length > 0 && <BreadCrumb breadcrumbs={breadcrumbs} />}
-      <main className="my-36 md:my-32 lg:my-6 mx-auto md:w-[93%] lg:w-11/12 max-w-[1152px] min-h-[80vh]">
+      <main className="my-36 md:my-32 lg:my-6 phone_large:my-2 mx-auto md:w-[93%] lg:w-11/12 max-w-[1152px] min-h-[80vh]">
         {children}
       </main>
       <ScrollUp />
