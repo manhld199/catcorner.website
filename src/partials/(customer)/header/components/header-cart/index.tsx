@@ -17,7 +17,7 @@ export default function CustomerHeaderCart() {
           </span>
         </div>
         <span className="ml-2 font-semibold tablet:block laptop:block desktop:block">
-          Shopping bag
+          Giỏ hàng
         </span>
       </a>
 

@@ -1,8 +1,17 @@
 import { ToogleThemeModeMobile } from "@/components";
-import { Ellipsis, MessageCircleQuestion, Settings } from "lucide-react";
+import {
+  Ellipsis,
+  MessageCircleQuestion,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import React from "react";
 
 export default function CustomerHeaderMore() {
+  const { data: session } = useSession();
+
   return (
     <>
       {/* Navigation Links */}
@@ -19,23 +28,31 @@ export default function CustomerHeaderMore() {
               </div>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-              <a
+              <Link
                 href="#"
-                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300"
-              >
+                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <MessageCircleQuestion />
-                <span className="font-medium">Help Center</span>
-              </a>
+                <span className="font-medium">Hỗ trợ</span>
+              </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-              <a
+              <Link
                 href="#"
-                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300"
-              >
+                className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
                 <Settings />
-                <span className="font-medium">Settings</span>
-              </a>
+                <span className="font-medium">Cài đặt</span>
+              </Link>
             </li>
+            {session?.user?.role === "Admin" && (
+              <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                <Link
+                  href="/admin"
+                  className="flex items-center space-x-4 text-pri-1 dark:text-white hover:text-teal-600 dark:hover:text-teal-300">
+                  <ShieldCheck />
+                  <span className="font-medium">Quản lý</span>
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

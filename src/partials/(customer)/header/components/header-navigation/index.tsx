@@ -7,19 +7,19 @@ export default function CustomerHeaderNavigation() {
       {/* Navigation Links */}
       <nav className="flex space-x-8">
         <Link
-          href="/"
+          href="/blogs"
           className="phone:hidden laptop:block text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 font-semibold laptop:text-base desktop:text-base tablet:text-sm">
-          Home
+          Bài viết
         </Link>
         <Link
-          href="#"
+          href="/search-result?discount=true"
           className="phone:hidden desktop:block text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 font-semibold tablet:hidden">
-          Hot Products
+          Sản phẩm sale
         </Link>
         <Link
-          href="#"
+          href="/coupons"
           className="phone:hidden desktop:block text-pri-1 dark:text-white hover:text-teal-700 dark:hover:text-teal-300 font-semibold tablet:hidden">
-          Hot Sales
+          Phiếu giảm giá
         </Link>
       </nav>
     </>

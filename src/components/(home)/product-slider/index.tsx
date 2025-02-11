@@ -4,54 +4,13 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { CardProduct } from "@/components";
-import { Product, IProductProps } from "@/types/product";
+import type { Product, IProductProps } from "@/types/product";
 import { PRODUCT_LIST_URL } from "@/utils/constants/urls";
-
-const products = [
-  {
-    product_id_hashed: "1",
-    product_slug: "san-pham-1",
-    product_img: "/imgs/home/product.png",
-    product_name: "Tên sản phẩm Tên sản phẩm nè",
-    category_name: "Thức ăn",
-    product_avg_rating: 4,
-    product_sold_quantity: 100,
-    variant_name: ["100g", "200g", "300g"],
-    product_price: 456789,
-    lowest_price: 123456,
-    highest_discount: 10,
-  },
-  {
-    product_id_hashed: "2",
-    product_slug: "san-pham-2",
-    product_img: "/imgs/home/product.png",
-    product_name: "Tên sản phẩm Tên sản phẩm nè",
-    category_name: "Thức ăn",
-    product_avg_rating: 4,
-    product_sold_quantity: 100,
-    variant_name: ["100g", "200g", "300g"],
-    product_price: 456789,
-    lowest_price: 123456,
-    highest_discount: 10,
-  },
-  {
-    product_id_hashed: "3",
-    product_slug: "san-pham-3",
-    product_img: "/imgs/home/product.png",
-    product_name: "Tên sản phẩm Tên sản phẩm nè",
-    category_name: "Thức ăn",
-    product_avg_rating: 4,
-    product_sold_quantity: 100,
-    variant_name: ["100g", "200g", "300g"],
-    product_price: 456789,
-    lowest_price: 123456,
-    highest_discount: 10,
-  },
-];
 
 export default function ProductSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState<Product[]>([]);
+  const [visibleProducts, setVisibleProducts] = useState(3);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -69,8 +28,23 @@ export default function ProductSlider() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setVisibleProducts(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleProducts(2);
+      } else {
+        setVisibleProducts(3);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const transformProduct = (product: any): IProductProps => {
-    // console.log(product);
     const hasMultipleVariants = product.variant_names.length > 1;
 
     return {
@@ -91,44 +65,50 @@ export default function ProductSlider() {
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === products.length - 3 ? 0 : prev + 1));
+    setCurrentIndex((prev) =>
+      prev === products.length - visibleProducts ? 0 : prev + 1
+    );
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? products.length - 3 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? products.length - visibleProducts : prev - 1
+    );
   };
 
   return (
-    <div className="container w-[80%] mx-auto py-8">
-      <h2 className="text-3xl font-bold text-center text-[#1B4242] dark:text-pri-2 mb-8">
+    <div className="container w-full sm:w-[90%] md:w-[85%] lg:w-[80%] mx-auto py-4 sm:py-6 md:py-8">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#1B4242] dark:text-pri-2 mb-4 sm:mb-6 md:mb-8">
         Hôm nay tại CatCorner
       </h2>
 
-      <div className="relative px-12">
+      <div className="relative px-4 sm:px-8 md:px-12">
         <Button
           variant="none"
           size="icon"
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10"
           onClick={prevSlide}>
           <ChevronLeft
+            className="w-6 h-6 sm:w-8 sm:h-8"
             style={{ height: "48px", width: "48px" }}
-            className="w-8 h-8"
           />
         </Button>
 
-        <div className="overflow-hidden px-4">
+        <div className="overflow-hidden px-2 sm:px-4">
           <div
             className="flex transition-transform duration-300 ease-in-out pb-6"
-            style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
+            style={{
+              transform: `translateX(-${currentIndex * (100 / visibleProducts)}%)`,
+            }}>
             {products.map((product, index) => (
               <div
                 key={index}
-                className="flex-none w-1/3"
+                className={`flex-none ${visibleProducts === 1 ? "w-full" : visibleProducts === 2 ? "w-1/2" : "w-1/3"}`}
                 data-cy={`product-item-${index}`}>
-                <div className="flex justify-center">
+                <div className="flex justify-center px-2 sm:px-4">
                   <CardProduct
                     product={transformProduct(product) as any}
-                    className="w-[320px]"
+                    className="w-full max-w-[320px]"
                   />
                 </div>
               </div>
@@ -142,8 +122,8 @@ export default function ProductSlider() {
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10"
           onClick={nextSlide}>
           <ChevronRight
+            className="w-6 h-6 sm:w-8 sm:h-8"
             style={{ height: "48px", width: "48px" }}
-            className="w-8 h-8"
           />
         </Button>
       </div>
