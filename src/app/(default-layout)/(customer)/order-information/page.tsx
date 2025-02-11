@@ -23,11 +23,12 @@ import { Button } from "@/components/ui/button";
 
 // import utils
 import { convertNumberToVND } from "@/utils/functions/convert";
-import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
+import { PRODUCT_ORDER_URL, USER_URL } from "@/utils/constants/urls";
 import { SHIPPING_COST } from "@/utils/constants/variables";
 
 // import types
 import { IOrderProduct } from "@/types/interfaces";
+import { Address } from "@/types/address";
 
 const demoCoupons = [
   {
@@ -64,6 +65,7 @@ export default function OrderInformationPage() {
   const [userPhone, setUserPhone] = useState<string>("");
   const [streetAddress, setStreetAddress] = useState<string>("");
   const [orderNote, setOrderNote] = useState<string>("");
+  const [addresses, setAddresses] = useState<Address[]>([]);
 
   const shippingFee = SHIPPING_COST; // Fixed shipping fee
   const couponDiscount = 0; // Example coupon discount
@@ -83,6 +85,7 @@ export default function OrderInformationPage() {
 
   const handleCityChange = (value: string) => {
     const selected = cities.find((city) => city.Id === value);
+    console.log("selected", selected);
     setSelectedCity(selected?.Name || "");
     setDistricts(selected?.Districts || []);
     setWards([]);
@@ -151,7 +154,7 @@ export default function OrderInformationPage() {
 
           const data = await response.json();
           // console.log("dataaaaaa", data);
-          console.log("Fetched products:", data.data.products);
+          // console.log("Fetched products:", data.data.products);
           setProductInfo(data.data.products); // Lưu thông tin sản phẩm để hiển thị
         } catch (error) {
           console.error("Error fetching product data:", error);
@@ -159,7 +162,31 @@ export default function OrderInformationPage() {
       }
     };
 
+    const fetchAddresses = async () => {
+      if (!session?.user?.accessToken) return;
+      try {
+        const response = await fetch(
+          `${USER_URL}/${session?.user?.id}/addresses`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${session.user.accessToken}`,
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.success) {
+          setAddresses(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch addresses:", error);
+      }
+    };
+
     fetchProductInfo();
+    fetchAddresses();
   }, []);
 
   const calculateOriginalPrice = () => {
@@ -296,7 +323,10 @@ export default function OrderInformationPage() {
           <div className="flex flex-col md:col-span-2 gap-2">
             <label className="text-sm font-medium">Địa chỉ</label>
             <div className="grid grid-cols-2 gap-2">
-              <Select onValueChange={handleCityChange} name="city">
+              <Select
+                value={cities.find((city) => city.Name === selectedCity)?.Id}
+                onValueChange={handleCityChange}
+                name="city">
                 <SelectTrigger className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn tỉnh/thành phố" />
                 </SelectTrigger>
@@ -310,9 +340,15 @@ export default function OrderInformationPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+
               <Select
                 onValueChange={handleDistrictChange}
-                disabled={!districts.length}
+                value={
+                  districts.find(
+                    (district) => district.Name === selectedDistrict
+                  )?.Id
+                }
+                disabled={!districts.length && selectedCity == ""}
                 name="district">
                 <SelectTrigger className="border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
                   <SelectValue placeholder="Chọn quận/huyện" />
@@ -327,10 +363,10 @@ export default function OrderInformationPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="mt-2">
+
               <Select
                 onValueChange={handleWardChange}
+                value={wards.find((ward) => ward.Name === selectedWard)?.Id}
                 disabled={!wards.length}
                 name="ward">
                 <SelectTrigger className="w-full border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm">
@@ -353,9 +389,36 @@ export default function OrderInformationPage() {
                 value={streetAddress}
                 onChange={(e) => setStreetAddress(e.target.value)}
                 maxLength={100}
-                className="w-full border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm mt-2"
+                className="w-full border border-gray-300 dark:border-none dark:bg-zinc-900 rounded-md p-3 text-sm"
               />
             </div>
+
+            <div className="w-full flex gap-2">
+              {addresses.map((address, index) => (
+                <button
+                  title={`${address.detail_address}, ${address.ward.name}, ${address.district.name}, ${address.province.name}`}
+                  type="button"
+                  className="p-2 text-sm w-[30%] border-2 rounded-lg bg-transparent dark:bg-pri-7 border-pri-1/40 hover:bg-pri-2 hover:text-gray-600 dark:border-pri-7 dark:hover:text-black"
+                  onClick={() => {
+                    handleCityChange(
+                      cities.find((city) => city.Name === address.province.name)
+                        ?.Id
+                    );
+                    handleDistrictChange(
+                      districts.find(
+                        (district) => district.Name == address.district.name
+                      )?.Id
+                    );
+                    handleWardChange(
+                      wards.find((ward) => ward.Name == address.ward.name)?.Id
+                    );
+                    setStreetAddress(address.detail_address);
+                  }}>
+                  <span className="line-clamp-1">{`${address.detail_address}, ${address.ward.name}, ${address.district.name}, ${address.province.name}`}</span>
+                </button>
+              ))}
+            </div>
+
             <div className="flex flex-col md:col-span-2 gap-2">
               <label className="text-sm font-medium">Ghi chú</label>
               <Textarea

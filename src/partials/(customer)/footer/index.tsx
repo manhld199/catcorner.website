@@ -21,27 +21,27 @@ export default function CustomerFooter() {
           <Link
             href="/"
             className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
-            Home
+            Trang chủ
           </Link>
           <Link
             href="/blogs"
             className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
-            Blogs
+            Bài viết
           </Link>
           <Link
             href="/about-us"
             className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
-            About Us
+            Về chúng tôi
           </Link>
           <Link
             href="/privacy-policy"
             className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
-            Policies
+            Bảo mật
           </Link>
           <Link
             href="/delivery-and-payment"
             className="hover:text-teal-300 transition-colors flex justify-center py-3 tablet:py-0">
-            Delivery and Payment
+            Đổi trả
           </Link>
         </div>
       </div>
