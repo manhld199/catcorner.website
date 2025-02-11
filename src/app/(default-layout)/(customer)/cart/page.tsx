@@ -377,7 +377,7 @@ export default function CartPage() {
           </Dialog>
         )}
 
-        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-gray-800 flex flex-col ml:border-2 md:border-none rounded-2xl overflow-hidden">
+        <section className="w-full phone_large:mx-0 bg-white dark:bg-gray-800 flex flex-col ml:border-2 md:border-none rounded-2xl overflow-hidden">
           <div className="dark:bg-pri-6 ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
             <Checkbox
               checked={isSelectedAll}
