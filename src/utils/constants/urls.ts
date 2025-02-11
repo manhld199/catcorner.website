@@ -50,7 +50,7 @@ export const GUEST_DETAIL_BLOG_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/gue
 export const GUEST_ALL_PRODUCT_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/product`;
 
 export const PRODUCT_ORDER_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/productList/getOrderProducts`;
-export const PRODUCT_BY_CATEGORY_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/product/byCategory`;
+export const PRODUCT_BY_CATEGORY_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/productList/byCategory`;
 
 export const GUEST_CATEGORIES_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/guest/categories`;
 export const ORDER_RATING_URL = `${ORDER_URL}/rating`;
