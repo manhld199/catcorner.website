@@ -100,7 +100,7 @@ export default function BlogListing() {
             href={`/blogs/${blog.article_slug}/${encodeURIComponent(blog.article_id_hashed)}`}
             className="flex-shrink-0">
             <BlogCardShort
-              className="w-[223px] sm:w-[250px] md:w-[275px] lg:w-[300px] h-[285px] overflow-hidden p-3"
+              className="w-[223px] sm:w-[250px] md:w-[275px] lg:w-[300px] h-[340px] overflow-hidden p-3"
               image={blog.article_avt}
               date={`${blog.article_author_name} - ${new Date(blog.article_published_date).toLocaleDateString()}`}
               title={blog.article_name}
