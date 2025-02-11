@@ -102,8 +102,7 @@ export default function CustomerHeaderCategories() {
                       ? "bg-teal-300/10 dark:bg-gray-700"
                       : ""
                   }`}
-                  onMouseEnter={() => setSelectedCategory(category.name)}
-                >
+                  onMouseEnter={() => setSelectedCategory(category.name)}>
                   <Image
                     src={category.image}
                     alt={category.name}
