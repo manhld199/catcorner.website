@@ -5,11 +5,7 @@ export default withAuth(
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
 
-    if (path.startsWith("/staff") && token?.role === "User") {
-      const url = req.nextUrl.clone();
-      url.pathname = "/access-denied";
-      return NextResponse.redirect(url);
-    }
+  
 
     // Nếu người dùng có vai trò "User" và cố gắng truy cập vào trang admin
     if (path.startsWith("/admin") && token?.role === "User") {
@@ -20,9 +16,9 @@ export default withAuth(
     }
     // Protect admin routes
     if (
-      path.startsWith("/admin") ||
-      (path.startsWith("/staff") && token?.role !== "Admin")
-    ) {
+      path.startsWith("/admin") 
+      && token?.role !== "Admin")
+     {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
