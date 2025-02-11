@@ -65,7 +65,7 @@ export default function ProductDetailsPage() {
     setInputQuantity(newQuantity);
 
   return (
-    <div className="container mx-auto bg-white p-6 rounded-lg">
+    <div className="container mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg">
       <section className="flex flex-col laptop:flex-row gap-12">
         <div className="laptop:w-1/2">
           <CustomerProductSlider SliderImgs={productData.product_imgs} />

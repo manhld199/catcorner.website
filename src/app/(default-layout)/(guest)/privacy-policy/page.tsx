@@ -1,6 +1,6 @@
 export default function PrivacyPolicyPage() {
   return (
-    <div className="container mx-auto bg-white ml:p-8 rounded-lg text-lg p-2">
+    <div className="container mx-auto bg-white dark:bg-gray-800 ml:p-8 rounded-lg text-lg p-2">
       <h1 className="text-center font-bold mb-6">
         Chính sách bảo mật thông tin
       </h1>

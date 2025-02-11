@@ -20,7 +20,11 @@ export default function PaymentPage() {
         const paymentData = JSON.parse(storedData);
         localStorage.removeItem(PAYMENT_PRODUCTS);
 
-        if (paymentData && paymentData.re_payment) {
+        if (
+          paymentData &&
+          paymentData.re_payment &&
+          paymentData.order_status == "unpaid"
+        ) {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/payos/get-payment-link/${paymentData.order_id}`,
             {
@@ -79,7 +83,7 @@ export default function PaymentPage() {
 
   return (
     <div className="mx-auto md:w-[500px] aspect-square flex flex-col gap-2 items-center">
-      <div className="w-1/2 mx-auto aspect-square rounded-full bg-gray-100 dark:bg-gray-600 flex flex-col justify-center items-center">
+      <div className="w-1/2 mx-auto aspect-square rounded-full bg-white dark:bg-gray-800 flex flex-col justify-center items-center">
         <div className="relative w-2/3 aspect-square">
           <Image
             src="/imgs/noti/cat-2.png"

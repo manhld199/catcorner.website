@@ -106,27 +106,18 @@ export default function RowCart({
 
   const handleChangeVariant = (value: string) => {
     setCartProducts((prev: ICartProduct[]) => {
-      const updatedCartProducts = prev.map((item, index) =>
-        index == cartIndex ? { ...item, variant_id: value } : item
+      return prev.map((item, index) =>
+        index === cartIndex ? { ...item, variant_id: value } : item
       );
-
-      return updatedCartProducts;
     });
 
     setSelectedCartProducts((prev: ICartProduct[]) => {
-      const changeCartProductIndex = prev.findIndex(
-        (item) =>
-          item.product_id == cartProducts[cartIndex].product_id &&
-          item.variant_id == cartProducts[cartIndex].variant_id
+      return prev.map((item) =>
+        item.product_id === cartProducts[cartIndex].product_id &&
+        item.variant_id === cartProducts[cartIndex].variant_id
+          ? { ...item, variant_id: value }
+          : item
       );
-
-      if (changeCartProductIndex == -1) return prev;
-
-      const updatedCartProducts = prev.map((item, index) =>
-        index == changeCartProductIndex ? { ...item, variant_id: value } : item
-      );
-
-      return updatedCartProducts;
     });
   };
 
@@ -225,27 +216,35 @@ export default function RowCart({
 
       <div className="grid ml:grid-cols-[60px_1fr] md:grid-cols-[72px_1fr] lg:grid-cols-[100px_1fr] md:gap-1 lg:gap-2 items-center">
         {variant && variant.variant_img.startsWith("SEO") ? (
-          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}
+            className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <CldImage
               src={variant.variant_img}
               alt={variant.variant_name}
               fill={true}
             />
-          </div>
+          </a>
         ) : (
-          <div className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}
+            className="relative ml:w-[60px] md:w-[72px] lg:w-[100px] aspect-square">
             <Image
               src={variant.variant_img}
               alt={variant.variant_name}
               fill={true}
             />
-          </div>
+          </a>
         )}
 
         <div className="w-full flex flex-col md:gap-1 lg:gap-2">
-          <h6 className={`line-clamp-2 ${isSelected ? "dark:text-black" : ""}`}>
-            {cartProducts[cartIndex].product_name}
-          </h6>
+          <a
+            href={`/${cartProducts[cartIndex].product_slug}?pid=${cartProducts[cartIndex].product_hashed_id}`}>
+            <h6
+              className={`line-clamp-2 ${isSelected ? "dark:text-black" : ""}`}>
+              {cartProducts[cartIndex].product_name}
+            </h6>
+          </a>
           <Select
             onValueChange={handleChangeVariant}
             value={cartProducts[cartIndex].variant_id}>
@@ -277,7 +276,7 @@ export default function RowCart({
           </Select>
           <div className="flex flex-row gap-1">
             {variant.variant_discount_percent > 0 && (
-              <p className="text-slate-600 line-through">
+              <p className="text-slate-600 dark:text-slate-400 line-through">
                 {convertNumberToVND(variant.variant_price)}
               </p>
             )}
@@ -337,7 +336,7 @@ export default function RowCart({
         </Dialog>
 
         {variant.variant_discount_percent > 0 && (
-          <p className="text-center text-slate-600 line-through">
+          <p className="text-center text-slate-600 dark:text-slate-400 line-through">
             {convertNumberToVND(quantity * variant.variant_price)}
           </p>
         )}

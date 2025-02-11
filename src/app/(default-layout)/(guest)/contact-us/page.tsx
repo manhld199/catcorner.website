@@ -6,7 +6,7 @@ export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Biểu mẫu liên hệ */}
-      <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+      <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <h2 className="font-bold mb-4">Biểu mẫu liên hệ</h2>
         <form className="space-y-4">
           {/* Dòng đầu tiên */}
@@ -20,9 +20,11 @@ export default function ContactPage() {
                 id="name"
                 placeholder="Nhập họ và tên"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3"
+                className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3"
               />
-              <p className="text-sm text-gray-500 text-right">0/50</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+                0/50
+              </p>
             </div>
             <div>
               <label htmlFor="organization" className="block font-medium mb-1">
@@ -33,9 +35,11 @@ export default function ContactPage() {
                 id="organization"
                 placeholder="Nhập tên tổ chức"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3"
+                className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3"
               />
-              <p className="text-sm text-gray-500 text-right">0/50</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+                0/50
+              </p>
             </div>
           </div>
 
@@ -50,9 +54,11 @@ export default function ContactPage() {
                 id="phone"
                 placeholder="Nhập số điện thoại"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3"
+                className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3"
               />
-              <p className="text-sm text-gray-500 text-right">0/50</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+                0/50
+              </p>
             </div>
             <div>
               <label htmlFor="email" className="block font-medium mb-1">
@@ -63,9 +69,11 @@ export default function ContactPage() {
                 id="email"
                 placeholder="Nhập địa chỉ email"
                 maxLength={50}
-                className="w-full border border-gray-300 rounded-lg px-3"
+                className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3"
               />
-              <p className="text-sm text-gray-500 text-right">0/50</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+                0/50
+              </p>
             </div>
           </div>
 
@@ -79,9 +87,11 @@ export default function ContactPage() {
               id="subject"
               placeholder="Nhập tiêu đề"
               maxLength={100}
-              className="w-full border border-gray-300 rounded-lg px-3"
+              className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3"
             />
-            <p className="text-sm text-gry-500 text-right">0/100</p>
+            <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+              0/100
+            </p>
           </div>
 
           {/* Nội dung */}
@@ -93,9 +103,11 @@ export default function ContactPage() {
               id="message"
               placeholder="Nhập nội dung..."
               maxLength={200}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24"
+              className="w-full border border-gray-300 dark:bg-zinc-900 dark:border-none rounded-lg px-3 py-2 h-24"
             />
-            <p className="text-sm text-gray-500 text-right">0/200</p>
+            <p className="text-sm text-gray-500 dark:text-gray-300 text-right">
+              0/200
+            </p>
           </div>
 
           {/* Nút gửi */}
@@ -108,7 +120,7 @@ export default function ContactPage() {
       </div>
 
       {/* Thông tin liên hệ */}
-      <div className="bg-white px-6 pt-6 pb-10 rounded-lg shadow-md h-fit">
+      <div className="bg-white dark:bg-gray-800 px-6 pt-6 pb-10 rounded-lg shadow-md h-fit">
         <h2 className="font-bold mb-4">Thông tin liên hệ</h2>
         <div className="space-y-4">
           <div className="flex items-center">
@@ -117,7 +129,7 @@ export default function ContactPage() {
             </div>
             <div>
               <p className="font-medium">Số điện thoại</p>
-              <p className="text-gray-700">0795.849.949</p>
+              <p className="text-gray-700 dark:text-pri-2">0795.849.949</p>
             </div>
           </div>
           <div className="flex items-center">
@@ -126,7 +138,9 @@ export default function ContactPage() {
             </div>
             <div>
               <p className="font-medium">Địa chỉ email</p>
-              <p className="text-gray-700">catcorner.contact@gmail.com</p>
+              <p className="text-gray-700 dark:text-pri-2">
+                catcorner.contact@gmail.com
+              </p>
             </div>
           </div>
         </div>

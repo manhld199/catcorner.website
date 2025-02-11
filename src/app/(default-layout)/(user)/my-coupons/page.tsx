@@ -83,7 +83,7 @@ export default function HistoryOrder() {
             defaultValue="freeship"
             className="mb-6"
             onValueChange={(value: any) => setActiveTab(value)}>
-            <TabsList className="grid w-fit mx-auto grid-cols-2 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-900">
+            <TabsList className="grid w-fit mx-auto grid-cols-2 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-800">
               <TabsTrigger
                 value="freeship"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">

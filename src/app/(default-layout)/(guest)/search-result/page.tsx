@@ -93,7 +93,7 @@ export default function SearchResultPage() {
   };
 
   return (
-    <div className="container mx-auto bg-white p-6 rounded-lg">
+    <div className="container mx-auto bg-white dark:bg-black p-6 rounded-lg">
       <h1 className="font-bold text-center mb-8 dark:text-white">
         Kết quả tìm kiếm
       </h1>

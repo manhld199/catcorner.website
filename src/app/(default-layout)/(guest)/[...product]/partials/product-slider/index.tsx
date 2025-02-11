@@ -142,16 +142,16 @@ export default function CustomerProductSlider({ SliderImgs }: SliderImgProps) {
         onRequestClose={handleCloseModal}
         shouldCloseOnOverlayClick={true}
         contentLabel="Product Images"
-        className="relative w-full max-w-4xl h-auto bg-white rounded-lg shadow-lg overflow-hidden outline-none py-12"
+        className="relative w-full max-w-4xl h-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden outline-none py-12"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <button
           onClick={handleCloseModal}
-          className="absolute top-4 right-4 text-gray-600 bg-white rounded-full p-2 hover:cursor-pointer z-50 hover:text-teal-600">
+          className="absolute top-4 right-4 text-gray-600 bg-white  rounded-full p-2 hover:cursor-pointer z-50 hover:text-teal-600">
           <X />
         </button>
         {/* Slider chính */}
         <div
-          className="relative w-full h-[460px] overflow-hidden dark:bg-white"
+          className="relative w-full h-[460px] overflow-hidden dark:bg-gray-800"
           onClick={handleMainImageClick}>
           <div className="absolute inset-0 mb-8">
             <CldImage

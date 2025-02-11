@@ -138,7 +138,7 @@ export default function RatingDetailPage() {
   return (
     <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
       {/* Sản phẩm đặt mua */}
-      <section className="col-span-1 lg:col-span-2 bg-white p-4 rounded-lg shadow-md">
+      <section className="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <h3 className="font-bold mb-2 text-center">Sản phẩm đặt mua</h3>
         <hr className="mb-4 dark:border-white" />
         {products.map((product) => (
@@ -157,10 +157,12 @@ export default function RatingDetailPage() {
               />
             </div>
             <div className="ml-4 flex-1">
-              <h2 className="text-sm font-bold">{product.name}</h2>
-              <p className="text-sm text-gray-600">{product.variant}</p>
+              <h2 className="text-sm font-bold dark:text-black">
+                {product.name}
+              </h2>
+              <p className="text-sm text-gray-600 ">{product.variant}</p>
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 line-through">
+                <span className="text-gray-400 dark:text-gray-500 line-through">
                   {product.price.toLocaleString()}đ
                 </span>
                 <span className="font-bold text-teal-600">
@@ -189,13 +191,15 @@ export default function RatingDetailPage() {
           </p>
           <p className="flex justify-between font-bold text-lg">
             <span>Tổng tiền</span>
-            <span className="text-teal-600">{finalCost.toLocaleString()}đ</span>
+            <span className="text-teal-600 dark:text-teal-300">
+              {finalCost.toLocaleString()}đ
+            </span>
           </p>
         </div>
       </section>
 
       {/* Đánh giá */}
-      <section className="col-span-1 lg:col-span-2 bg-white p-4 rounded-lg shadow-md">
+      <section className="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <h3 className="font-bold mb-2 text-center">Đánh giá</h3>
         <hr className="mb-4 dark:border-white" />
         {selectedProduct && ratings[selectedProduct.id] ? (
@@ -264,7 +268,9 @@ export default function RatingDetailPage() {
             )}
           </div>
         ) : (
-          <p className="text-gray-500">Chưa có đánh giá cho sản phẩm này.</p>
+          <p className="text-gray-500 dark:text-gray-300">
+            Chưa có đánh giá cho sản phẩm này.
+          </p>
         )}
       </section>
     </div>

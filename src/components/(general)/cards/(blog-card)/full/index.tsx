@@ -19,9 +19,9 @@ export default function BlogCardFull({
   hashtags = ["hashtag", "hashtag", "hashtag"],
 }: BlogCardProps) {
   return (
-    <Card className="rounded-lg overflow-hidden shadow-md border border-gray-200 bg-white">
+    <Card className="rounded-lg overflow-hidden shadow-md border border-gray-200 bg-white dark:bg-pri-6">
       {/* Header */}
-      <div className="bg-pri-4 px-4 py-2">
+      <div className="bg-pri-4 dark:bg-emerald-400 px-4 py-2">
         <h3 className="text-lg font-bold line-clamp-1">{title}</h3>
       </div>
 
@@ -30,7 +30,7 @@ export default function BlogCardFull({
         {/* Date */}
         <p className="mb-2 text-xs">{date}</p>
         {/* Short description */}
-        <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-500 text-sm mb-4 line-clamp-2 dark:text-gray-300">
           {shortDescription}
         </p>
         {/* Hashtags */}

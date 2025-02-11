@@ -5,6 +5,7 @@ export { default as CustomerStarRating } from "./(general)/star-rating";
 
 // cards
 export { default as CustomerProductCard } from "./(general)/cards/product-card";
+export { default as CardProduct } from "./(general)/cards/product-card";
 export { default as BlogCardFull } from "./(general)/cards/(blog-card)/full";
 export { default as BlogCardShort } from "./(general)/cards/(blog-card)/short";
 export { default as RowCart } from "./(general)/cards/cart";

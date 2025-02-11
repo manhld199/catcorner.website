@@ -82,7 +82,7 @@ export default function BlogListPage() {
   return (
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-4 gap-4">
       {/* Danh sách bài viết */}
-      <div className="lg:col-span-3 bg-white rounded-lg px-4 py-6">
+      <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg px-4 py-6">
         <div className="flex justify-between">
           <h1 className="font-bold mb-6">Bài viết</h1>
 
@@ -93,7 +93,7 @@ export default function BlogListPage() {
               placeholder="Tìm kiếm bài viết..."
               value={searchQuery}
               onChange={handleSearch}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full border border-gray-300 dark:border-none rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             <Search className="absolute left-3 top-2.5 text-gray-500 w-5 h-5" />
           </div>
@@ -155,7 +155,7 @@ export default function BlogListPage() {
       </div>
 
       {/* Sidebar */}
-      <aside className="bg-white rounded-lg px-4 py-6">
+      <aside className="bg-white dark:bg-gray-800 rounded-lg px-4 py-6">
         {/* Chủ đề hấp dẫn */}
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-4">Chủ đề hấp dẫn</h2>

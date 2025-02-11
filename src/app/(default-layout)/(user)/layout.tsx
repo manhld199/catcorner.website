@@ -22,7 +22,7 @@ export default function DefaultLayout({
   if (!session?.user?.accessToken) return null;
 
   return (
-    <div className="flex flex-col md:flex-row w-full container mx-auto gap-4 relative z-0 px-4 md:px-0 dark:bg-black">
+    <div className="flex flex-col md:flex-row w-full container mx-auto gap-4 relative z-0 px-4 md:px-0">
       <UserSidebar />
       {children}
     </div>

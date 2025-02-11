@@ -107,12 +107,12 @@ export default function FileUploader({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={handleClick}
-        className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center bg-gray-100 cursor-pointer">
-        <p className="text-gray-600 px-24 py-4">
-          <span className="text-blue-500">Bấm </span> để chọn{" "}
+        className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center bg-gray-100 dark:bg-zinc-900 cursor-pointer">
+        <p className="text-gray-600 dark:text-gray-300 px-24 py-4">
+          <span className="text-blue-500 dark:text-blue-400">Bấm </span> để chọn{" "}
           {label.toLowerCase()} cần tải lên hoặc{" "}
-          <span className="text-blue-500">kéo thả</span> {label.toLowerCase()}{" "}
-          vào đây
+          <span className="text-blue-500 dark:text-blue-400">kéo thả</span>{" "}
+          {label.toLowerCase()} vào đây
         </p>
         <Input
           ref={inputRef}

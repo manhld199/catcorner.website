@@ -14,6 +14,8 @@ import { extractOrderIdPrefix } from "@/utils/functions/format";
 import OrderProductItem from "@/components/(order)/order-product-item";
 import StatusBadge from "@/components/(order)/status-badge";
 import OrderActions from "@/components/(order)/order-actions";
+import { putData } from "@/utils/functions/client";
+
 interface OrderProduct {
   product_id: string;
   variant_id: string;
@@ -83,6 +85,8 @@ const calculateProductTotal = (product: OrderProduct) => {
 const isValidOrderId = (str: string) => /^DH/.test(str);
 
 export default function HistoryOrder() {
+  const searchParams = useSearchParams();
+
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -98,6 +102,33 @@ export default function HistoryOrder() {
     delivered: 0,
     canceled: 0,
   });
+
+  useEffect(() => {
+    const cancelData = async (orderCode: string) => {
+      try {
+        const data = await putData(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/cancel/DH${orderCode}`,
+          {}
+        );
+        // console.log("data: ", data);
+        if (!data.success) {
+          toast.error("Không thể hủy đơn hàng");
+          throw new Error("Failed to cancel order");
+        }
+
+        toast.success("Hủy đơn hàng thành công");
+      } catch (err) {
+        console.log("Error in canceling order: ", err);
+      }
+    };
+
+    const isCancelled = searchParams.get("cancel");
+    // console.log("cancel", isCancelled);
+    if (isCancelled) {
+      const orderCode = searchParams.get("orderCode");
+      cancelData(orderCode);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchOrders();
@@ -135,7 +166,7 @@ export default function HistoryOrder() {
         },
       });
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+        const errorData = await response.json().catch(() => {});
         console.error("Error response:", {
           status: response.status,
           statusText: response.statusText,
@@ -147,7 +178,7 @@ export default function HistoryOrder() {
       if (!responseData.success) {
         throw new Error("Failed to fetch orders");
       }
-      console.log("order data", responseData.data.orders);
+      // console.log("order data", responseData.data.orders);
       setOrders(responseData.data.orders);
       setIsLoading(false);
 
@@ -176,9 +207,55 @@ export default function HistoryOrder() {
     }
   };
 
-  const handleRepurchase = (orderId: string) => {
-    console.log("Repurchase order:", orderId);
-    // Implement repurchase logic
+  const handleRepurchase = async (order: Order) => {
+    try {
+      if (order.order_status == "unpaid") {
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          re_payment: true,
+          order_status: order.order_status,
+        };
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        window.location.href = "/payment";
+      } else if (order.order_status == "canceled") {
+        const orderProducts = order.order_products.map((product: any) => ({
+          product_hashed_id: product.product_hashed_id,
+          variant_id: product.variant_id,
+          quantity: product.quantity,
+          unit_price: product.unit_price,
+          discount_percent: product.discount_percent,
+        }));
+
+        // Define payment data structure
+        const newPaymentData = {
+          _id: order._id,
+          order_id: order.order_id,
+          user_id: session ? session.user.id : undefined,
+          order_products: orderProducts,
+          order_buyer: {
+            name: order.order_buyer.name,
+            phone_number: order.order_buyer.phone_number,
+            address: order.order_buyer.address,
+          },
+          order_note: order.order_note || "",
+          shipping_cost: order.shipping_cost,
+          payment_method: "onl",
+          cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-history?selectedTab=unpaid`, // Cancel URL
+          return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/order-success?orderId=${encodeURIComponent(order.order_id)}`, // Success redirect
+          re_payment: true,
+        };
+
+        // Save payment data to local storage
+        localStorage.setItem("paymentData", JSON.stringify(newPaymentData));
+        // console.log("dataaaaaaaaa neeeeee", newPaymentData);
+
+        // Redirect to the payment page
+        window.location.href = "/payment";
+      }
+    } catch (err) {
+      console.log("Error in repurchasing order: ", err);
+    }
   };
 
   const handleCancel = async (orderId: string) => {
@@ -186,7 +263,7 @@ export default function HistoryOrder() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/cancel/${orderId}`,
         {
           method: "PUT",
           headers: {
@@ -223,7 +300,7 @@ export default function HistoryOrder() {
             defaultValue="all"
             className="mb-6"
             onValueChange={(value) => setActiveTab(value)}>
-            <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-900">
+            <TabsList className="grid w-full grid-cols-5 rounded-[50px] p-2 h-[50px] mb-5 z-0 dark:bg-gray-800">
               <TabsTrigger
                 value="all"
                 className="data-[state=active]:text-pri-1 dark:data-[state=active]:text-white data-[state=active]:font-bold text-base rounded-[50px] dark:text-gray-300">
@@ -283,7 +360,7 @@ export default function HistoryOrder() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Nhập mã đơn hàng hoặc tên sản phẩm để tìm kiếm"
-                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-900 rounded-full border border-neutral-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
+                    className="w-full pl-4 pr-14 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 bg-white dark:bg-gray-900 rounded-full border border-neutral-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-300"
                   />
                   <Search className="absolute top-1/2 right-4 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
@@ -308,10 +385,10 @@ export default function HistoryOrder() {
                     orders.map((order) => (
                       <Card
                         key={order._id}
-                        className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:bg-black dark:border-gray-700">
+                        className="drop-shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:bg-gray-800 dark:border-gray-700">
                         <CardContent className="p-6">
                           <div className="flex items-center justify-between mb-4">
-                            <span className="flex gap-2 text-pri-1 dark:text-pri-6 text-2xl">
+                            <span className="flex gap-2 text-pri-1 dark:text-pri-2 text-2xl">
                               <ShoppingBag size={24} />
                               <span>Mã đơn hàng:</span>
                               <span>
@@ -327,7 +404,7 @@ export default function HistoryOrder() {
                                   size={16}
                                   className="dark:text-gray-300"
                                 />
-                                <span className="text-sm text-pri-1 dark:text-pri-6">
+                                <span className="text-sm text-pri-1 dark:text-gray-200">
                                   Thủ Đức, Tp Hồ Chí Minh
                                 </span>
                               </div>
@@ -338,7 +415,7 @@ export default function HistoryOrder() {
 
                                   <div className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#d1d5db_2px,#d1d5db_8px)] dark:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,#4b5563_2px,#4b5563_8px)]" />
                                 </div>
-                                <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px] dark:text-gray-300">
+                                <div className="text-xs text-muted-foreground whitespace-nowrap p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px] dark:text-gray-200">
                                   Giao hàng dự kiến: 28/09/25
                                 </div>
                                 <div className="flex items-center flex-1">
@@ -352,7 +429,7 @@ export default function HistoryOrder() {
                                   size={16}
                                   className="dark:text-gray-300"
                                 />
-                                <span className="text-sm text-pri-1 dark:text-pri-6">
+                                <span className="text-sm text-pri-1 dark:text-gray-200">
                                   {order.order_buyer.address.district},{" "}
                                   {order.order_buyer.address.province}
                                 </span>
@@ -360,7 +437,7 @@ export default function HistoryOrder() {
                             </div>
                           </div>
 
-                          <div className="text-right text-pri-1 dark:text-white underline font-bold pb-4 hover:opacity-80 dark:hover:text-pri-6 transition-colors">
+                          <div className="text-right text-pri-1 dark:text-white underline font-bold pb-4 dark:hover:text-pri-2 transition-colors">
                             <Link href={`order-history/details/${order._id}`}>
                               Xem chi tiết
                             </Link>
@@ -379,22 +456,20 @@ export default function HistoryOrder() {
                           </div>
 
                           <div className="mt-1 pt-1 text-right">
-                            <span className="font-medium dark:text-gray-300">
+                            <span className="font-medium dark:text-gray-200">
                               Thành tiền:{" "}
                             </span>
-                            <span className="text-lg font-semibold text-pri-7 dark:text-pri-6">
+                            <span className="text-lg font-semibold text-pri-7 dark:text-pri-2">
                               ₫{order.final_cost.toLocaleString("vi-VN")}
                             </span>
                           </div>
 
                           <div className="flex gap-4 justify-end mt-9">
                             <OrderActions
-                              status={order.order_status}
-                              orderId={order._id}
+                              order={order}
                               onRepurchase={handleRepurchase}
                               onCancel={handleCancel}
                               onReview={handleReview}
-                              orderIdHashed={order.order_id_hashed}
                             />
                           </div>
                         </CardContent>

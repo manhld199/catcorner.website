@@ -43,7 +43,7 @@ export default function BreadCrumb({
           <BreadcrumbItem>
             <BreadcrumbLink
               href={firstBreadcrumb.href}
-              className="text-gray-500 hover:text-teal-600">
+              className="text-gray-500 hover:text-teal-600 dark:text-gray-200 dark:hover:text-teal-200">
               {firstBreadcrumb.label}
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -63,7 +63,7 @@ export default function BreadCrumb({
                       <DropdownMenuItem key={index}>
                         <BreadcrumbLink
                           href={crumb.href}
-                          className="text-gray-500 hover:text-teal-600">
+                          className="text-gray-500 hover:text-teal-600 dark:text-gray-300">
                           {crumb.label}
                         </BreadcrumbLink>
                       </DropdownMenuItem>
@@ -81,7 +81,7 @@ export default function BreadCrumb({
               <BreadcrumbItem>
                 <BreadcrumbLink
                   href={secondToLastBreadcrumb.href}
-                  className="text-gray-500 hover:text-teal-600">
+                  className="text-gray-500 hover:text-teal-600 dark:text-gray-300">
                   {secondToLastBreadcrumb.label}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -91,7 +91,7 @@ export default function BreadCrumb({
           {/* Hiển thị breadcrumb cuối cùng */}
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage className="text-black font-semibold">
+            <BreadcrumbPage className="text-black font-semibold dark:text-gray-400">
               {lastBreadcrumb.label}
             </BreadcrumbPage>
           </BreadcrumbItem>

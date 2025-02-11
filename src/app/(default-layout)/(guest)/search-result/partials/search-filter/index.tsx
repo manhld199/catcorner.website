@@ -180,7 +180,7 @@ export default function SearchFilter() {
   };
 
   return (
-    <aside className="w-[30%] p-4 border rounded-lg h-fit">
+    <aside className="w-[30%] p-4 border rounded-lg h-fit dark:bg-gray-800">
       <h2 className="font-bold mb-4">Bộ lọc:</h2>
 
       {/* Categories */}
@@ -199,8 +199,8 @@ export default function SearchFilter() {
               }
               className={`px-3 py-2 rounded-md border text-center flex items-center justify-between ${
                 selectedCategories.includes(category)
-                  ? "bg-pri-7 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
+                  ? "bg-pri-7 text-white dark:text-gray-400"
+                  : "bg-white dark:bg-teal-100 text-gray-700 border-gray-300"
               }`}>
               <span className="truncate line-clamp-1">{category}</span>{" "}
               {selectedCategories.includes(category) ? (
@@ -214,7 +214,7 @@ export default function SearchFilter() {
         {categories.length > MAX_VISIBLE_ITEMS && (
           <button
             onClick={() => setShowMoreCategories(!showMoreCategories)}
-            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            className="text-teal-600 dark:text-teal-300 mt-2 flex items-center text-sm justify-center w-full">
             {showMoreCategories ? "Thu gọn" : "Xem thêm"}
             {showMoreCategories ? (
               <ChevronUp className="w-4 h-4" />
@@ -239,8 +239,8 @@ export default function SearchFilter() {
               }
               className={`px-3 py-3 rounded-md border flex items-center justify-between ${
                 selectedRatings.includes(rating)
-                  ? "bg-pri-7 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
+                  ? "bg-pri-7 text-white dark:text-gray-400"
+                  : "bg-white dark:bg-teal-100 text-gray-700 border-gray-300"
               }`}>
               <StarRating rating={rating} />
               {selectedRatings.includes(rating) ? (
@@ -254,7 +254,7 @@ export default function SearchFilter() {
         {ratings.length > MAX_VISIBLE_ITEMS && (
           <button
             onClick={() => setShowMoreRatings(!showMoreRatings)}
-            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            className="text-teal-600 dark:text-teal-300 mt-2 flex items-center text-sm justify-center w-full">
             {showMoreRatings ? "Thu gọn" : "Xem thêm"}
             {showMoreRatings ? (
               <ChevronUp className="w-4 h-4" />
@@ -277,7 +277,7 @@ export default function SearchFilter() {
             type="number"
             placeholder="Min"
             step="10000"
-            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-600"
+            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 dark:border-none focus:outline-none focus:ring-1 focus:ring-teal-600"
             value={selectedMinPrice || ""}
             onChange={handleMinPriceChange}
           />
@@ -285,7 +285,7 @@ export default function SearchFilter() {
             type="number"
             placeholder="Max"
             step="10000"
-            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-600"
+            className="px-3 py-2 rounded-md border text-center text-gray-700 border-gray-300 dark:border-none focus:outline-none focus:ring-1 focus:ring-teal-600"
             value={selectedMaxPrice || ""}
             onChange={handleMaxPriceChange}
           />
@@ -299,8 +299,8 @@ export default function SearchFilter() {
               onClick={() => toggleBudgetSelection(budget)}
               className={`px-3 py-2 rounded-md border text-center flex items-center justify-between ${
                 selectedBudgets.includes(budget)
-                  ? "bg-pri-7 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
+                  ? "bg-pri-7 text-white dark:text-gray-400"
+                  : "bg-white dark:bg-teal-100 text-gray-700 border-gray-300"
               }`}>
               {budget}{" "}
               {selectedBudgets.includes(budget) ? (
@@ -316,7 +316,7 @@ export default function SearchFilter() {
         {budgets.length > MAX_VISIBLE_ITEMS && (
           <button
             onClick={() => setShowMoreBudgets(!showMoreBudgets)}
-            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            className="text-teal-600 dark:text-teal-300 mt-2 flex items-center text-sm justify-center w-full">
             {showMoreBudgets ? "Thu gọn" : "Xem thêm"}
             {showMoreBudgets ? (
               <ChevronUp className="w-4 h-4" />
@@ -341,8 +341,8 @@ export default function SearchFilter() {
               }
               className={`px-3 py-2 rounded-md border text-center flex items-center justify-between ${
                 selectedSales.includes(sale)
-                  ? "bg-pri-7 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
+                  ? "bg-pri-7 text-white dark:text-gray-400"
+                  : "bg-white dark:bg-teal-100 text-gray-700 border-gray-300"
               }`}>
               {sale}{" "}
               {selectedSales.includes(sale) ? (
@@ -356,7 +356,7 @@ export default function SearchFilter() {
         {sales.length > MAX_VISIBLE_ITEMS && (
           <button
             onClick={() => setShowMoreSales(!showMoreSales)}
-            className="text-teal-600 mt-2 flex items-center text-sm justify-center w-full">
+            className="text-teal-600 dark:text-teal-300 mt-2 flex items-center text-sm justify-center w-full">
             {showMoreSales ? "Thu gọn" : "Xem thêm"}
             {showMoreSales ? (
               <ChevronUp className="w-4 h-4" />

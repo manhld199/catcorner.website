@@ -23,7 +23,7 @@ export default function BlogCardShort({
 }: BlogCardProps) {
   return (
     <Card
-      className={`flex flex-col h-full overflow-hidden rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 ${
+      className={`dark:bg-pri-6 flex flex-col h-full overflow-hidden rounded-lg shadow-lg border border-gray-200 dark:border-none hover:shadow-lg transition-shadow duration-300 ${
         isOdd ? "mt-16" : ""
       } ${className}`} // Hợp nhất className truyền từ ngoài với các class mặc định
     >
@@ -40,7 +40,7 @@ export default function BlogCardShort({
 
       {/* Content */}
       <CardContent className="flex-1 px-2 py-0 mt-2">
-        <p className="text-gray-500 text-xs">{date}</p>
+        <p className="text-gray-500 text-xs dark:text-gray-300">{date}</p>
         <p className="font-semibold tracking-tight line-clamp-2 text-base">
           {title}
         </p>
@@ -67,7 +67,7 @@ export default function BlogCardShort({
       <CardFooter className="px-4 py-0 mt-2">
         <Button
           variant="link"
-          className="flex items-center gap-1 text-teal-600 hover:text-teal-500 transition-colors text-sm font-medium p-0">
+          className="flex items-center gap-1 text-teal-600 hover:text-teal-500 dark:text-teal-300 transition-colors text-sm font-medium p-0">
           Đọc thêm
           <ArrowUpRight className="w-4 h-4" />
         </Button>

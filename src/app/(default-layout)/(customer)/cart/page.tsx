@@ -225,9 +225,9 @@ export default function CartPage() {
   };
 
   const handleSort = (key: string, sortState: string) => {
-    console.log("deffffffff", defaultCartProducts);
-    console.log("name state", sortNameState);
-    console.log("sort state", sortState);
+    // console.log("deffffffff", defaultCartProducts);
+    // console.log("name state", sortNameState);
+    // console.log("sort state", sortState);
 
     let sortedData = [
       ...defaultCartProducts.filter(
@@ -308,6 +308,33 @@ export default function CartPage() {
     setCartProducts(sortedData);
   };
 
+  const handleBuy = async () => {
+    localStorage.removeItem("buyNowProducts");
+    // Lấy danh sách sản phẩm đã lưu trong localStorage
+    const existingProducts = localStorage.getItem("buyNowProducts");
+    const productsArray = existingProducts ? JSON.parse(existingProducts) : [];
+
+    // Xử lý dữ liệu đặt hàng
+    const orderProducts = selectedCartProducts.map((product) => ({
+      product_hashed_id: product.product_hashed_id,
+      variant_id: product.variant_id,
+      quantity: product.quantity,
+    }));
+
+    // Thêm sản phẩm mới vào mảng
+    const updatedProductsArray = [...productsArray, ...orderProducts];
+
+    // Lưu mảng sản phẩm vào localStorage
+    localStorage.setItem(
+      "buyNowProducts",
+      JSON.stringify(updatedProductsArray)
+    );
+
+    location.href = "/order-information";
+
+    // console.log("Saved to localStorage:", updatedProductsArray);
+  };
+
   return (
     <div className="relative w-full h-fit grid md:grid-cols-[7fr_3fr] gap-3">
       <div className="flex flex-col gap-2 items-end">
@@ -350,8 +377,8 @@ export default function CartPage() {
           </Dialog>
         )}
 
-        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-black flex flex-col ml:border-2 md:border-none rounded-2xl">
-          <div className="ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
+        <section className="w-full ml:mx-4 md:mx-0 bg-white dark:bg-gray-800 flex flex-col ml:border-2 md:border-none rounded-2xl overflow-hidden">
+          <div className="dark:bg-pri-6 ml:p-2 lg:py-3 lg:pl-4 grid ml:grid-cols-[5%_48%_22%_22%] md:grid-cols-[5%_48%_22%_22%] lg:grid-cols-[5%_45%_23%_23%] xl:grid-cols-[5%_50%_22%_22%] items-center">
             <Checkbox
               checked={isSelectedAll}
               onCheckedChange={handleChangeCheckAll}
@@ -418,41 +445,47 @@ export default function CartPage() {
         </section>
       </div>
 
-      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white dark:bg-black w-full h-fit flex flex-col gap-3 rounded-2xl">
+      <section className="sticky md:top-32 lg:top-20 right-0 p-4 bg-white dark:bg-gray-800 w-full h-fit flex flex-col gap-3 rounded-2xl">
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-price"]}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-price"]}
+          </p>
           <p>{convertNumberToVND(originalTotalPrice)}</p>
         </div>
 
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-discount"]}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-discount"]}
+          </p>
           <p>{convertNumberToVND(discountedTotalPrice)}</p>
         </div>
 
         <div className="border-[1px]"></div>
 
         <div className="flex flex-row justify-between">
-          <p className="text-gray-600">{PAGE_DATA["cart-total-price"]}</p>
-          <h4 className="text-pri-6">{convertNumberToVND(totalPrice)}</h4>
+          <p className="text-gray-600 dark:text-gray-300">
+            {PAGE_DATA["cart-total-price"]}
+          </p>
+          <h4 className="text-pri-6 dark:text-teal-300">
+            {convertNumberToVND(totalPrice)}
+          </h4>
         </div>
 
-        <Button variant="filled">
-          <a href="#" className="w-full h-full pt-1">
-            <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
-          </a>
+        <Button variant="filled" onClick={handleBuy}>
+          <h5>{`${PAGE_DATA["cart-submit"]} (${selectedCartProducts.length})`}</h5>
         </Button>
 
         <p className="text-center text-sm">
           <span className="text-center">{PAGE_DATA["cart-term-1"]}</span>
           <Link
             href="/term-of-service"
-            className="ml-1 text-blue-500 underline">
+            className="ml-1 text-blue-500 dark:text-blue-400 underline">
             {PAGE_DATA["cart-term-2"]}
           </Link>
           <span className="ml-1">{PAGE_DATA["cart-term-3"]}</span>
           <Link
             href="/security-policies"
-            className="ml-1 text-blue-500 underline">
+            className="ml-1 text-blue-500 dark:text-blue-400 underline">
             {PAGE_DATA["cart-term-4"]}
           </Link>
           <span className="ml-1">{PAGE_DATA["cart-term-5"]}</span>

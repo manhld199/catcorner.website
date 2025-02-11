@@ -115,9 +115,9 @@ function AdminTable<TData, TValue>({
         filterList={filterList}
       />
 
-      <div className="relative rounded md w-full max-h-[580px] overflow-auto">
-        <TableWrap className="p-2 bg-white dark:bg-zinc-950">
-          <TableHeader className="sticky  top-0 z-10 bg-white dark:bg-zinc-950">
+      <div className="w-full relative rounded md max-h-[580px] overflow-auto">
+        <TableWrap className="w-full p-2 bg-white dark:bg-zinc-950">
+          <TableHeader className="w-full sticky top-0 z-10 bg-white dark:bg-zinc-950">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

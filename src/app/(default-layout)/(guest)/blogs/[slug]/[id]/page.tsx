@@ -69,7 +69,7 @@ export default async function BlogDetailPage({
     <div className="container mx-auto grid grid-cols-1 lg:grid-cols-4 gap-4">
       {/* Nội dung bài viết */}
       <article
-        className="lg:col-span-3 bg-white px-4 py-4 rounded-lg overflow-y-auto"
+        className="lg:col-span-3 bg-white dark:bg-gray-800 px-4 py-4 rounded-lg overflow-y-auto"
         style={{ height: "100vh" }} // Nội dung bên trái cuộn được
       >
         {/* Ảnh tiêu đề */}
@@ -115,7 +115,7 @@ export default async function BlogDetailPage({
                     href={`/blog/${related.article_slug}/${encodeURIComponent(
                       related.article_id_hashed
                     )}`}
-                    className="text-teal-600 hover:underline font-medium">
+                    className="text-teal-600 dark:text-teal-400 hover:underline font-medium">
                     {related.article_name}
                   </a>
                 </li>
@@ -127,7 +127,7 @@ export default async function BlogDetailPage({
 
       {/* Sidebar */}
       <aside
-        className="bg-white rounded-lg p-6 h-fit sticky top-6" // Sticky để cố định
+        className="bg-white dark:bg-gray-800 rounded-lg p-6 h-fit sticky top-6" // Sticky để cố định
         style={{ maxHeight: "calc(100vh - 2rem)", overflowY: "auto" }} // Cuộn nội dung bên phải
       >
         <h2 className="text-xl font-bold mb-4">Nội dung</h2>
@@ -139,7 +139,7 @@ export default async function BlogDetailPage({
               className="text-gray-600 text-sm">
               <a
                 href={`#${id}`}
-                className="text-teal-600 hover:underline font-medium">
+                className="text-teal-600 dark:text-teal-400 hover:underline font-medium">
                 {text}
               </a>
             </li>

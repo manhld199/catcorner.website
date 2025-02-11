@@ -18,7 +18,7 @@ interface OrderDetailsProps {
   order: Order;
   title?: string;
   description?: string;
-  onRepurchase?: (orderId: string) => void;
+  onRepurchase?: (order: Order) => void;
   onCancel?: (orderId: string) => void;
   onReview?: (orderId: string) => void;
 }
@@ -31,7 +31,7 @@ export default function OrderDetails({
   onCancel,
   onReview,
 }: OrderDetailsProps) {
-  console.log("orrrrr", order);
+  // console.log("orrrrr", order);
   return (
     <div className="container mx-auto w-[100%]">
       <h1 className="text-2xl mb-2 font-bold dark:text-white">{title}</h1>
@@ -39,15 +39,15 @@ export default function OrderDetails({
         <p className="text-lg font-light text-gray-600">{description}</p>
       )}
 
-      <Card className="my-6 dark:bg-black dark:border-gray-700">
+      <Card className="my-6 dark:bg-gray-800 dark:border-gray-700">
         <CardContent className="p-6">
           {/* Order ID and Status */}
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <div className="text-base text-muted-foreground dark:text-gray-400">
+              <div className="text-base text-muted-foreground dark:text-pri-2">
                 Mã đơn hàng
               </div>
-              <div className="font-medium text-base text-pri-1 dark:text-pri-6">
+              <div className="font-medium text-base text-pri-1 dark:text-teal-400">
                 {extractOrderIdPrefix(order.order_id)}
               </div>
             </div>
@@ -58,14 +58,14 @@ export default function OrderDetails({
           <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
             <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px]">
               <Truck size={16} className="dark:text-gray-300" />
-              <span className="text-sm text-pri-1 dark:text-pri-6">
+              <span className="text-sm text-pri-1 dark:text-gray-400">
                 Thủ Đức, Tp Hồ Chí Minh
               </span>
             </div>
             <span className="text-muted-foreground dark:text-gray-400">→</span>
             <div className="flex items-center gap-2 p-0.5 px-4 border border-neutral-200 dark:border-gray-700 rounded-[32px]">
               <MapPin size={16} className="dark:text-gray-300" />
-              <span className="text-sm text-pri-1 dark:text-pri-6">
+              <span className="text-sm text-pri-1 dark:text-gray-400">
                 {order.order_buyer.address.district},{" "}
                 {order.order_buyer.address.province}
               </span>
@@ -84,12 +84,10 @@ export default function OrderDetails({
                     Cậu đợi 1 lát nhé, shop sẽ xác nhận ngay thôi !
                   </p>
                   <OrderActions
-                    status={order.order_status}
-                    orderId={order._id}
+                    order={order}
                     onRepurchase={onRepurchase}
                     onCancel={onCancel}
                     onReview={onReview}
-                    orderIdHashed={order.order_id_hashed}
                   />
                 </div>
               </Card>
@@ -100,10 +98,10 @@ export default function OrderDetails({
                     <Clock className="h-5 w-5 dark:text-gray-300" />
                   </div>
                   <div>
-                    <div className="text-base text-neutral-400 dark:text-gray-400">
+                    <div className="text-base text-neutral-400 dark:text-gray-200">
                       Giao hàng dự kiến
                     </div>
-                    <div className="font-medium text-base text-pri-1 dark:text-pri-6">
+                    <div className="font-medium text-base text-pri-1 dark:text-teal-400">
                       28/09/25
                     </div>
                   </div>
@@ -116,10 +114,10 @@ export default function OrderDetails({
                     <Timer className="h-5 w-5 dark:text-gray-300" />
                   </div>
                   <div>
-                    <div className="text-base text-neutral-400 dark:text-gray-400">
+                    <div className="text-base text-neutral-400 dark:text-gray-200">
                       Giao hàng trong:
                     </div>
-                    <div className="font-medium text-base text-pri-1 dark:text-pri-6">
+                    <div className="font-medium text-base text-pri-1 dark:text-teal-400">
                       5 ngày
                     </div>
                   </div>
@@ -189,7 +187,7 @@ export default function OrderDetails({
           </div>
 
           {/* Products Section */}
-          <div className="text-xl text-pri-1 dark:text-pri-6 py-3 font-medium">
+          <div className="text-xl text-pri-1 dark:text-pri-2 py-3 font-medium">
             Sản phẩm
           </div>
 
@@ -232,7 +230,7 @@ export default function OrderDetails({
                 </span>
                 <span className="font-medium text-base dark:text-white">
                   {" "}
-                  -₫50.000
+                  -0đ
                 </span>
               </div>
               <div className="text-sm">
@@ -241,14 +239,14 @@ export default function OrderDetails({
                 </span>
                 <span className="font-medium text-base dark:text-white">
                   {" "}
-                  -₫50.000
+                  -0đ
                 </span>
               </div>
               <div className="text-base mt-1">
-                <span className="font-medium dark:text-gray-300">
+                <span className="font-medium dark:text-pri-2">
                   Thành tiền:{" "}
                 </span>
-                <span className="text-lg font-semibold text-pri-7 dark:text-pri-6">
+                <span className="text-lg font-semibold text-pri-7 dark:text-teal-400">
                   ₫{order.final_cost.toLocaleString("vi-VN")}
                 </span>
               </div>

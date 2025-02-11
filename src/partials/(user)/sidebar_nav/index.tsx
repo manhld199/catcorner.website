@@ -47,9 +47,10 @@ export default function UserSidebar() {
         md:flex h-auto md:h-[450px] w-full md:w-[300px] flex-col
         fixed md:relative top-0 left-0 z-40
         ${isMenuOpen ? "flex" : "hidden"}
-        bg-white dark:black
+        bg-white dark:bg-zinc-950
         md:bg-white
         transition-all duration-300
+        border-none shadow-lg
       `}>
         {/* Profile Section */}
         <div className="flex items-center gap-3 p-4">

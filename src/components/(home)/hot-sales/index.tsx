@@ -50,31 +50,33 @@ export default function HotSales() {
 
   return (
     <div className="container w-[80%] mx-auto py-8">
-      <h2 className="text-3xl font-bold text-center text-[#1B4242] mb-8">
+      <h2 className="text-3xl font-bold text-center text-[#1B4242] dark:text-pri-2 mb-8">
         Hot Sales
       </h2>
 
       <div className="grid grid-cols-4 gap-6 mb-6">
-        {products.slice(0, 4).map((product) => (
-          <div key={product._id} className="bg-white rounded-lg">
-            {/* Sau này xóa any đi fix chỗ này */}
-            <ProductCard product={transformProduct(product) as any} />
-          </div>
+        {products.slice(0, 4).map((product, index) => (
+          <ProductCard
+            key={`hot sale ${index}`}
+            product={transformProduct(product) as any}
+          />
         ))}
       </div>
 
       <div className="grid grid-cols-4 gap-6 mb-8">
-        {products.slice(4, 8).map((product) => (
-          <div key={product._id} className="bg-white rounded-lg">
-            {/* Sau này xóa any đi fix chỗ này */}
-            <ProductCard product={transformProduct(product) as any} />
-          </div>
+        {products.slice(4, 8).map((product, index) => (
+          <ProductCard
+            key={`hot sale 2 ${index}`}
+            product={transformProduct(product) as any}
+          />
         ))}
       </div>
 
       <div className="flex justify-center">
         <Link href="/products">
-          <Button variant="link" className="text-base text-pri-1 font-bold">
+          <Button
+            variant="link"
+            className="text-base text-pri-1 dark:text-white font-bold">
             Tất cả sản phẩm
             <ArrowUpRight />
           </Button>

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function CustomerFooter() {
   return (
-    <footer className="bg-zinc-900 text-white py-4 w-full">
+    <footer className="bg-bg-dark-1 text-white py-4 w-full">
       <div className="container mx-auto flex flex-col tablet:flex-row tablet:justify-between tablet:items-center desktop:w-4/5 tablet:w-11/12">
         {/* Logo */}
         <div className="flex justify-center items-center tablet:justify-start">
